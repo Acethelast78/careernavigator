@@ -1,0 +1,4391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraCareer — Dynamic Career Guidance Tool</title>
+  <meta name="description" content="Personalized career path recommendations, benchmarking, and transition roadmaps based on real-world market insights.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-primary: #f3f4f6;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.65);
+  --border-glass: rgba(255, 255, 255, 0.6);
+  --border-glass-active: rgba(99, 102, 241, 0.5);
+  --border-input: #cbd5e1;
+  
+  --color-primary: #6366f1; /* Indigo */
+  --color-primary-glow: rgba(99, 102, 241, 0.2);
+  --color-secondary: #d946ef; /* Fuchsia / Pink */
+  --color-accent: #0d9488; /* Teal */
+  --color-accent-glow: rgba(13, 148, 136, 0.15);
+  --color-warning: #d97706; /* Dark Amber */
+  --color-danger: #e11d48; /* Crimson */
+  
+  --text-main: #0f172a; /* Slate 900 */
+  --text-muted: #334155; /* Slate 700 */
+  --text-dark: #64748b; /* Slate 500 */
+  
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  
+  --shadow-premium: 0 20px 40px -15px rgba(15, 23, 42, 0.08), 
+                    0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  --shadow-glow: 0 8px 25px -5px rgba(99, 102, 241, 0.4);
+  
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius-lg: 20px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(99, 102, 241, 0.15) 0px, transparent 40%),
+    radial-gradient(at 90% 80%, rgba(217, 70, 239, 0.15) 0px, transparent 40%),
+    radial-gradient(at 50% 50%, rgba(13, 148, 136, 0.08) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.6;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+}
+
+h1 {
+  font-size: 2.8rem;
+  background: linear-gradient(135deg, var(--text-main) 30%, var(--color-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+p {
+  color: var(--text-muted);
+}
+
+/* Layout Utilities */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(16px) saturate(120%);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.4rem;
+  text-decoration: none;
+  color: var(--text-main);
+  transition: var(--transition-smooth);
+}
+
+.logo:hover {
+  opacity: 0.9;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -5px rgba(99, 102, 241, 0.6);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: #e2e8f0;
+  color: var(--text-muted);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.btn-secondary:hover {
+  background: white;
+  border-color: #cbd5e1;
+  color: var(--text-main);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+}
+
+.btn-icon {
+  padding: 10px;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #e2e8f0;
+  color: var(--text-muted);
+}
+
+.btn-icon:hover {
+  background: white;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.1);
+}
+
+/* Form Inputs */
+.form-group {
+  margin-bottom: 28px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.input-control {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  transition: var(--transition-smooth);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.input-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+select.input-control option {
+  background-color: white;
+  color: var(--text-main);
+}
+
+/* Tag Inputs */
+.tag-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  min-height: 52px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+  align-items: center;
+}
+
+.tag-input-container:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+.tag-input-container input {
+  flex: 1;
+  min-width: 120px;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  outline: none;
+  font-size: 0.95rem;
+}
+
+.tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  color: var(--color-primary);
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.tag-badge span {
+  cursor: pointer;
+  font-weight: bold;
+  opacity: 0.6;
+  transition: var(--transition-smooth);
+}
+
+.tag-badge span:hover {
+  opacity: 1;
+  color: var(--color-secondary);
+}
+
+/* Clickable suggestion chips */
+.chip-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #cbd5e1;
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+}
+
+.chip-btn:hover {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+/* Card & Glass Elements */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 35px;
+  box-shadow: var(--shadow-premium);
+  backdrop-filter: blur(24px) saturate(140%);
+  transition: var(--transition-smooth);
+}
+
+/* Multi-Step Wizard */
+.wizard-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  position: relative;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wizard-header::after {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: 30px;
+  right: 30px;
+  height: 3px;
+  background: #e2e8f0;
+  z-index: 1;
+}
+
+.step-indicator {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  z-index: 2;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.step-indicator.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.step-indicator.completed {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: white;
+  box-shadow: 0 4px 15px rgba(13, 148, 136, 0.2);
+}
+
+.wizard-step-view {
+  display: none;
+}
+
+.wizard-step-view.active {
+  display: block;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Card Selection Grid */
+.grid-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.select-card {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.select-card:hover {
+  border-color: var(--border-glass-active);
+  transform: translateY(-2px);
+}
+
+.select-card.active {
+  background: rgba(99, 102, 241, 0.04);
+  border-color: var(--color-primary);
+  box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.2);
+}
+
+.select-card-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.select-card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+  color: var(--text-main);
+}
+
+.select-card-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Dashboard & Recommendation Grid */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.recommendation-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.recommendation-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--color-primary);
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.card-title-area {
+  flex: 1;
+}
+
+.card-field {
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  margin-bottom: 5px;
+}
+
+.card-title {
+  font-size: 1.35rem;
+  color: var(--text-main);
+  line-height: 1.25;
+}
+
+/* Score Circular Badge */
+.score-badge-ring {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+}
+
+.score-badge-ring svg {
+  transform: rotate(-90deg);
+}
+
+.score-badge-circle-bg {
+  fill: none;
+  stroke: #cbd5e1;
+  stroke-width: 5px;
+  opacity: 0.3;
+}
+
+.score-badge-circle-value {
+  fill: none;
+  stroke: url(#score-gradient);
+  stroke-width: 5px;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease-in-out;
+}
+
+.score-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.card-reason {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+  flex-grow: 1;
+  border-left: 3px solid var(--color-primary);
+  padding-left: 12px;
+  line-height: 1.5;
+}
+
+.card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 18px;
+  margin-bottom: 22px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-dark);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.stat-value {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.badge-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.badge-high {
+  background: rgba(13, 148, 136, 0.1);
+  color: var(--color-accent);
+}
+
+.badge-medium {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--color-warning);
+}
+
+.badge-low {
+  background: rgba(225, 29, 72, 0.1);
+  color: var(--color-danger);
+}
+
+/* Timeline Layout */
+.timeline {
+  position: relative;
+  padding-left: 35px;
+  margin: 35px 0;
+}
+
+.timeline::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 12px;
+  width: 3px;
+  background: #cbd5e1;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 35px;
+}
+
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: -28px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+  z-index: 2;
+}
+
+.timeline-phase {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.timeline-title {
+  font-size: 1.15rem;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.timeline-tasks {
+  list-style: none;
+  padding-left: 0;
+}
+
+.timeline-tasks li {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  position: relative;
+  padding-left: 22px;
+}
+
+.timeline-tasks li::before {
+  content: '⚡';
+  position: absolute;
+  left: 0;
+  font-size: 0.8rem;
+}
+
+/* Modal Settings Window */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition-smooth);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 500px;
+  background: white;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-lg);
+  padding: 35px;
+  position: relative;
+  transform: scale(0.95);
+  transition: var(--transition-smooth);
+  box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.2);
+}
+
+.modal-overlay.active .modal-content {
+  transform: scale(1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: var(--text-dark);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Toggle Switch Control */
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: .3s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+input:checked + .slider {
+  background-color: var(--color-primary);
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* Analytics Log Styles */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-bottom: 35px;
+}
+
+.analytics-card {
+  text-align: center;
+  padding: 25px;
+}
+
+.analytics-num {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+  line-height: 1;
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.analytics-table th, .analytics-table td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.analytics-table th {
+  color: var(--text-dark);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.analytics-table td {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* Case Study Blocks */
+.case-study-box {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-top: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+}
+
+.case-study-header {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+
+.case-study-body {
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.case-study-outcome {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  border-top: 1px solid #e2e8f0;
+  padding: 30px 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  background: rgba(255,255,255,0.4);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Rules */
+@media (max-width: 768px) {
+  h1 { font-size: 2.2rem; }
+  .wizard-header::after { display: none; }
+  .grid-selector { grid-template-columns: 1fr; }
+  .card-stats { grid-template-columns: 1fr; }
+}
+
+/* Tab Navigation Styles */
+.tabs-control {
+  display: flex;
+  gap: 10px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 2px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-dark);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.tab-btn:hover {
+  color: var(--text-main);
+}
+
+.tab-btn.active {
+  color: var(--color-primary);
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-primary);
+  border-radius: 2px;
+}
+
+/* Compare Paths Matrix Table */
+.analytics-table {
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.analytics-table th {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-dark);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 12px 16px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+}
+
+.analytics-table td {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.9rem;
+}
+
+.analytics-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Cost-Benefit Success Badges */
+.badge-tag {
+  display: inline-block;
+  border-radius: 30px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.badge-tag.badge-high {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.badge-tag.badge-medium {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+}
+
+.badge-tag.badge-low {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container header-inner">
+      <a href="#" class="logo" id="logo-home">
+        <div class="logo-icon">A</div>
+        <span>AuraCareer</span>
+      </a>
+      <div class="nav-actions">
+        <button class="btn btn-secondary" id="nav-btn-analytics">Analytics Log</button>
+        <button class="btn btn-icon" id="nav-btn-settings" title="API Settings">⚙️</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="container" style="margin-top: 40px; margin-bottom: 60px;">
+    
+    <!-- VIEW 1: Assessment Form -->
+    <section id="view-assessment" class="glass-card">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <h2 style="font-size: 2rem; margin-bottom: 10px;">Find Your Next Career Move</h2>
+        <p>Enter your current profile below. Our matching engine will analyze your background and calculate your best paths.</p>
+      </div>
+
+      <!-- Step Stepper -->
+      <div class="wizard-header">
+        <div class="step-indicator active" data-step="1">1</div>
+        <div class="step-indicator" data-step="2">2</div>
+        <div class="step-indicator" data-step="3">3</div>
+      </div>
+
+      <form id="assessment-form">
+        <!-- STEP 1: Specific Background -->
+        <div class="wizard-step-view active" id="step-1-view">
+          <h3 style="margin-bottom: 20px;">Step 1: Qualifications & Current Role</h3>
+          
+          <div class="form-group">
+            <label for="input-qualification">Highest Qualification Level</label>
+            <select class="input-control" id="input-qualification" required>
+              <option value="" disabled selected>Select highest qualification...</option>
+              <option value="12th Pass / High School">12th Standard / High School</option>
+              <option value="Diploma / Technical Certificate">Diploma / Technical Certificate</option>
+              <option value="Bachelor's Degree (UG)">Bachelor's Degree (B.A, B.Sc, B.Com, B.Tech, BBA, etc.)</option>
+              <option value="Master's Degree (PG)">Master's Degree (M.A, M.Sc, M.Com, M.Tech, MBA, MCA, etc.)</option>
+              <option value="Doctoral / Professional License">Doctorate / Professional License (CA, MBBS, PhD, Law)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="input-ug-specialization">Undergraduate Graduation Major / Specialization (e.g. B.Tech Mech, B.Com Accounts, B.A English)</label>
+            <input type="text" class="input-control" id="input-ug-specialization" list="specialization-datalist" placeholder="Type your undergrad specialization..." required>
+          </div>
+
+          <div class="form-group" id="container-pg-specialization" style="display: none; animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+            <label for="input-pg-specialization">Postgraduate Specialization (e.g. MBA Finance, M.Tech Data Science)</label>
+            <input type="text" class="input-control" id="input-pg-specialization" list="specialization-datalist" placeholder="Type your postgrad specialization...">
+          </div>
+          
+          <datalist id="specialization-datalist">
+            <option value="Computer Science / IT"></option>
+            <option value="Mechanical Engineering"></option>
+            <option value="Electrical & Electronics Eng"></option>
+            <option value="Commerce & Accounting"></option>
+            <option value="Business Management (BBA/MBA)"></option>
+            <option value="Economics & Finance"></option>
+            <option value="Arts / Humanities / English Lit"></option>
+            <option value="Science / Physics / Chemistry"></option>
+            <option value="Biotechnology / Life Sciences"></option>
+            <option value="Hotel Management & Culinary Arts"></option>
+          </datalist>
+
+          <div class="form-group">
+            <label for="input-status">Current Employment Status</label>
+            <select class="input-control" id="input-status" required>
+              <option value="" disabled selected>Select status...</option>
+              <option value="Student">Student (Currently in College / School)</option>
+              <option value="Employed">Employed (Working Professional)</option>
+              <option value="Freelancer">Freelancer / Self-Employed / Business Owner</option>
+              <option value="Unemployed">Unemployed / On a Career Break</option>
+            </select>
+          </div>
+
+          <!-- Dynamic Field for Students -->
+          <div class="form-group" id="container-student-course" style="display: none; animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div>
+                <label for="input-student-degree">Current Course Level</label>
+                <select class="input-control" id="input-student-degree">
+                  <option value="" disabled selected>Select level...</option>
+                  <option value="Bachelor's (UG)">Bachelor's (UG)</option>
+                  <option value="Master's (PG)">Master's (PG)</option>
+                  <option value="PhD / Doctorate">PhD / Doctorate</option>
+                  <option value="Diploma / Certificate">Diploma / Certificate</option>
+                </select>
+              </div>
+              <div>
+                <label for="input-student-year">Current Year</label>
+                <select class="input-control" id="input-student-year">
+                  <option value="" disabled selected>Select year...</option>
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                  <option value="Final Year">Final Year</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Field for Working Professionals / Unemployed -->
+          <div class="form-group" id="container-professional-title" style="display: none; animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+            <label for="input-professional-title">What is your current/most recent job title?</label>
+            <input type="text" class="input-control" id="input-professional-title" list="job-titles-datalist" placeholder="e.g. Mechanical Engineer, BPO Executive, Bank Clerk">
+            <datalist id="job-titles-datalist"></datalist>
+          </div>
+
+          <div class="form-group">
+            <label for="input-experience">Years of Work Experience</label>
+            <input type="number" class="input-control" id="input-experience" min="0" max="40" placeholder="e.g. 2 (Enter 0 if fresh graduate)" required>
+          </div>
+
+          <!-- Dynamic Field for Prior Work Details (shown if experience > 0) -->
+          <div class="form-group" id="container-prior-work" style="display: none; animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); border-left: 3px solid var(--color-primary); padding-left: 15px; margin-top: 20px; margin-bottom: 20px;">
+            <h4 style="font-size: 0.85rem; margin-bottom: 12px; color: var(--color-primary); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Prior Work Details</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div>
+                <label for="input-prior-industry" style="font-size:0.8rem; font-weight:600;">Prior Industry</label>
+                <select class="input-control" id="input-prior-industry" style="padding:10px 14px; font-size:0.9rem;">
+                  <option value="" disabled selected>Select industry...</option>
+                  <option value="Tech / IT">Tech / Software / IT Services</option>
+                  <option value="Finance / Banking">Finance / Banking / Insurance</option>
+                  <option value="Sales / Marketing">Sales / Advertising / Marketing</option>
+                  <option value="HR / Operations / Admin">HR / Operations / Administration</option>
+                  <option value="Manufacturing / Core Engineering">Manufacturing / Automotive / Core Eng</option>
+                  <option value="Healthcare / Biotech / Pharma">Healthcare / Pharma / Biotech</option>
+                  <option value="Education / Corporate Training">Education / Teaching / Training</option>
+                  <option value="Creative / Design / Video">Creative / Graphic / Video / Copy</option>
+                  <option value="Skilled Trades / Fitness / Hospitality">Skilled Trades / Fitness / Hospitality</option>
+                  <option value="Customer Support / BPO / Operations">Customer Support / BPO / Ops</option>
+                </select>
+              </div>
+              <div>
+                <label for="input-prior-role" style="font-size:0.8rem; font-weight:600;">Prior Job Title</label>
+                <input type="text" class="input-control" id="input-prior-role" list="job-titles-datalist" placeholder="e.g. Bank Clerk, QA, Teacher" style="padding:10px 14px; font-size:0.9rem;">
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; margin-top: 30px;">
+            <button type="button" class="btn btn-primary" id="btn-step1-next">Next Step →</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Skills & Interests -->
+        <div class="wizard-step-view" id="step-2-view">
+          <h3 style="margin-bottom: 20px;">Step 2: Skills & Interests</h3>
+          
+          <div class="form-group">
+            <label>Current Skills (Press Enter to add tags)</label>
+            <div class="tag-input-container" id="container-skills-tags">
+              <!-- Tags injected here -->
+              <input type="text" id="input-skills" list="skills-datalist" placeholder="Type or select a skill (e.g. SQL, Figma, Python)...">
+            </div>
+            <datalist id="skills-datalist"></datalist>
+            <p style="font-size: 0.75rem; margin-top: 5px;">Add at least 2 key skills or tools you are comfortable working with.</p>
+            <div class="chip-suggestions-label" style="font-size: 0.75rem; color: var(--text-dark); margin-top: 10px; font-weight: 600; letter-spacing: 0.02em;">POPULAR SKILLS (CLICK TO ADD):</div>
+            <div class="chip-container" id="container-skills-chips" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;"></div>
+          </div>
+
+          <div class="form-group" style="margin-top: 30px;">
+            <label>Interests & Activities (Press Enter to add tags)</label>
+            <div class="tag-input-container" id="container-interests-tags">
+              <!-- Tags injected here -->
+              <input type="text" id="input-interests" list="interests-datalist" placeholder="Type or select an interest (e.g. Coding, Design, Sales)...">
+            </div>
+            <datalist id="interests-datalist"></datalist>
+            <p style="font-size: 0.75rem; margin-top: 5px;">What kind of tasks, hobbies, or domains do you enjoy doing?</p>
+            <div class="chip-suggestions-label" style="font-size: 0.75rem; color: var(--text-dark); margin-top: 10px; font-weight: 600; letter-spacing: 0.02em;">COMMON INTERESTS (CLICK TO ADD):</div>
+            <div class="chip-container" id="container-interests-chips" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 45px;">
+            <button type="button" class="btn btn-secondary" id="btn-step2-prev">← Back</button>
+            <button type="button" class="btn btn-primary" id="btn-step2-next">Next Step →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Career Direction -->
+        <div class="wizard-step-view" id="step-3-view">
+          <h3 style="margin-bottom: 20px;">Step 3: Define Your Career Goal</h3>
+          <p style="margin-bottom: 20px;">Which of these categories best matches your current goal?</p>
+          
+          <div class="grid-selector" id="goal-selector">
+            <div class="select-card active" data-goal="first_career">
+              <div class="select-card-icon">🎓</div>
+              <div class="select-card-title">First Career</div>
+              <div class="select-card-desc">College student or fresh graduate entering the workforce.</div>
+            </div>
+            
+            <div class="select-card" data-goal="switch_role">
+              <div class="select-card-icon">🔄</div>
+              <div class="select-card-title">Role / Industry Switcher</div>
+              <div class="select-card-desc">Working professional looking to pivot into adjacent roles.</div>
+            </div>
+
+            <div class="select-card" data-goal="complete_pivot">
+              <div class="select-card-icon">🚀</div>
+              <div class="select-card-title">Complete Pivot</div>
+              <div class="select-card-desc">Looking to start entirely from scratch in a new field.</div>
+            </div>
+          </div>
+
+          <div class="form-group" id="container-target-role" style="display: none; margin-top: 30px; animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+            <label for="input-target-role">Dream/Target Role (Do you have a specific career path in mind?)</label>
+            <select class="input-control" id="input-target-role">
+              <option value="" selected>No specific dream role — recommend the best fits for me...</option>
+            </select>
+            <p style="font-size: 0.75rem; margin-top: 5px;">If you choose a dream role, we will analyze your exact skills gap and generate a transition roadmap specifically for it, alongside other recommendations.</p>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 45px;">
+            <button type="button" class="btn btn-secondary" id="btn-step3-prev">← Back</button>
+            <button type="submit" class="btn btn-primary" id="btn-submit-form" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);">Analyze & Match Paths</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- VIEW 2: Recommendations Dashboard -->
+    <section id="view-results" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
+        <div>
+          <h2>Your Top Career Matches</h2>
+          <p style="margin-top: 5px;">Based on your qualifications, skills, and scoring calculations.</p>
+        </div>
+        <button class="btn btn-secondary" id="btn-restart-assessment">← Retake Assessment</button>
+      </div>
+
+      <!-- Live API / Mock alert -->
+      <div id="matching-source-badge" style="margin-bottom: 25px; font-size: 0.85rem; padding: 10px 15px; border-radius: var(--radius-md); background: rgba(99, 102, 241, 0.1); border: 1px solid var(--border-glass-active); display: inline-flex; align-items: center; gap: 8px;">
+        <span>ℹ️ Matches calculated using <strong>Mock Database Mode</strong>. Add a Gemini Key for live AI generation.</span>
+      </div>
+
+      <!-- Tabs to switch between Card list and Cost-Benefit Matrix -->
+      <div class="tabs-control" style="margin-bottom: 25px;">
+        <button class="tab-btn active" id="btn-tab-cards">Top Recommendations</button>
+        <button class="tab-btn" id="btn-tab-matrix">Compare Paths (Cost-Benefit Matrix)</button>
+      </div>
+
+      <!-- Recommendation Cards Container -->
+      <div class="results-grid" id="recommendations-container">
+        <!-- Dynamic Cards Injected Here -->
+      </div>
+
+      <!-- Cost-Benefit Matrix Container -->
+      <div class="glass-card" id="matrix-container" style="display: none; padding: 25px; overflow-x: auto;">
+        <h3 style="margin-bottom: 5px; font-family: var(--font-display);">Path Comparison Matrix</h3>
+        <p style="font-size: 0.85rem; margin-bottom: 20px; color: var(--text-muted);">Compare your capability strength (what you are built for) against interest alignment, estimated transition success rate, and CTC outcomes.</p>
+        
+        <table class="analytics-table" style="min-width: 750px; width: 100%;">
+          <thead>
+            <tr>
+              <th style="font-weight: 700;">Career Path</th>
+              <th style="font-weight: 700; text-align: center;">Capability Fit (Profile Strength)</th>
+              <th style="font-weight: 700; text-align: center;">Interest Fit (Holland Score)</th>
+              <th style="font-weight: 700; text-align: center;">Transition Success</th>
+              <th style="font-weight: 700;">Expected CTC (LPA)</th>
+              <th style="font-weight: 700; text-align: center;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="matrix-table-body">
+            <!-- Dynamic rows injected here -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VIEW 3: Detailed Roadmap & Benchmarking -->
+    <section id="view-details" style="display: none;">
+      <button class="btn btn-secondary" id="btn-back-to-results" style="margin-bottom: 30px;">← Back to Matches</button>
+      
+      <div class="glass-card" id="detail-card-container">
+        <!-- Dynamic Details Injected Here -->
+      </div>
+    </section>
+
+    <!-- VIEW 4: Analytics View -->
+    <section id="view-analytics" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h2>Project Analytics Dashboard</h2>
+        <button class="btn btn-secondary" id="btn-close-analytics">Back to Form</button>
+      </div>
+
+      <div class="analytics-grid">
+        <div class="glass-card analytics-card">
+          <div class="analytics-num" id="stat-conversions">0</div>
+          <div class="stat-label">Total Form Completions</div>
+          <p style="font-size: 0.75rem; margin-top: 5px;">Primary Conversion Metric</p>
+        </div>
+
+        <div class="glass-card analytics-card">
+          <div class="analytics-num" id="stat-clicks">0</div>
+          <div class="stat-label">Roadmap Explores</div>
+          <p style="font-size: 0.75rem; margin-top: 5px;">Deep-Engagement Clicks</p>
+        </div>
+      </div>
+
+      <div class="glass-card" style="margin-bottom: 30px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3>Popular Recommendations</h3>
+          <button class="btn btn-primary btn-secondary" id="btn-export-analytics" style="font-size: 0.8rem; padding: 6px 12px;">📥 Export JSON Log</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="analytics-table">
+            <thead>
+              <tr>
+                <th>Career Role</th>
+                <th>Times Recommended</th>
+                <th>Roadmap Clicks</th>
+              </tr>
+            </thead>
+            <tbody id="analytics-table-body">
+              <tr>
+                <td colspan="3" style="text-align: center; color: var(--text-dark);">No conversion logs recorded yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Settings Modal (Overlay) -->
+  <div class="modal-overlay" id="modal-settings">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-settings-close">×</button>
+      <h3 style="margin-bottom: 15px; font-family: var(--font-display);">⚙️ Matching Settings</h3>
+      <p style="font-size: 0.85rem; margin-bottom: 20px;">Configure how matching operations are computed.</p>
+      
+      <div class="toggle-container">
+        <div>
+          <div style="font-weight: 600; font-size: 0.9rem;">Offline / Mock Mode</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Uses static grounded mock data instead of live LLM calls.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="setting-toggle-mock" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="form-group" id="setting-api-key-group" style="display: none;">
+        <label for="setting-gemini-key">Google Gemini API Key</label>
+        <input type="password" class="input-control" id="setting-gemini-key" placeholder="AIzaSy...">
+        <p style="font-size: 0.7rem; margin-top: 5px; color: var(--text-muted);">
+          Get a free API Key from <a href="https://aistudio.google.com/" target="_blank" style="color: var(--color-primary);">Google AI Studio</a>. Placed locally in your browser.
+        </p>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 30px;">
+        <button class="btn btn-secondary" id="modal-settings-cancel">Cancel</button>
+        <button class="btn btn-primary" id="modal-settings-save">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG Gradients definitions for score badge rings -->
+  <svg style="width:0; height:0; position:absolute;" aria-hidden="true" focusable="false">
+    <linearGradient id="score-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+  </svg>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 AuraCareer. Grounded on real O*NET/RIASEC methodology and Indian market salary benchmarks.</p>
+    </div>
+  </footer>
+
+  
+
+<script>
+// Standalone Global State Shim
+window._standalone = true;
+
+// 1. DATABASE
+const reportRoles = [
+  {
+    "id": "marketing_manager",
+    "role": "Marketing Manager",
+    "field": "Business",
+    "entryLevelSalary": 480000,
+    "midLevelSalary": 1500000,
+    "seniorSalary": 3500000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "5-8 years experience required",
+    "mustHaveSkills": [
+      "Digital Marketing",
+      "Google Analytics",
+      "Campaign Planning",
+      "Brand Management",
+      "SEO/SEM"
+    ],
+    "learnableSkills": [
+      "HubSpot",
+      "Performance Marketing",
+      "Marketing Automation",
+      "A/B Testing"
+    ],
+    "riasecType": "ESA",
+    "minQualification": "BBA/MBA (Marketing)",
+    "entryBarrier": "Years of progressive marketing experience; MBA from good institute",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "sales_executive",
+    "role": "Sales Executive",
+    "field": "Business",
+    "entryLevelSalary": 300000,
+    "midLevelSalary": 480000,
+    "seniorSalary": 1200000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "0-1 months",
+    "mustHaveSkills": [
+      "Communication",
+      "CRM Tools",
+      "Cold Calling",
+      "Objection Handling",
+      "Target Orientation"
+    ],
+    "learnableSkills": [
+      "Salesforce",
+      "Social Selling",
+      "Negotiation",
+      "Data-Driven Sales"
+    ],
+    "riasecType": "ECS",
+    "minQualification": "Any graduate",
+    "entryBarrier": "Minimal — performance track record matters most",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "hr_manager",
+    "role": "HR Manager",
+    "field": "Business",
+    "entryLevelSalary": 400000,
+    "midLevelSalary": 900000,
+    "seniorSalary": 2500000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "4-6 years experience",
+    "mustHaveSkills": [
+      "Recruitment",
+      "Labor Law",
+      "HRIS Tools",
+      "Employee Relations",
+      "Payroll Basics"
+    ],
+    "learnableSkills": [
+      "People Analytics",
+      "OKR Frameworks",
+      "SHRM Certification",
+      "Organizational Development"
+    ],
+    "riasecType": "SEC",
+    "minQualification": "MBA (HR) or MSW",
+    "entryBarrier": "MBA from recognized institute; SHRM-CP valued",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "operations_manager",
+    "role": "Operations Manager",
+    "field": "Business",
+    "entryLevelSalary": 400000,
+    "midLevelSalary": 1100000,
+    "seniorSalary": 3000000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "5-8 years experience",
+    "mustHaveSkills": [
+      "Process Optimization",
+      "Project Management",
+      "Data Analysis",
+      "Vendor Management",
+      "Team Leadership"
+    ],
+    "learnableSkills": [
+      "Six Sigma",
+      "SAP/Oracle ERP",
+      "Lean Methodology",
+      "Supply Chain Basics"
+    ],
+    "riasecType": "ECI",
+    "minQualification": "B.E. or MBA",
+    "entryBarrier": "PMP certification; domain-specific operational experience",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "finance_analyst",
+    "role": "Finance Analyst",
+    "field": "Business",
+    "entryLevelSalary": 450000,
+    "midLevelSalary": 1100000,
+    "seniorSalary": 2500000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "MEDIUM",
+    "typicalTimeToEnter": "0-2 years",
+    "mustHaveSkills": [
+      "Financial Modeling",
+      "Excel",
+      "Accounting Fundamentals",
+      "Variance Analysis",
+      "Budgeting"
+    ],
+    "learnableSkills": [
+      "Power BI",
+      "Python for Finance",
+      "CFA coursework",
+      "Investment Analysis"
+    ],
+    "riasecType": "CIE",
+    "minQualification": "B.Com/BBA/CA/MBA (Finance)",
+    "entryBarrier": "CA or CFA significantly accelerates career; strong Excel skills essential",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "business_development_manager",
+    "role": "Business Development Manager",
+    "field": "Business",
+    "entryLevelSalary": 480000,
+    "midLevelSalary": 1300000,
+    "seniorSalary": 2800000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "3-5 years sales experience",
+    "mustHaveSkills": [
+      "B2B Sales",
+      "Proposal Writing",
+      "CRM",
+      "Market Research",
+      "Client Negotiation"
+    ],
+    "learnableSkills": [
+      "LinkedIn Sales Navigator",
+      "Account-Based Marketing",
+      "SaaS Selling",
+      "Contract Management"
+    ],
+    "riasecType": "ECS",
+    "minQualification": "MBA/BBA",
+    "entryBarrier": "Proven sales track record; MBA preferred",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "supply_chain_manager",
+    "role": "Supply Chain Manager",
+    "field": "Business",
+    "entryLevelSalary": 350000,
+    "midLevelSalary": 1300000,
+    "seniorSalary": 3000000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "5-8 years",
+    "mustHaveSkills": [
+      "Supply Chain Planning",
+      "Inventory Management",
+      "Vendor Management",
+      "SAP SCM",
+      "Logistics Coordination"
+    ],
+    "learnableSkills": [
+      "APICS CPIM",
+      "Demand Forecasting",
+      "WMS",
+      "Sustainability in SCM"
+    ],
+    "riasecType": "CEI",
+    "minQualification": "B.E. (Industrial/Mech) + MBA/PGDM Operations",
+    "entryBarrier": "APICS certification; ERP experience; domain expertise",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "product_manager",
+    "role": "Product Manager",
+    "field": "Business",
+    "entryLevelSalary": 1100000,
+    "midLevelSalary": 2500000,
+    "seniorSalary": 7000000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "3-5 years tech/business experience",
+    "mustHaveSkills": [
+      "Product Roadmap Planning",
+      "User Story Writing",
+      "Data Analysis",
+      "Stakeholder Management",
+      "Cross-functional Collaboration"
+    ],
+    "learnableSkills": [
+      "A/B Testing",
+      "Mixpanel/Amplitude",
+      "AI Product Thinking",
+      "OKR Setting"
+    ],
+    "riasecType": "EIA",
+    "minQualification": "B.Tech or MBA (Tier-1 institute preferred)",
+    "entryBarrier": "APM programs for freshers; prior software/business experience critical",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "software_developer",
+    "role": "Software Developer",
+    "field": "Tech",
+    "entryLevelSalary": 400000,
+    "midLevelSalary": 1000000,
+    "seniorSalary": 2500000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "MEDIUM",
+    "typicalTimeToEnter": "6-12 months (bootcamp/self-study path)",
+    "mustHaveSkills": [
+      "Python or Java or JavaScript",
+      "DSA",
+      "Git",
+      "REST APIs",
+      "Problem Solving"
+    ],
+    "learnableSkills": [
+      "React/Node.js",
+      "Docker",
+      "AWS",
+      "Kubernetes",
+      "Agile/Scrum"
+    ],
+    "riasecType": "IRC",
+    "minQualification": "B.Tech/BCA/BSc CS or equivalent bootcamp",
+    "entryBarrier": "Portfolio + DSA skills; competitive coding practice",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "data_analyst",
+    "role": "Data Analyst",
+    "field": "Tech",
+    "entryLevelSalary": 500000,
+    "midLevelSalary": 1100000,
+    "seniorSalary": 2800000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "MEDIUM",
+    "typicalTimeToEnter": "3-6 months (self-study path viable)",
+    "mustHaveSkills": [
+      "SQL",
+      "Excel Advanced",
+      "Python (Pandas)",
+      "Power BI or Tableau",
+      "Statistical Analysis"
+    ],
+    "learnableSkills": [
+      "Machine Learning Basics",
+      "Hadoop/Spark",
+      "R",
+      "Data Storytelling"
+    ],
+    "riasecType": "ICE",
+    "minQualification": "Any STEM graduate; Google Data Analytics certificate accepted",
+    "entryBarrier": "SQL proficiency + 2-3 portfolio projects with real datasets",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "ux_ui_designer",
+    "role": "UX/UI Designer",
+    "field": "Tech",
+    "entryLevelSalary": 500000,
+    "midLevelSalary": 1300000,
+    "seniorSalary": 3000000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "MEDIUM",
+    "typicalTimeToEnter": "4-8 months",
+    "mustHaveSkills": [
+      "Figma",
+      "User Research",
+      "Wireframing",
+      "Usability Testing",
+      "Design Thinking"
+    ],
+    "learnableSkills": [
+      "HTML/CSS basics",
+      "Motion Design",
+      "Accessibility",
+      "A/B Testing",
+      "Webflow"
+    ],
+    "riasecType": "AIR",
+    "minQualification": "BDes/BFA or any degree with strong Figma portfolio",
+    "entryBarrier": "Portfolio of 5+ case studies in Figma; user research documentation",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "qa_engineer",
+    "role": "QA Engineer",
+    "field": "Tech",
+    "entryLevelSalary": 350000,
+    "midLevelSalary": 1000000,
+    "seniorSalary": 2500000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "2-4 months",
+    "mustHaveSkills": [
+      "Manual Testing",
+      "Selenium",
+      "SQL Basics",
+      "API Testing (Postman)",
+      "SDLC Understanding"
+    ],
+    "learnableSkills": [
+      "JIRA",
+      "TestNG",
+      "Java for Automation",
+      "JMeter",
+      "ISTQB"
+    ],
+    "riasecType": "CIR",
+    "minQualification": "B.Tech/BCA; ISTQB Foundation preferred",
+    "entryBarrier": "ISTQB certification + automation tool practice on open-source projects",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "it_support_engineer",
+    "role": "IT Support Engineer",
+    "field": "Tech",
+    "entryLevelSalary": 300000,
+    "midLevelSalary": 600000,
+    "seniorSalary": 1400000,
+    "growthRating": "LOW",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "1-3 months",
+    "mustHaveSkills": [
+      "Hardware Troubleshooting",
+      "Windows/Linux OS",
+      "Networking Basics",
+      "Ticketing Systems"
+    ],
+    "learnableSkills": [
+      "Active Directory",
+      "ITIL",
+      "Azure/AWS Basics",
+      "PowerShell/Bash"
+    ],
+    "riasecType": "RIC",
+    "minQualification": "BCA/B.Tech/Diploma; CompTIA A+ or CCNA valued",
+    "entryBarrier": "Low — fresher roles widely available; certification helpful",
+    "dataConfidence": "LOW"
+  },
+  {
+    "id": "cloud_engineer",
+    "role": "Cloud Engineer",
+    "field": "Tech",
+    "entryLevelSalary": 700000,
+    "midLevelSalary": 1600000,
+    "seniorSalary": 3500000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "12-18 months",
+    "mustHaveSkills": [
+      "AWS or Azure or GCP",
+      "Linux Administration",
+      "Networking Fundamentals",
+      "Terraform (IaC)"
+    ],
+    "learnableSkills": [
+      "Kubernetes",
+      "Ansible",
+      "Cloud Architecture",
+      "Cost Optimization",
+      "Multi-Cloud"
+    ],
+    "riasecType": "IRC",
+    "minQualification": "B.Tech + AWS Solutions Architect / Azure Admin certification",
+    "entryBarrier": "Cloud certification + hands-on lab projects (AWS Free Tier/Azure sandbox)",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "cybersecurity_analyst",
+    "role": "Cybersecurity Analyst",
+    "field": "Tech",
+    "entryLevelSalary": 600000,
+    "midLevelSalary": 1300000,
+    "seniorSalary": 3500000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "MEDIUM",
+    "typicalTimeToEnter": "6-12 months",
+    "mustHaveSkills": [
+      "Network Security",
+      "SIEM Tools (Splunk)",
+      "Vulnerability Assessment",
+      "Incident Response",
+      "CompTIA Security+ or CEH"
+    ],
+    "learnableSkills": [
+      "Penetration Testing",
+      "Cloud Security",
+      "CISSP",
+      "Python for Security"
+    ],
+    "riasecType": "IRC",
+    "minQualification": "B.Tech/BCA + security certification",
+    "entryBarrier": "CEH/CompTIA Security+ cert + TryHackMe/HackTheBox practice labs",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "full_stack_developer",
+    "role": "Full Stack Developer",
+    "field": "Tech",
+    "entryLevelSalary": 600000,
+    "midLevelSalary": 1600000,
+    "seniorSalary": 4000000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "MEDIUM",
+    "typicalTimeToEnter": "6-12 months",
+    "mustHaveSkills": [
+      "HTML/CSS/JavaScript",
+      "React or Angular",
+      "Node.js or Django",
+      "MongoDB or MySQL",
+      "Git"
+    ],
+    "learnableSkills": [
+      "TypeScript",
+      "GraphQL",
+      "Docker",
+      "Redis",
+      "CI/CD Pipelines"
+    ],
+    "riasecType": "IRC",
+    "minQualification": "B.Tech/BCA or coding bootcamp graduate",
+    "entryBarrier": "Strong GitHub portfolio with 3+ deployed MERN/MEAN projects",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "data_scientist",
+    "role": "Data Scientist",
+    "field": "Tech",
+    "entryLevelSalary": 800000,
+    "midLevelSalary": 1600000,
+    "seniorSalary": 4000000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "12-18 months",
+    "mustHaveSkills": [
+      "Python (Scikit-learn, TensorFlow)",
+      "Statistics & Probability",
+      "Machine Learning",
+      "SQL",
+      "Data Wrangling"
+    ],
+    "learnableSkills": [
+      "Deep Learning",
+      "NLP/LLM Fine-tuning",
+      "MLOps",
+      "Spark",
+      "Domain Expertise"
+    ],
+    "riasecType": "IRA",
+    "minQualification": "B.Tech/MSc (Math/Stats/Physics/CS); MTech preferred for senior roles",
+    "entryBarrier": "ML project portfolio (Kaggle competitions); published research or capstone projects",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "devops_engineer",
+    "role": "DevOps Engineer",
+    "field": "Tech",
+    "entryLevelSalary": 700000,
+    "midLevelSalary": 1500000,
+    "seniorSalary": 3500000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "12-18 months",
+    "mustHaveSkills": [
+      "Linux/Unix",
+      "CI/CD (Jenkins/GitLab CI)",
+      "Docker",
+      "Kubernetes",
+      "Bash/Python Scripting"
+    ],
+    "learnableSkills": [
+      "Terraform",
+      "Ansible",
+      "Prometheus/Grafana",
+      "Chaos Engineering",
+      "GitOps"
+    ],
+    "riasecType": "RIC",
+    "minQualification": "B.Tech + cloud certifications; sysadmin background common entry path",
+    "entryBarrier": "Hands-on lab projects; Docker + CI/CD pipeline demos on GitHub",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "content_creator_corporate",
+    "role": "Content Creator (Corporate)",
+    "field": "Creative",
+    "entryLevelSalary": 360000,
+    "midLevelSalary": 750000,
+    "seniorSalary": 1800000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "1-3 months",
+    "mustHaveSkills": [
+      "Writing/Editing",
+      "SEO Basics",
+      "Content Calendar Management",
+      "Social Media Platforms",
+      "Canva/Adobe Express"
+    ],
+    "learnableSkills": [
+      "Video Scripting",
+      "Podcast Production",
+      "Content Analytics",
+      "Email Marketing"
+    ],
+    "riasecType": "AES",
+    "minQualification": "Any graduate; English/Mass Comm preferred",
+    "entryBarrier": "Writing portfolio (5+ published pieces); blog or LinkedIn content samples",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "graphic_designer",
+    "role": "Graphic Designer",
+    "field": "Creative",
+    "entryLevelSalary": 300000,
+    "midLevelSalary": 900000,
+    "seniorSalary": 2200000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "3-6 months",
+    "mustHaveSkills": [
+      "Adobe Illustrator",
+      "Adobe Photoshop",
+      "InDesign",
+      "Visual Design Principles",
+      "Brand Identity Design"
+    ],
+    "learnableSkills": [
+      "After Effects (Motion)",
+      "Figma/Sketch",
+      "Blender (3D)",
+      "AI Design Tools (Firefly)"
+    ],
+    "riasecType": "ARI",
+    "minQualification": "BDes/BFA/Diploma; portfolio is primary credential",
+    "entryBarrier": "Behance/Dribbble portfolio; 10+ diverse design projects",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "video_editor",
+    "role": "Video Editor",
+    "field": "Creative",
+    "entryLevelSalary": 300000,
+    "midLevelSalary": 900000,
+    "seniorSalary": 1800000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "3-6 months",
+    "mustHaveSkills": [
+      "Adobe Premiere Pro or Final Cut Pro or DaVinci Resolve",
+      "Video Storytelling",
+      "Color Grading",
+      "Audio Editing"
+    ],
+    "learnableSkills": [
+      "After Effects",
+      "3D Animation Basics",
+      "Subtitling Tools",
+      "Streaming Optimization"
+    ],
+    "riasecType": "ARI",
+    "minQualification": "Any degree/diploma; showreel is primary credential",
+    "entryBarrier": "Video showreel (3-5 edited pieces); short-form content experience",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "copywriter",
+    "role": "Copywriter",
+    "field": "Creative",
+    "entryLevelSalary": 300000,
+    "midLevelSalary": 900000,
+    "seniorSalary": 1800000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "1-3 months",
+    "mustHaveSkills": [
+      "Persuasive Writing",
+      "Headline Writing",
+      "Brand Voice Adaptation",
+      "SEO Copywriting",
+      "Editing/Proofreading"
+    ],
+    "learnableSkills": [
+      "Long-form Content Strategy",
+      "Email Copywriting",
+      "CRO Writing",
+      "Scriptwriting",
+      "AI Prompting"
+    ],
+    "riasecType": "AES",
+    "minQualification": "Any graduate (English preferred); published writing samples essential",
+    "entryBarrier": "Portfolio of 5+ diverse copy samples (ads, landing pages, emails)",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "social_media_manager",
+    "role": "Social Media Manager",
+    "field": "Creative",
+    "entryLevelSalary": 300000,
+    "midLevelSalary": 700000,
+    "seniorSalary": 1600000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "1-3 months",
+    "mustHaveSkills": [
+      "Platform Expertise (Instagram/LinkedIn/YouTube)",
+      "Content Scheduling Tools",
+      "Basic Analytics",
+      "Community Management",
+      "Canva"
+    ],
+    "learnableSkills": [
+      "Meta Ads Manager",
+      "Influencer Marketing",
+      "Social Listening",
+      "Video Editing"
+    ],
+    "riasecType": "EAS",
+    "minQualification": "Any graduate; Meta Social Media Marketing Certificate valued",
+    "entryBarrier": "Own social media presence as proof; community management examples",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "brand_strategist",
+    "role": "Brand Strategist",
+    "field": "Creative",
+    "entryLevelSalary": 600000,
+    "midLevelSalary": 1500000,
+    "seniorSalary": 3000000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "4-6 years marketing/creative experience",
+    "mustHaveSkills": [
+      "Brand Positioning",
+      "Market Research",
+      "Competitive Analysis",
+      "Consumer Insight",
+      "Strategic Communication"
+    ],
+    "learnableSkills": [
+      "Brand Architecture",
+      "Pricing Strategy",
+      "Digital Brand Analytics",
+      "Category Management"
+    ],
+    "riasecType": "EAI",
+    "minQualification": "MBA (Marketing)/BDes; agency background strongly preferred",
+    "entryBarrier": "Years in creative agency; brand strategy portfolio/case studies",
+    "dataConfidence": "LOW"
+  },
+  {
+    "id": "medical_sales_rep",
+    "role": "Medical Sales Representative",
+    "field": "Healthcare",
+    "entryLevelSalary": 250000,
+    "midLevelSalary": 600000,
+    "seniorSalary": 1400000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "0-3 months",
+    "mustHaveSkills": [
+      "Pharma Product Knowledge",
+      "Doctor Relationship Management",
+      "Territory Management",
+      "Sales Reporting",
+      "Communication"
+    ],
+    "learnableSkills": [
+      "CRM for Pharma",
+      "Market Research",
+      "Regulatory Compliance",
+      "Specialty Therapy Knowledge"
+    ],
+    "riasecType": "ESC",
+    "minQualification": "B.Pharm / BSc (Biology/Chemistry); science background essential",
+    "entryBarrier": "Science graduation; fresher roles widely available",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "healthcare_administrator",
+    "role": "Healthcare Administrator",
+    "field": "Healthcare",
+    "entryLevelSalary": 450000,
+    "midLevelSalary": 900000,
+    "seniorSalary": 2500000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "MBA (2 years) + 2-3 years experience",
+    "mustHaveSkills": [
+      "Hospital Operations",
+      "Healthcare Policy",
+      "Financial Management",
+      "Staff Management",
+      "Regulatory Compliance (NABH)"
+    ],
+    "learnableSkills": [
+      "HIS (Hospital Information Systems)",
+      "Quality Management",
+      "Healthcare Analytics",
+      "Revenue Cycle Management"
+    ],
+    "riasecType": "ESC",
+    "minQualification": "MBA (Hospital Management)/MHA",
+    "entryBarrier": "MHA/MBA from accredited institute; hospital internship mandatory",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "nutrition_coach_dietitian",
+    "role": "Nutrition Coach / Dietitian",
+    "field": "Healthcare",
+    "entryLevelSalary": 300000,
+    "midLevelSalary": 600000,
+    "seniorSalary": 1400000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "MEDIUM",
+    "typicalTimeToEnter": "3 years (BSc degree)",
+    "mustHaveSkills": [
+      "Nutritional Assessment",
+      "Meal Planning",
+      "Client Counseling",
+      "Clinical Nutrition Basics",
+      "Supplement Knowledge"
+    ],
+    "learnableSkills": [
+      "Sports Nutrition",
+      "Online Coaching Platforms",
+      "Corporate Wellness Programs",
+      "Gut Microbiome"
+    ],
+    "riasecType": "SIC",
+    "minQualification": "BSc (Nutrition/Dietetics); MSc strengthens clinical practice",
+    "entryBarrier": "BSc degree; RD certification from IDA preferred",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "pharma_sales_rep",
+    "role": "Pharmaceutical Sales Representative",
+    "field": "Healthcare",
+    "entryLevelSalary": 280000,
+    "midLevelSalary": 700000,
+    "seniorSalary": 1600000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "0-3 months",
+    "mustHaveSkills": [
+      "Pharma Product Knowledge",
+      "Territory Management",
+      "HCP Detailing",
+      "Sales Reporting",
+      "Communication"
+    ],
+    "learnableSkills": [
+      "Pharma CRM",
+      "Key Account Management",
+      "Regulatory Knowledge",
+      "Specialty Pharma"
+    ],
+    "riasecType": "ESC",
+    "minQualification": "B.Pharm/BSc Life Sciences",
+    "entryBarrier": "Science graduation; fresher roles common",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "school_teacher",
+    "role": "School Teacher",
+    "field": "Education",
+    "entryLevelSalary": 280000,
+    "midLevelSalary": 500000,
+    "seniorSalary": 1200000,
+    "growthRating": "LOW",
+    "difficultyToEnter": "MEDIUM",
+    "typicalTimeToEnter": "2-3 years (B.Ed. required)",
+    "mustHaveSkills": [
+      "Subject Matter Expertise",
+      "Lesson Planning",
+      "Classroom Management",
+      "Student Assessment",
+      "Communication"
+    ],
+    "learnableSkills": [
+      "EdTech Tools (Google Classroom)",
+      "Differentiated Instruction",
+      "Special Needs Education",
+      "Educational Psychology"
+    ],
+    "riasecType": "SAE",
+    "minQualification": "Graduate + B.Ed. (mandatory); TET/CTET for government schools",
+    "entryBarrier": "B.Ed. degree + TET/CTET for government; private schools more flexible",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "edtech_content_creator",
+    "role": "EdTech Content Creator / Educator",
+    "field": "Education",
+    "entryLevelSalary": 400000,
+    "midLevelSalary": 900000,
+    "seniorSalary": 2500000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "MEDIUM",
+    "typicalTimeToEnter": "3-6 months",
+    "mustHaveSkills": [
+      "Subject Expertise",
+      "Content Scripting",
+      "Video Production Basics",
+      "Curriculum Design",
+      "Engagement Techniques"
+    ],
+    "learnableSkills": [
+      "Articulate Storyline",
+      "LMS Platforms",
+      "Video Editing",
+      "Student Analytics"
+    ],
+    "riasecType": "SAI",
+    "minQualification": "Any graduate with strong subject expertise",
+    "entryBarrier": "Demo lecture video; competitive exam expertise (JEE/NEET for top pay)",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "corporate_trainer",
+    "role": "Corporate Trainer (L&D)",
+    "field": "Education",
+    "entryLevelSalary": 500000,
+    "midLevelSalary": 1200000,
+    "seniorSalary": 2800000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "3-5 years domain experience",
+    "mustHaveSkills": [
+      "Instructional Design (ADDIE)",
+      "Facilitation Skills",
+      "Training Needs Analysis",
+      "Presentation Delivery",
+      "Adult Learning Principles"
+    ],
+    "learnableSkills": [
+      "Articulate Storyline/Rise",
+      "LMS (Moodle/Cornerstone)",
+      "Gamification",
+      "Psychometric Tools"
+    ],
+    "riasecType": "SEA",
+    "minQualification": "MBA/PGDM + domain expertise; ATD/CPLP certification valued",
+    "entryBarrier": "Domain expertise first; instructional design certification bridges to L&D",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "tutor_coaching_faculty",
+    "role": "Tutor / Coaching Faculty",
+    "field": "Education",
+    "entryLevelSalary": 240000,
+    "midLevelSalary": 600000,
+    "seniorSalary": 3000000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "0-3 months",
+    "mustHaveSkills": [
+      "Subject Expertise",
+      "Teaching/Explanation Skills",
+      "Student Engagement",
+      "Exam Pattern Knowledge",
+      "Patience"
+    ],
+    "learnableSkills": [
+      "Online Teaching Platforms",
+      "Video Production",
+      "Assessment Design",
+      "Personal Branding"
+    ],
+    "riasecType": "SEI",
+    "minQualification": "Graduation in subject; no formal requirement for private tutoring",
+    "entryBarrier": "Low for private tutoring; competitive for top institutes (teaching demo required)",
+    "dataConfidence": "LOW"
+  },
+  {
+    "id": "bank_po",
+    "role": "Bank PO (Probationary Officer)",
+    "field": "Government",
+    "entryLevelSalary": 840000,
+    "midLevelSalary": 1400000,
+    "seniorSalary": 3000000,
+    "growthRating": "LOW",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "1-3 years exam preparation",
+    "mustHaveSkills": [
+      "Quantitative Aptitude",
+      "Reasoning Ability",
+      "English Proficiency",
+      "Financial Awareness",
+      "Customer Service"
+    ],
+    "learnableSkills": [
+      "NPA Management",
+      "MSME Lending",
+      "Forex Basics",
+      "Core Banking (Finacle)"
+    ],
+    "riasecType": "CES",
+    "minQualification": "Any graduate; IBPS PO / SBI PO exam; age limit 20-30 years",
+    "entryBarrier": "Competitive exam clearance; extremely high competition (50L+ applicants for ~4000 seats)",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "civil_services_ias_ips",
+    "role": "Civil Services Officer (IAS/IPS)",
+    "field": "Government",
+    "entryLevelSalary": 1000000,
+    "midLevelSalary": 2000000,
+    "seniorSalary": 3000000,
+    "growthRating": "LOW",
+    "difficultyToEnter": "VERY HIGH",
+    "typicalTimeToEnter": "3-7 years preparation",
+    "mustHaveSkills": [
+      "General Studies Breadth",
+      "Essay Writing",
+      "Interview/Personality Skills",
+      "Current Affairs",
+      "Administrative Aptitude"
+    ],
+    "learnableSkills": [
+      "Public Policy Analysis",
+      "Law/Governance",
+      "Optional Subject Specialization"
+    ],
+    "riasecType": "ESI",
+    "minQualification": "Any graduate; UPSC Civil Services Exam; age limit 21-32 years (General)",
+    "entryBarrier": "UPSC exam — among hardest competitive exams globally; 0.1% selection rate",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "psu_engineer",
+    "role": "PSU Engineer",
+    "field": "Government",
+    "entryLevelSalary": 1400000,
+    "midLevelSalary": 2000000,
+    "seniorSalary": 3500000,
+    "growthRating": "LOW",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "GATE preparation 1-2 years",
+    "mustHaveSkills": [
+      "Core Engineering (discipline-specific)",
+      "GATE Score",
+      "Technical Problem Solving",
+      "Drawing Reading",
+      "Safety Protocols"
+    ],
+    "learnableSkills": [
+      "SAP for PSUs",
+      "Project Management",
+      "Contract Management",
+      "Technical Report Writing"
+    ],
+    "riasecType": "RIC",
+    "minQualification": "B.E./B.Tech; GATE score mandatory for most Maharatna/Navratna PSUs",
+    "entryBarrier": "GATE exam + PSU-specific GDPI; ONGC/NTPC/BHEL highly competitive",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "defence_officer",
+    "role": "Defence Officer (Army/Navy/Air Force)",
+    "field": "Government",
+    "entryLevelSalary": 1000000,
+    "midLevelSalary": 1800000,
+    "seniorSalary": 2800000,
+    "growthRating": "LOW",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "NDA (after 12th) or CDS/AFCAT (after graduation); 3-4 year process",
+    "mustHaveSkills": [
+      "Physical Fitness",
+      "Leadership Aptitude",
+      "Disciplined Mindset",
+      "Teamwork",
+      "Patriotic Motivation"
+    ],
+    "learnableSkills": [
+      "Weapons Training",
+      "Strategy/Tactics",
+      "Signaling",
+      "Administration"
+    ],
+    "riasecType": "RES",
+    "minQualification": "Graduate (CDS/AFCAT) or 12th pass (NDA); physical + medical standards mandatory",
+    "entryBarrier": "NDA/CDS/AFCAT exam + SSB interview (5-day psychological selection); Agnipath scheme for short service",
+    "dataConfidence": "HIGH"
+  },
+  {
+    "id": "electrician",
+    "role": "Electrician",
+    "field": "Skilled Trades",
+    "entryLevelSalary": 180000,
+    "midLevelSalary": 360000,
+    "seniorSalary": 900000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "2 years (ITI course)",
+    "mustHaveSkills": [
+      "Electrical Wiring",
+      "Circuit Reading",
+      "Safety Standards",
+      "Tool Proficiency",
+      "Basic Troubleshooting"
+    ],
+    "learnableSkills": [
+      "Industrial Electrical Systems",
+      "Solar/EV Installation",
+      "PLC Programming",
+      "Contractor Business Skills"
+    ],
+    "riasecType": "RIC",
+    "minQualification": "ITI (Electrician) / Diploma; wireman license for independent work",
+    "entryBarrier": "ITI certification; Class B/A electrician license from state electricity board",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "chef",
+    "role": "Chef / Culinary Professional",
+    "field": "Skilled Trades",
+    "entryLevelSalary": 240000,
+    "midLevelSalary": 600000,
+    "seniorSalary": 2000000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "MEDIUM",
+    "typicalTimeToEnter": "3 years (hotel management degree/diploma)",
+    "mustHaveSkills": [
+      "Culinary Techniques",
+      "Food Safety/HACCP",
+      "Kitchen Management",
+      "Recipe Development",
+      "Hygiene Standards"
+    ],
+    "learnableSkills": [
+      "International Cuisine Specialization",
+      "Pastry Arts",
+      "Food Costing",
+      "Menu Engineering",
+      "Cloud Kitchen Ops"
+    ],
+    "riasecType": "RAE",
+    "minQualification": "Hotel Management (IHM) diploma/degree; culinary internship essential",
+    "entryBarrier": "3-year hotel management + kitchen apprenticeship; specialization helps",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "fitness_trainer",
+    "role": "Fitness Trainer / Coach",
+    "field": "Skilled Trades",
+    "entryLevelSalary": 240000,
+    "midLevelSalary": 480000,
+    "seniorSalary": 1500000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "3-6 months",
+    "mustHaveSkills": [
+      "Exercise Science",
+      "Program Design",
+      "Client Assessment",
+      "Motivation/Coaching",
+      "Anatomy Knowledge"
+    ],
+    "learnableSkills": [
+      "Nutrition Basics",
+      "Online Coaching",
+      "Group Fitness Instruction",
+      "Injury Prevention",
+      "Wearable Tech"
+    ],
+    "riasecType": "SRA",
+    "minQualification": "ACE/NASM/ISSA certification; BSc Sports Science is a differentiator",
+    "entryBarrier": "International certification (ACE/NASM); practical experience at established gym",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "plumber",
+    "role": "Plumber",
+    "field": "Skilled Trades",
+    "entryLevelSalary": 120000,
+    "midLevelSalary": 300000,
+    "seniorSalary": 800000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "2 years (ITI) or apprenticeship",
+    "mustHaveSkills": [
+      "Pipe Fitting",
+      "Plumbing Systems Knowledge",
+      "Leak Detection",
+      "Safety Standards",
+      "Hand Tool Proficiency"
+    ],
+    "learnableSkills": [
+      "Water Treatment Systems",
+      "Gas Fitting",
+      "Contractor Business Skills",
+      "Urban Infrastructure Projects"
+    ],
+    "riasecType": "RCI",
+    "minQualification": "ITI (Plumber); apprenticeship under licensed plumber",
+    "entryBarrier": "ITI certification; independent contracting potential with licensing",
+    "dataConfidence": "LOW"
+  },
+  {
+    "id": "automotive_technician",
+    "role": "Automotive Technician",
+    "field": "Skilled Trades",
+    "entryLevelSalary": 150000,
+    "midLevelSalary": 360000,
+    "seniorSalary": 1000000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "2 years (ITI/Diploma)",
+    "mustHaveSkills": [
+      "Vehicle Diagnostics",
+      "Engine Repair",
+      "Electrical Systems",
+      "Safety Protocols",
+      "Tool Proficiency"
+    ],
+    "learnableSkills": [
+      "EV Battery Systems",
+      "OBD-II Diagnostics",
+      "CNC Tools",
+      "Dealership Management Software"
+    ],
+    "riasecType": "RIC",
+    "minQualification": "ITI (Automobile Engineering) / Diploma; EV certification increasingly valuable",
+    "entryBarrier": "ITI + dealership apprenticeship; EV training from OEM (Ola, Tata Motors) programs",
+    "dataConfidence": "MEDIUM"
+  },
+  {
+    "id": "ecommerce_seller",
+    "role": "E-commerce Seller (Amazon/Flipkart)",
+    "field": "Entrepreneurial",
+    "entryLevelSalary": 240000,
+    "midLevelSalary": 900000,
+    "seniorSalary": 5000000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "1-3 months to launch",
+    "mustHaveSkills": [
+      "Product Sourcing",
+      "Marketplace Management",
+      "Inventory Planning",
+      "Basic Digital Marketing",
+      "GST/Accounting Basics"
+    ],
+    "learnableSkills": [
+      "Amazon PPC",
+      "Catalog Optimization",
+      "Pricing Analytics",
+      "Brand Registry",
+      "Cross-border Selling"
+    ],
+    "riasecType": "ECR",
+    "minQualification": "None formal; GST registration required",
+    "entryBarrier": "Capital for initial inventory; product research; platform learning curve",
+    "dataConfidence": "LOW"
+  },
+  {
+    "id": "freelance_consultant",
+    "role": "Freelance Consultant",
+    "field": "Entrepreneurial",
+    "entryLevelSalary": 400000,
+    "midLevelSalary": 1000000,
+    "seniorSalary": 4000000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "HIGH",
+    "typicalTimeToEnter": "Requires 5-10 years domain expertise first",
+    "mustHaveSkills": [
+      "Domain Expertise",
+      "Client Communication",
+      "Proposal Writing",
+      "Problem Solving",
+      "Self-Management"
+    ],
+    "learnableSkills": [
+      "LinkedIn Personal Branding",
+      "Digital Marketing",
+      "International Client Acquisition",
+      "Contract Management"
+    ],
+    "riasecType": "EIA",
+    "minQualification": "Domain expertise (MBA/CA/CFA for management/finance); no formal consulting degree required",
+    "entryBarrier": "Proven track record in domain; strong professional network; first 2-3 clients hardest",
+    "dataConfidence": "LOW"
+  },
+  {
+    "id": "freelance_graphic_designer",
+    "role": "Freelance Graphic Designer",
+    "field": "Entrepreneurial",
+    "entryLevelSalary": 240000,
+    "midLevelSalary": 800000,
+    "seniorSalary": 2500000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "3-6 months portfolio building",
+    "mustHaveSkills": [
+      "Adobe Creative Suite",
+      "Visual Design",
+      "Brand Identity",
+      "Client Communication",
+      "Project Management"
+    ],
+    "learnableSkills": [
+      "Motion Graphics",
+      "3D Design",
+      "AI Tools (Midjourney)",
+      "International Platform Profiles (Upwork/Fiverr)"
+    ],
+    "riasecType": "AER",
+    "minQualification": "None formal; strong Behance/Dribbble portfolio",
+    "entryBarrier": "Portfolio; first 5-star reviews on freelance platforms",
+    "dataConfidence": "LOW"
+  },
+  {
+    "id": "youtuber_content_creator",
+    "role": "YouTuber / Independent Content Creator",
+    "field": "Entrepreneurial",
+    "entryLevelSalary": 240000,
+    "midLevelSalary": 1300000,
+    "seniorSalary": 10000000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "12-24 months to meaningful monetization",
+    "mustHaveSkills": [
+      "Content Strategy",
+      "Video Production Basics",
+      "Audience Understanding",
+      "Consistency",
+      "Niche Expertise"
+    ],
+    "learnableSkills": [
+      "SEO for YouTube",
+      "Thumbnail Design",
+      "Brand Deals Negotiation",
+      "Community Building",
+      "Multi-platform Distribution"
+    ],
+    "riasecType": "AEC",
+    "minQualification": "None; smartphone and internet access minimum",
+    "entryBarrier": "1000 subscribers + 4000 watch hours for monetization; 12-24 months consistent effort typical",
+    "dataConfidence": "LOW"
+  },
+  {
+    "id": "dropshipping_entrepreneur",
+    "role": "Dropshipping Entrepreneur",
+    "field": "Entrepreneurial",
+    "entryLevelSalary": 180000,
+    "midLevelSalary": 700000,
+    "seniorSalary": 3500000,
+    "growthRating": "MEDIUM",
+    "difficultyToEnter": "LOW",
+    "typicalTimeToEnter": "3-6 months to profitability (many fail first year)",
+    "mustHaveSkills": [
+      "Product Research",
+      "Digital Marketing (Meta/Google Ads)",
+      "Shopify/WooCommerce",
+      "Customer Service",
+      "Basic Analytics"
+    ],
+    "learnableSkills": [
+      "CRO (Conversion Rate Optimization)",
+      "Email Marketing",
+      "Influencer Marketing",
+      "International Supplier Sourcing"
+    ],
+    "riasecType": "ECR",
+    "minQualification": "None formal; digital marketing knowledge essential",
+    "entryBarrier": "Marketing budget for ad testing; high failure rate (~80% in first year); quick commerce threat",
+    "dataConfidence": "LOW"
+  }
+];
+
+// 2. TELEMETRY ANALYTICS
+// Local Storage Analytics Engine for Dynamic Career Guidance Tool
+
+const STORAGE_KEYS = {
+  COMPLETIONS: "career_guidance_completions",
+  CLICKS: "career_guidance_clicks",
+  RECOMMENDATIONS_COUNT: "career_guidance_recommendations_count",
+  CLICKED_ROLES_COUNT: "career_guidance_clicked_roles_count"
+};
+
+// Initialize logs if they don't exist
+const getStoredJSON = (key, defaultValue = []) => {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : defaultValue;
+  } catch (e) {
+    console.error("Error reading localStorage key: " + key, e);
+    return defaultValue;
+  }
+};
+
+const setStoredJSON = (key, data) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (e) {
+    console.error("Error writing localStorage key: " + key, e);
+  }
+};
+
+const logFormCompletion = (userData, recommendations) => {
+  const completions = getStoredJSON(STORAGE_KEYS.COMPLETIONS);
+  const completionEvent = {
+    timestamp: new Date().toISOString(),
+    userProfile: {
+      qualification: userData.qualification,
+      currentStatus: userData.currentStatus,
+      experienceYears: userData.experienceYears,
+      skillsCount: userData.skills ? userData.skills.length : 0,
+      interestsCount: userData.interests ? userData.interests.length : 0,
+      category: userData.category
+    },
+    recommendations: recommendations.map(r => ({ id: r.id, role: r.role, matchScore: r.matchScore }))
+  };
+  
+  completions.push(completionEvent);
+  setStoredJSON(STORAGE_KEYS.COMPLETIONS, completions);
+
+  // Update recommendations tally
+  const recTally = getStoredJSON(STORAGE_KEYS.RECOMMENDATIONS_COUNT, {});
+  recommendations.forEach(r => {
+    recTally[r.role] = (recTally[r.role] || 0) + 1;
+  });
+  setStoredJSON(STORAGE_KEYS.RECOMMENDATIONS_COUNT, recTally);
+};
+
+const logRoadmapClick = (roleId, roleName) => {
+  const clicks = getStoredJSON(STORAGE_KEYS.CLICKS);
+  const clickEvent = {
+    timestamp: new Date().toISOString(),
+    roleId,
+    roleName
+  };
+  
+  clicks.push(clickEvent);
+  setStoredJSON(STORAGE_KEYS.CLICKS, clicks);
+
+  // Update clicks tally
+  const clickTally = getStoredJSON(STORAGE_KEYS.CLICKED_ROLES_COUNT, {});
+  clickTally[roleName] = (clickTally[roleName] || 0) + 1;
+  setStoredJSON(STORAGE_KEYS.CLICKED_ROLES_COUNT, clickTally);
+};
+
+const getAnalyticsSummary = () => {
+  const completions = getStoredJSON(STORAGE_KEYS.COMPLETIONS);
+  const clicks = getStoredJSON(STORAGE_KEYS.CLICKS);
+  const recommendationsCount = getStoredJSON(STORAGE_KEYS.RECOMMENDATIONS_COUNT, {});
+  const clickedRolesCount = getStoredJSON(STORAGE_KEYS.CLICKED_ROLES_COUNT, {});
+
+  return {
+    totalCompletions: completions.length,
+    totalRoadmapClicks: clicks.length,
+    recommendationsCount,
+    clickedRolesCount,
+    rawEvents: {
+      completions,
+      clicks
+    }
+  };
+};
+
+const clearAnalytics = () => {
+  localStorage.removeItem(STORAGE_KEYS.COMPLETIONS);
+  localStorage.removeItem(STORAGE_KEYS.CLICKS);
+  localStorage.removeItem(STORAGE_KEYS.RECOMMENDATIONS_COUNT);
+  localStorage.removeItem(STORAGE_KEYS.CLICKED_ROLES_COUNT);
+};
+
+const exportAnalyticsJSON = () => {
+  const summary = getAnalyticsSummary();
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(summary, null, 2));
+  const downloadAnchor = document.createElement("a");
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", `career_guidance_analytics_${new Date().toISOString().slice(0,10)}.json`);
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+};
+
+// 3. MATCHING LOGIC
+// STORAGE KEYS for API configurations
+const CONFIG_KEYS = {
+  GEMINI_KEY: "career_guidance_gemini_key",
+  USE_MOCK: "career_guidance_use_mock"
+};
+
+// Retrieve API configurations
+const getApiConfig = () => {
+  const envKey = "" || "";
+  return {
+    geminiKey: localStorage.getItem(CONFIG_KEYS.GEMINI_KEY) || envKey || "",
+    useMock: localStorage.getItem(CONFIG_KEYS.USE_MOCK) !== "false" // default to true
+  };
+};
+
+const setApiConfig = (key, useMock) => {
+  localStorage.setItem(CONFIG_KEYS.GEMINI_KEY, key);
+  localStorage.setItem(CONFIG_KEYS.USE_MOCK, useMock.toString());
+};
+
+// Real transition case studies extracted from Category 2 of the Research Report
+const reportCaseStudies = [
+  {
+    id: "tech_to_pm",
+    from: "Backend Software Engineer (Java, 4 years, IT services firm)",
+    to: "Associate Product Manager at fintech startup",
+    age: 27,
+    timeTaken: "14 months",
+    steps: "Completed Reforge/Product School PM courses; built portfolio documenting product thinking; leveraged internal referral; took APM role at smaller startup; networked via LinkedIn.",
+    outcome: "Successfully transitioned into product management role at a fast-growing fintech startup."
+  },
+  {
+    id: "teaching_to_training",
+    from: "High school Science teacher (private school, 6 years)",
+    to: "L&D Specialist / Corporate Trainer at IT company",
+    age: 31,
+    timeTaken: "10 months",
+    steps: "Got certified in Instructional Design (ATD); reframed teaching skills as 'adult learning facilitation'; applied directly to L&D teams in mid-tier IT service companies.",
+    outcome: "Secured L&D Specialist position with a 60% salary increase from school teaching salary."
+  },
+  {
+    id: "mech_to_analyst",
+    from: "Mechanical Engineer at manufacturing PSU (5 years)",
+    to: "Data Analyst at e-commerce company",
+    age: 28,
+    timeTaken: "12 months",
+    steps: "Self-learned SQL and Python via YouTube/Coursera; completed Google Data Analytics certificate; built 3 comprehensive portfolio projects on GitHub using public e-commerce transaction logs.",
+    outcome: "Broke into tech data analytics starting at 7.8 LPA."
+  },
+  {
+    id: "finance_to_dev",
+    from: "Bank Clerk/Officer (2 years post-probation)",
+    to: "Junior Full Stack Developer at startup",
+    age: 26,
+    timeTaken: "12 months",
+    steps: "Enrolled in a 6-month coding bootcamp (MERN stack); built multiple web applications; collaborated on open-source code and networked via bootcamp alumni.",
+    outcome: "Secured developer position at a logistics tech startup starting at 6.5 LPA."
+  },
+  {
+    id: "marketing_to_ux",
+    from: "Digital Marketing Executive (3 years)",
+    to: "UX/UI Designer at product company",
+    age: 26,
+    timeTaken: "11 months",
+    steps: "Utilized user research experience from marketing; completed Google UX Design Certificate; built Figma portfolio with 5 detailed redesign case studies showing user testing and iterations.",
+    outcome: "Landed product designer position at 7.2 LPA."
+  },
+  {
+    id: "audit_to_finance",
+    from: "Chartered Accountant practicing in audit firm (5 years)",
+    to: "Senior Finance Analyst at global tech company",
+    age: 32,
+    timeTaken: "6 months",
+    steps: "Upskilled in financial modeling and Power BI; applied via LinkedIn referrals; CA credentials gave immediate credibility.",
+    outcome: "Transitioned from traditional auditing to tech financial planning and analysis."
+  },
+  {
+    id: "support_to_cyber",
+    from: "L1/L2 IT Support Engineer (3 years)",
+    to: "Junior Cybersecurity Analyst (SOC)",
+    age: 25,
+    timeTaken: "8 months",
+    steps: "Completed CompTIA Security+ and CEH; practiced on TryHackMe/HackTheBox; leveraged IT support networking knowledge as a major advantage during interviews.",
+    outcome: "Broke into security operations center (SOC) at 6.0 LPA."
+  },
+  {
+    id: "sales_to_hospital",
+    from: "Medical Sales Representative (7 years, pharma MNC)",
+    to: "Operations Manager at corporate hospital chain",
+    age: 34,
+    timeTaken: "2 years",
+    steps: "Completed 1-year Executive MBA in Hospital Management while working; leveraged pharma domain knowledge to position for clinical operations; networked via hospital associations.",
+    outcome: "Landed operations management role at a corporate hospital chain in a tier-2 city."
+  },
+  {
+    id: "designer_to_strategist",
+    from: "Junior Graphic Designer at creative agency (4 years)",
+    to: "Brand Strategy Lead at D2C startup",
+    age: 28,
+    timeTaken: "8 months",
+    steps: "Proactively took on brand positioning projects at agency; got mentorship in marketing; pitched internally and moved to a D2C startup where role boundaries were flexible.",
+    outcome: "Switched from visual layout work to high-level branding strategy."
+  },
+  {
+    id: "mba_to_scientist",
+    from: "Marketing MBA working in FMCG brand management (3 years)",
+    to: "Data Scientist at retail analytics firm",
+    age: 29,
+    timeTaken: "18 months",
+    steps: "Started with advanced Excel/Tableau; progressed to Python; completed IBM Data Science professional certificate; built retail analytics portfolio (domain-relevant).",
+    outcome: "Leveraged business context to land retail data science role at 11.2 LPA."
+  }
+];
+
+// Helper to generate a dynamic roadmap and find relevant case studies for mock/local fallback
+const getFallbackRoadmapAndCaseStudies = (role) => {
+  const fieldLower = role.field.toLowerCase();
+  const roleNameLower = role.role.toLowerCase();
+  
+  // 1. Phased Roadmap generation based on the Field
+  let roadmap = { phase1: [], phase2: [], phase3: [] };
+  
+  const m1 = role.mustHaveSkills[0] || "core principles";
+  const m2 = role.mustHaveSkills[1] || "industry practices";
+  const m3 = role.mustHaveSkills[2] || "essential tools";
+  const l1 = (role.learnableSkills && role.learnableSkills[0]) || "advanced tools";
+  const l2 = (role.learnableSkills && role.learnableSkills[1]) || "specialized skills";
+
+  if (fieldLower.includes("tech") || fieldLower.includes("developer")) {
+    roadmap.phase1 = [
+      `Master Foundational Theory: Learn syntaxes and basics of ${m1} and ${m2}.`,
+      `Set up development environment: Install IDEs, and configure a GitHub profile to track daily commits.`,
+      `Learn basic data formatting (JSON, SQL querying, or API structures).`
+    ];
+    roadmap.phase2 = [
+      `Application & Projects: Practice building 3 mini-projects using ${m3} and check code on GitHub.`,
+      `Begin basic algorithms: Solve 50+ simple coding or logical analysis exercises on LeetCode or HackerRank.`,
+      `Learn a primary framework (e.g. React for UI, Node.js for backend, or Tableau/Power BI for data).`
+    ];
+    roadmap.phase3 = [
+      `Portfolio Consolidation: Build 1 complex full-stack application or design system.`,
+      `Upskill in advanced tooling: Study basics of ${l1} or ${l2}.`,
+      `Interview Prep: Build a clean resume, polish your LinkedIn profile, and apply to 10-15 internships or startup junior roles.`
+    ];
+  } else if (fieldLower.includes("creative") || fieldLower.includes("graphic") || fieldLower.includes("video")) {
+    roadmap.phase1 = [
+      `Master Creative Software: Learn UI shortcuts and core features of ${m1} and ${m2}.`,
+      `Study composition: Read about grids, typography, pacing, and visual storytelling.`,
+      `Recreate high-quality designs or video styles of top brands to learn techniques.`
+    ];
+    roadmap.phase2 = [
+      `Client Brief Practice: Design/edit 4 dummy projects based on real-world briefs (e.g., social media ad, 60s Reel, website copy).`,
+      `Upskill in secondary tools: Learn basics of ${l1} or ${l2} to make your work stand out.`,
+      `Join design/content Discord communities to get constructive feedback.`
+    ];
+    roadmap.phase3 = [
+      `Create your Showreel/Portfolio: Upload your best 3 pieces to Behance, YouTube, or a custom portfolio site.`,
+      `Cold Outreach Sprint: Proactively message 10 creators or marketing agencies presenting mock improvements of their work.`,
+      `Set up freelancing profiles (Fiverr, Upwork) and pitch for local gig contracts.`
+    ];
+  } else if (fieldLower.includes("business") || fieldLower.includes("marketing") || fieldLower.includes("sales") || fieldLower.includes("hr")) {
+    roadmap.phase1 = [
+      `Study Business Fundamentals: Understand KPIs, metrics, and core workflows of ${m1}.`,
+      `Get Certified: Secure certifications in CRM platforms (Salesforce, HubSpot) or Analytics (Google Analytics 4).`,
+      `Read 3 industry case studies to understand strategic campaign/operations decision-making.`
+    ];
+    roadmap.phase2 = [
+      `Hands-on Practice: Manage social media or optimize local search results for a local business for free.`,
+      `Master core business tools: Create financial spreadsheets or project timelines using ${m3} and ${l1}.`,
+      `Draft mock business development plans or recruitment scripts to practice.`
+    ];
+    roadmap.phase3 = [
+      `Build a Business Case Portfolio: Detail your strategic ideas and the measurable metrics they target.`,
+      `Network Sprint: Reach out to alumni in similar roles on LinkedIn and request informational interviews.`,
+      `Apply to Business Associate, Junior Analyst, or management trainee programs.`
+    ];
+  } else {
+    // Default / Vocational / Trades / Healthcare-adjacent
+    roadmap.phase1 = [
+      `Theory & Safety: Understand process safety guidelines, human anatomy, or basic regulations in ${role.role}.`,
+      `Enrol in an entry-level certification course recognized by major local employers.`,
+      `Study basic client servicing and customer communication skills.`
+    ];
+    roadmap.phase2 = [
+      `Hands-on Practice: Work with equipment or practice methods for ${m1} and ${m2}.`,
+      `Apprentice work: Assist a senior practitioner or join an entry-level clinic, kitchen, or workshop floor.`,
+      `Obtain basic first-aid, CPR, or equivalent safety certifications.`
+    ];
+    roadmap.phase3 = [
+      `Secure Licensing: Complete your official exam or state certificate if required.`,
+      `Create a local/digital brand: List services on Google Business, local trade apps, or social media.`,
+      `Apply for full-time trainer, associate, or assistant roles at established outlets.`
+    ];
+  }
+
+  // 2. Case study mapping
+  let caseStudies = [];
+  
+  if (roleNameLower.includes("developer") || roleNameLower.includes("software")) {
+    caseStudies = [reportCaseStudies[3]]; // Bank Clerk to Full Stack Dev
+  } else if (roleNameLower.includes("analyst") && fieldLower.includes("tech")) {
+    caseStudies = [reportCaseStudies[2]]; // Mechanical Eng to Data Analyst
+  } else if (roleNameLower.includes("scientist")) {
+    caseStudies = [reportCaseStudies[9]]; // MBA to Data Scientist
+  } else if (roleNameLower.includes("ux") || roleNameLower.includes("ui") || roleNameLower.includes("designer")) {
+    caseStudies = [reportCaseStudies[4]]; // Marketing Executive to UX Designer
+  } else if (roleNameLower.includes("product manager")) {
+    caseStudies = [reportCaseStudies[0]]; // Tech to PM
+  } else if (roleNameLower.includes("trainer") || roleNameLower.includes("teacher")) {
+    caseStudies = [reportCaseStudies[1]]; // Teacher to Corporate Trainer
+  } else if (roleNameLower.includes("finance") || roleNameLower.includes("accounting")) {
+    caseStudies = [reportCaseStudies[5]]; // CA to Tech Finance Analyst
+  } else if (roleNameLower.includes("cybersecurity") || roleNameLower.includes("security")) {
+    caseStudies = [reportCaseStudies[6]]; // Support to Cybersecurity Analyst
+  } else if (roleNameLower.includes("administrator") || roleNameLower.includes("operations")) {
+    caseStudies = [reportCaseStudies[7]]; // Pharma Sales to Hospital Admin
+  } else if (roleNameLower.includes("strategist") || roleNameLower.includes("brand")) {
+    caseStudies = [reportCaseStudies[8]]; // Designer to Strategist
+  } else {
+    // Default case studies based on field
+    if (fieldLower.includes("tech")) {
+      caseStudies = [reportCaseStudies[3]];
+    } else if (fieldLower.includes("creative")) {
+      caseStudies = [reportCaseStudies[8]];
+    } else {
+      caseStudies = [reportCaseStudies[1]];
+    }
+  }
+
+  return { roadmap, caseStudies };
+};
+
+// LOCAL MATCHING ALGORITHM (Mock Mode & Grounded Fallback)
+// -------------------------------------------------------------
+const calculateLocalMatches = (userData, availableRoles = reportRoles) => {
+  const { 
+    qualification, 
+    ugSpecialization = "", 
+    pgSpecialization = "", 
+    currentStatus, 
+    currentRole = "",
+    experienceYears, 
+    priorIndustry = "",
+    priorRole = "",
+    skills = [], 
+    interests = [], 
+    category, 
+    targetRoleId 
+  } = userData;
+
+  const matches = availableRoles.map(role => {
+    const roleFieldLower = role.field.toLowerCase();
+    const roleTitleLower = role.role.toLowerCase();
+
+    // ---------------------------------------------------------
+    // 1. CAPABILITY SCORE (60% Weight of overall score)
+    // Measures how strong the user's hard profile is for this role.
+    // ---------------------------------------------------------
+    
+    // A. Skills Overlap (45% of Capability)
+    const userSkillsLower = skills.map(s => s.toLowerCase().trim());
+    const mustHaveLower = role.mustHaveSkills.map(s => s.toLowerCase());
+    let mustHaveMatched = 0;
+    
+    mustHaveLower.forEach(mh => {
+      if (userSkillsLower.some(us => us.includes(mh) || mh.includes(us))) {
+        mustHaveMatched++;
+      }
+    });
+    const skillsScore = mustHaveLower.length > 0 ? (mustHaveMatched / mustHaveLower.length) * 100 : 0;
+
+    // B. Education Match (35% of Capability)
+    let eduScore = 50; // baseline
+    const pgLower = pgSpecialization.toLowerCase();
+    const ugLower = ugSpecialization.toLowerCase();
+    const minQualLower = role.minQualification.toLowerCase();
+
+    // Check postgrad first if they have PG degree
+    if (qualification.includes("Master's") && pgLower) {
+      if (
+        pgLower.includes("mba") && (roleFieldLower.includes("business") || roleFieldLower.includes("marketing") || roleFieldLower.includes("sales") || roleFieldLower.includes("hr")) ||
+        pgLower.includes("mca") && roleFieldLower.includes("tech") ||
+        pgLower.includes("m.tech") && roleFieldLower.includes("tech")
+      ) {
+        eduScore = 95;
+      }
+    }
+
+    // Check undergrad
+    if (ugLower) {
+      if (
+        (ugLower.includes("tech") || ugLower.includes("bca") || ugLower.includes("engineering")) && roleFieldLower.includes("tech") ||
+        (ugLower.includes("bba") || ugLower.includes("commerce") || ugLower.includes("finance")) && (roleFieldLower.includes("business") || roleFieldLower.includes("corporate") || roleFieldLower.includes("finance"))
+      ) {
+        eduScore = Math.max(eduScore, 90);
+      }
+    }
+
+    // Check general baseline eligibility
+    if (minQualLower.includes("any graduate") || minQualLower.includes("open to all") || minQualLower.includes("12th") || minQualLower.includes("10th")) {
+      eduScore = Math.max(eduScore, 85);
+    }
+
+    // C. Experience Relevance (20% of Capability)
+    // Highly rewards past industry and role matching!
+    let expScore = 40; // baseline for pivots
+    const priorRoleLower = priorRole.toLowerCase().trim();
+    const currentRoleLower = currentRole.toLowerCase().trim();
+
+    // Check if prior role matches or is adjacent to target role
+    if (priorRoleLower && (priorRoleLower.includes(roleTitleLower) || roleTitleLower.includes(priorRoleLower))) {
+      expScore = 100;
+    } else if (currentRoleLower && (currentRoleLower.includes(roleTitleLower) || roleTitleLower.includes(currentRoleLower))) {
+      expScore = 95;
+    } else {
+      // Check prior industry overlap
+      const priorIndLower = priorIndustry.toLowerCase();
+      if (
+        priorIndLower.includes("tech") && roleFieldLower.includes("tech") ||
+        priorIndLower.includes("finance") && roleFieldLower.includes("finance") ||
+        priorIndLower.includes("marketing") && roleFieldLower.includes("marketing") ||
+        priorIndLower.includes("sales") && roleFieldLower.includes("sales")
+      ) {
+        expScore = 80;
+      }
+    }
+
+    // Boost experience score based on years of work
+    if (experienceYears >= 3 && expScore >= 80) {
+      expScore = Math.min(100, expScore + 10);
+    }
+
+    const capabilityScore = Math.round((skillsScore * 0.45) + (eduScore * 0.35) + (expScore * 0.20));
+
+    // ---------------------------------------------------------
+    // 2. INTEREST SCORE (40% Weight of overall score)
+    // Measures alignment with interests/RIASEC type.
+    // ---------------------------------------------------------
+    const userInterestsLower = interests.map(i => i.toLowerCase().trim());
+    let interestMatches = 0;
+    
+    userInterestsLower.forEach(interest => {
+      if (
+        roleTitleLower.includes(interest) ||
+        roleFieldLower.includes(interest) ||
+        role.mustHaveSkills.some(s => s.toLowerCase().includes(interest))
+      ) {
+        interestMatches += 25;
+      }
+    });
+
+    let riasecProximity = 50; // baseline
+    if (category === "first_career" && role.riasecType.includes("S")) riasecProximity += 20;
+    if (category === "complete_pivot" && role.riasecType.includes("A")) riasecProximity += 10;
+    if (category === "switch_role" && role.riasecType.includes("E")) riasecProximity += 15;
+
+    const interestScore = Math.round(Math.min(100, riasecProximity + interestMatches));
+
+    // ---------------------------------------------------------
+    // 3. TRANSITION SUCCESS RATE & COMBINED FIT
+    // ---------------------------------------------------------
+    
+    // Dynamic Fit score combines Capability and Interest
+    const finalScore = Math.round((capabilityScore * 0.6) + (interestScore * 0.4));
+
+    // Success Rate estimates success probability based on capability vs role difficulty
+    let difficultyOffset = 15;
+    if (role.difficultyToEnter === "HIGH") difficultyOffset = 35;
+    else if (role.difficultyToEnter === "MEDIUM") difficultyOffset = 20;
+    else difficultyOffset = 8;
+
+    // Boost success rate if they have high relevant experience
+    const expBonus = (experienceYears > 0 && expScore >= 80) ? Math.min(15, experienceYears * 4) : 0;
+    const successRate = Math.round(Math.max(22, Math.min(98, (capabilityScore - difficultyOffset + expBonus))));
+
+    const { roadmap, caseStudies } = getFallbackRoadmapAndCaseStudies(role);
+
+    let dynamicReason = "";
+    if (isAdjacent(priorRole, role.role) || isAdjacent(currentRole, role.role)) {
+      dynamicReason = `High capability match! Builds directly on your prior background as a ${priorRole || currentRole}.`;
+    } else if (mustHaveMatched > 0) {
+      dynamicReason = `Good match! Utilizes your existing skills in ${skills.slice(0, 2).join(", ")}.`;
+    } else {
+      dynamicReason = `Aligned with your interest in ${interests.slice(0, 2).join(", ")}. Expect a slightly steeper skill pivot.`;
+    }
+
+    return {
+      ...role,
+      matchScore: finalScore,
+      capabilityScore,
+      interestScore,
+      successRate,
+      oneLineReason: dynamicReason,
+      roadmap,
+      caseStudies
+    };
+  });
+
+  // Helper to check title adjacency
+  function isAdjacent(roleA, roleB) {
+    if (!roleA || !roleB) return false;
+    const a = roleA.toLowerCase();
+    const b = roleB.toLowerCase();
+    return a.includes(b) || b.includes(a);
+  }
+
+  const sortedMatches = matches.sort((a, b) => b.matchScore - a.matchScore);
+
+  if (targetRoleId) {
+    const targetIdx = sortedMatches.findIndex(r => r.id === targetRoleId);
+    if (targetIdx !== -1) {
+      const targetRole = sortedMatches[targetIdx];
+      sortedMatches.splice(targetIdx, 1);
+      return [targetRole, ...sortedMatches.slice(0, 5)];
+    }
+  }
+
+  return sortedMatches.slice(0, 6);
+};
+
+// -------------------------------------------------------------
+// LIVE GEMINI API MATCHING
+// -------------------------------------------------------------
+const queryGeminiMatching = async (userData, rawReportMarkdown = "") => {
+  const { geminiKey } = getApiConfig();
+  if (!geminiKey) {
+    throw new Error("Gemini API key is not configured.");
+  }
+
+  // Use the compiled reportData roles if report file markdown is empty
+  const groundingContext = rawReportMarkdown || JSON.stringify(reportRoles, null, 2);
+
+  const prompt = `
+You are the AI Matcher and Career Advisor inside a premium Career Guidance tool for the Indian market.
+Your task is to analyze a user's profile and match them to the best 5-8 career paths selected *only* from the grounded career dataset provided below.
+
+USER PROFILE:
+- Category of transition: ${userData.category} (first_career = choosing first job, switch_role = switching roles in business/tech, complete_pivot = pivoting into a completely new field from scratch)
+- Highest qualification level: ${userData.qualification}
+- Undergraduate specialization: ${userData.ugSpecialization || "N/A"}
+- Postgraduate specialization: ${userData.pgSpecialization || "N/A"} (if applicable, e.g. MBA)
+- Current employment status: ${userData.currentStatus}
+- Current specific role/course: ${userData.currentRole || "N/A"}
+- Years of total work experience: ${userData.experienceYears} years
+- Prior industry: ${userData.priorIndustry || "N/A"}
+- Prior job title / role: ${userData.priorRole || "N/A"}
+- Current skills: ${userData.skills.join(", ")}
+- Interests/enjoyable activities: ${userData.interests.join(", ")}
+- Specific Dream / Target Role: ${userData.targetRoleId || "None selected"} (matches the role ID inside the grounding database)
+
+GROUNDING DATASET (REAL INDIAN CAREER ROLES, SALARIES, AND METHODOLOGY):
+${groundingContext}
+
+MATCHING METHODOLOGY RULES:
+1. Calculate a dynamic "capabilityScore" (0-100%) indicating how strong their hard background (specializations, skills, prior industry/role) is for this role, and an "interestScore" (0-100%) indicating alignment with their interests and RIASEC types.
+2. The final "matchScore" is the combined score: (capabilityScore * 0.6) + (interestScore * 0.4).
+3. Calculate a dynamic "successRate" (0-100%) representing the likelihood of successfully landing this role. This is based on: capabilityScore minus a difficulty penalty (e.g. High difficulty = minus 30, Medium = minus 20, Low = minus 10), boosted by prior experience relevance (e.g. up to +15% for years of relevant industry experience). Keep it bounded between 20% and 99%.
+4. If a Specific Dream / Target Role is selected (not "None selected"), you MUST include this role as the first element in the returned JSON array (index 0), regardless of its match score. Generate the roadmap and details specifically showing the steps needed to transition from the user's current background to this target role.
+5. Select the top 5 to 7 other matching roles with the highest scores to follow the target role as additional recommendations.
+6. For each selected role, generate:
+   - A highly customized "oneLineReason" explaining *exactly* why they are a fit, referencing their specific skills, prior industry, or specializations.
+   - A tailored 3-phase transition roadmap (0-3 months, 3-6 months, 6-12 months). Avoid generic advice. Give actionable Indian-market actions (e.g. platform certifications, portfolio tasks, target companies).
+   - Dynamic benchmarking showing the entry-level, mid-level, and senior salary ranges in LPA (Lakhs Per Annum) based *strictly* on the grounding data.
+   - 1-2 realistic case study snippets of transitions matching this route.
+
+You MUST respond with a valid, clean, parseable JSON array. Do not include any markdown backticks, explanations, or text outside the JSON. The JSON must be an array of objects matching this exact structure:
+
+[
+  {
+    "id": "software_developer",
+    "role": "Software Developer",
+    "field": "Tech",
+    "matchScore": 88,
+    "capabilityScore": 92,
+    "interestScore": 82,
+    "successRate": 78,
+    "oneLineReason": "Your mechanical engineering undergrad and python skills match 3 of the 4 core requirements.",
+    "entryLevelSalary": 450000,
+    "midLevelSalary": 1000000,
+    "seniorSalary": 2400000,
+    "growthRating": "HIGH",
+    "difficultyToEnter": "MEDIUM",
+    "typicalTimeToEnter": "6-12 months",
+    "mustHaveSkills": ["JavaScript", "Python", "Data Structures"],
+    "learnableSkills": ["React", "Node.js"],
+    "riasecType": "IRC",
+    "minQualification": "B.Tech, BCA, or STEM",
+    "entryBarrier": "Technical screenings and portfolio",
+    "caseStudies": [
+      {
+        "from": "Mechanical Inspector",
+        "to": "Frontend Developer",
+        "age": 26,
+        "timeTaken": "8 months",
+        "steps": "Self-studied HTML/CSS/JS, built 5 portfolio projects, got an entry level role.",
+        "outcome": "Increased salary from 3.2L to 7.5L."
+      }
+    ],
+    "roadmap": {
+      "phase1": [
+        "Learn Python or JavaScript syntax basics.",
+        "Set up GitHub profile."
+      ],
+      "phase2": [
+        "Build 3-4 simple interactive DOM projects.",
+        "Start practicing DSA problems."
+      ],
+      "phase3": [
+        "Learn React.js framework.",
+        "Build a full-stack e-commerce project and apply to startups."
+      ]
+    }
+  }
+]
+`;
+
+  const models = [
+    "gemini-1.5-flash-latest",
+    "gemini-1.5-flash",
+    "gemini-2.0-flash",
+    "gemini-2.5-flash",
+    "gemini-1.5-pro-latest"
+  ];
+
+  let lastError = null;
+
+  for (const modelName of models) {
+    try {
+      console.log(`Querying Gemini API using model alias: ${modelName}...`);
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiKey}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: "application/json",
+              temperature: 0.2 // Factual alignment
+            }
+          })
+        }
+      );
+
+      if (!response.ok) {
+        const errData = await response.json();
+        // If the model is not found or is unsupported for generateContent (400/404), fallback and try the next model ID
+        if (response.status === 404 || response.status === 400) {
+          console.warn(`Model ${modelName} returned status ${response.status}: "${errData?.error?.message}". Trying next model alias...`);
+          lastError = new Error(errData?.error?.message || `Model ${modelName} returned status ${response.status}`);
+          continue;
+        }
+        throw new Error(errData?.error?.message || `HTTP error! Status: ${response.status}`);
+      }
+
+      const resJson = await response.json();
+      const responseText = resJson?.candidates?.[0]?.content?.parts?.[0]?.text;
+      
+      if (!responseText) {
+        throw new Error("No response text returned from Gemini API.");
+      }
+
+      let cleanText = responseText.trim();
+      if (cleanText.startsWith("```json")) {
+        cleanText = cleanText.substring(7);
+      }
+      if (cleanText.startsWith("```")) {
+        cleanText = cleanText.substring(3);
+      }
+      if (cleanText.endsWith("```")) {
+        cleanText = cleanText.substring(0, cleanText.length - 3);
+      }
+      cleanText = cleanText.trim();
+
+      const parsedResults = JSON.parse(cleanText);
+      if (!Array.isArray(parsedResults)) {
+        throw new Error("AI returned data that is not a JSON array.");
+      }
+
+      console.log(`Successfully matched career paths using model alias: ${modelName}`);
+      return parsedResults;
+    } catch (e) {
+      console.error(`Attempt with model alias ${modelName} failed:`, e);
+      lastError = e;
+    }
+  }
+
+  // If all models failed, throw the final accumulated error
+  throw new Error(`All Gemini models failed. Last error: ${lastError?.message}`);
+};
+
+// 4. MAIN CONTROLLER
+// Global App State
+const state = {
+  userProfile: {
+    qualification: "",
+    currentStatus: "",
+    experienceYears: 0,
+    skills: [],
+    interests: [],
+    category: "first_career" // default
+  },
+  currentStep: 1,
+  recommendations: [],
+  selectedRole: null,
+  rawReportMarkdown: "" // Dynamically loaded grounding report
+};
+
+// DOM Elements
+const views = {
+  assessment: document.getElementById("view-assessment"),
+  results: document.getElementById("view-results"),
+  details: document.getElementById("view-details"),
+  analytics: document.getElementById("view-analytics")
+};
+
+// Initialize Application
+document.addEventListener("DOMContentLoaded", () => {
+  initSettings();
+  setupWizard();
+  setupTagInputs();
+  setupFormSubmit();
+  setupNavigation();
+  loadResearchReport();
+});
+
+// -------------------------------------------------------------
+// 1. SETTINGS & MODAL ENGINE
+// -------------------------------------------------------------
+function initSettings() {
+  const modal = document.getElementById("modal-settings");
+  const btnSettings = document.getElementById("nav-btn-settings");
+  const btnClose = document.getElementById("modal-settings-close");
+  const btnCancel = document.getElementById("modal-settings-cancel");
+  const btnSave = document.getElementById("modal-settings-save");
+  
+  const toggleMock = document.getElementById("setting-toggle-mock");
+  const apiKeyGroup = document.getElementById("setting-api-key-group");
+  const apiKeyInput = document.getElementById("setting-gemini-key");
+
+  // Load config
+  const config = getApiConfig();
+  toggleMock.checked = config.useMock;
+  apiKeyInput.value = config.geminiKey;
+  
+  if (!config.useMock) {
+    apiKeyGroup.style.display = "block";
+  }
+
+  // Toggle API key visibility based on mock toggle
+  toggleMock.addEventListener("change", () => {
+    if (toggleMock.checked) {
+      apiKeyGroup.style.display = "none";
+    } else {
+      apiKeyGroup.style.display = "block";
+    }
+  });
+
+  // Modal actions
+  const openModal = () => modal.classList.add("active");
+  const closeModal = () => modal.classList.remove("active");
+
+  btnSettings.addEventListener("click", openModal);
+  btnClose.addEventListener("click", closeModal);
+  btnCancel.addEventListener("click", closeModal);
+
+  btnSave.addEventListener("click", () => {
+    setApiConfig(apiKeyInput.value.trim(), toggleMock.checked);
+    updateSourceBadge();
+    closeModal();
+  });
+
+  updateSourceBadge();
+}
+
+function updateSourceBadge() {
+  const badge = document.getElementById("matching-source-badge");
+  if (!badge) return;
+
+  const config = getApiConfig();
+  if (config.useMock) {
+    badge.innerHTML = `<span>ℹ️ Matches calculated using <strong>Mock Database Mode</strong>. Open Settings (⚙️) to configure live AI.</span>`;
+    badge.style.background = "rgba(245, 158, 11, 0.1)";
+    badge.style.borderColor = "rgba(245, 158, 11, 0.3)";
+  } else {
+    badge.innerHTML = `<span>⚡ Matches powered by <strong>Gemini 1.5 Flash AI</strong>. Grounded on real market benchmarks.</span>`;
+    badge.style.background = "rgba(16, 185, 129, 0.1)";
+    badge.style.borderColor = "rgba(16, 185, 129, 0.3)";
+  }
+}
+
+// -------------------------------------------------------------
+// 2. RESEARCH REPORT LOADER (Grounding Data)
+// -------------------------------------------------------------
+async function loadResearchReport() {
+  try {
+    // Attempt to load the report generated by the subagent
+    const response = await fetch("./research_report.md");
+    if (response.ok) {
+      state.rawReportMarkdown = await response.text();
+      console.log("Research report loaded successfully as grounding database!");
+    } else {
+      // Look in alternate path
+      const alternativeResponse = await fetch("/research_report.md");
+      if (alternativeResponse.ok) {
+        state.rawReportMarkdown = await alternativeResponse.text();
+        console.log("Research report loaded successfully from alternate path!");
+      }
+    }
+  } catch (e) {
+    console.warn("Could not load research_report.md. Live API will fall back to local JSON data structure.", e);
+  }
+}
+
+// -------------------------------------------------------------
+// 3. MULTI-STEP WIZARD FORM
+// -------------------------------------------------------------
+function setupWizard() {
+  const btnStep1Next = document.getElementById("btn-step1-next");
+  const btnStep2Prev = document.getElementById("btn-step2-prev");
+  const btnStep2Next = document.getElementById("btn-step2-next");
+  const btnStep3Prev = document.getElementById("btn-step3-prev");
+
+  const inputStatus = document.getElementById("input-status");
+  const containerStudent = document.getElementById("container-student-course");
+  const containerProfessional = document.getElementById("container-professional-title");
+  const jobDatalist = document.getElementById("job-titles-datalist");
+
+  // Populate Job Titles Autocomplete datalist dynamically from reportRoles
+  if (jobDatalist) {
+    jobDatalist.innerHTML = "";
+    reportRoles.forEach(r => {
+      const opt = document.createElement("option");
+      opt.value = r.role;
+      jobDatalist.appendChild(opt);
+    });
+  }
+
+  // Toggle dynamic fields depending on student vs worker status
+  if (inputStatus) {
+    inputStatus.addEventListener("change", () => {
+      const status = inputStatus.value;
+      if (status === "Student") {
+        containerStudent.style.display = "block";
+        containerProfessional.style.display = "none";
+      } else if (status) {
+        containerStudent.style.display = "none";
+        containerProfessional.style.display = "block";
+      } else {
+        containerStudent.style.display = "none";
+        containerProfessional.style.display = "none";
+      }
+    });
+  }
+
+  // Toggle dynamic fields for Master's Degree PG Specialization
+  const inputQualification = document.getElementById("input-qualification");
+  const containerPgSpecialization = document.getElementById("container-pg-specialization");
+  const labelUgSpecialization = document.querySelector("label[for='input-ug-specialization']");
+
+  if (inputQualification) {
+    inputQualification.addEventListener("change", () => {
+      const val = inputQualification.value;
+      if (val.includes("(PG)") || val.includes("Doctoral")) {
+        if (containerPgSpecialization) containerPgSpecialization.style.display = "block";
+        if (labelUgSpecialization) labelUgSpecialization.innerText = "Undergraduate (Graduation) Major / Specialization (e.g. B.Tech Mech, B.Com)";
+      } else {
+        if (containerPgSpecialization) {
+          containerPgSpecialization.style.display = "none";
+          document.getElementById("input-pg-specialization").value = "";
+        }
+        if (labelUgSpecialization) labelUgSpecialization.innerText = "Field of Study / Specialization (e.g. Computer Science, Mechanical Eng)";
+      }
+    });
+  }
+
+  // Toggle dynamic fields for Prior Work Details
+  const inputExperience = document.getElementById("input-experience");
+  const containerPriorWork = document.getElementById("container-prior-work");
+
+  if (inputExperience) {
+    inputExperience.addEventListener("input", () => {
+      const val = parseInt(inputExperience.value) || 0;
+      if (val > 0) {
+        if (containerPriorWork) containerPriorWork.style.display = "block";
+      } else {
+        if (containerPriorWork) {
+          containerPriorWork.style.display = "none";
+          document.getElementById("input-prior-industry").value = "";
+          document.getElementById("input-prior-role").value = "";
+        }
+      }
+    });
+  }
+
+  // Step 1 validation & next
+  btnStep1Next.addEventListener("click", () => {
+    const qual = document.getElementById("input-qualification").value;
+    const ugSpec = document.getElementById("input-ug-specialization").value.trim();
+    const pgSpec = document.getElementById("input-pg-specialization").value.trim();
+    const status = document.getElementById("input-status").value;
+    const exp = document.getElementById("input-experience").value;
+
+    if (!qual || !ugSpec || !status || exp === "") {
+      alert("Please fill in all Step 1 details.");
+      return;
+    }
+
+    // PG Specialization validation
+    if ((qual.includes("(PG)") || qual.includes("Doctoral")) && !pgSpec) {
+      alert("Please enter your Postgraduate Specialization (e.g., MBA Marketing, M.Tech CSE).");
+      return;
+    }
+
+    let currentRole = "";
+    if (status === "Student") {
+      const studentDeg = document.getElementById("input-student-degree").value;
+      const studentYr = document.getElementById("input-student-year").value;
+      if (!studentDeg || !studentYr) {
+        alert("Please select both your current course level and year.");
+        return;
+      }
+      currentRole = `${studentYr} ${studentDeg}`;
+    } else {
+      currentRole = document.getElementById("input-professional-title").value.trim();
+      if (!currentRole) {
+        alert("Please enter your current or most recent job title.");
+        return;
+      }
+    }
+
+    // Prior Work validation
+    const expYears = parseInt(exp) || 0;
+    let priorInd = "";
+    let priorRol = "";
+    if (expYears > 0) {
+      priorInd = document.getElementById("input-prior-industry").value;
+      priorRol = document.getElementById("input-prior-role").value.trim();
+      if (!priorInd || !priorRol) {
+        alert("Please specify your prior work industry and job title.");
+        return;
+      }
+    }
+    
+    state.userProfile.qualification = qual;
+    state.userProfile.ugSpecialization = ugSpec;
+    state.userProfile.pgSpecialization = pgSpec;
+    state.userProfile.currentStatus = status;
+    state.userProfile.currentRole = currentRole;
+    state.userProfile.experienceYears = expYears;
+    state.userProfile.priorIndustry = priorInd;
+    state.userProfile.priorRole = priorRol;
+    
+    goToStep(2);
+  });
+
+  // Step 2 prev / next
+  btnStep2Prev.addEventListener("click", () => goToStep(1));
+  btnStep2Next.addEventListener("click", () => {
+    if (state.userProfile.skills.length < 2) {
+      alert("Please add at least 2 current skills.");
+      return;
+    }
+    if (state.userProfile.interests.length < 1) {
+      alert("Please add at least 1 interest.");
+      return;
+    }
+    goToStep(3);
+  });
+
+  // Step 3 prev
+  btnStep3Prev.addEventListener("click", () => goToStep(2));
+
+  // Goal Selector cards
+  const selectTargetRole = document.getElementById("input-target-role");
+  const containerTargetRole = document.getElementById("container-target-role");
+
+  // Populate Target Role select options dynamically from reportRoles
+  if (selectTargetRole) {
+    // Clear out except the first option
+    selectTargetRole.innerHTML = '<option value="" selected>No specific dream role — recommend the best fits for me...</option>';
+    reportRoles.forEach(r => {
+      const opt = document.createElement("option");
+      opt.value = r.id;
+      opt.innerText = `${r.role} (${r.field})`;
+      selectTargetRole.appendChild(opt);
+    });
+  }
+
+  const selectCards = document.querySelectorAll("#goal-selector .select-card");
+  selectCards.forEach(card => {
+    card.addEventListener("click", () => {
+      selectCards.forEach(c => c.classList.remove("active"));
+      card.classList.add("active");
+      
+      const goal = card.getAttribute("data-goal");
+      state.userProfile.category = goal;
+
+      if (selectTargetRole && containerTargetRole) {
+        if (goal === "complete_pivot" || goal === "switch_role") {
+          containerTargetRole.style.display = "block";
+        } else {
+          containerTargetRole.style.display = "none";
+          selectTargetRole.value = ""; // Reset value
+        }
+      }
+    });
+  });
+}
+
+function goToStep(stepNum) {
+  state.currentStep = stepNum;
+  
+  // Update step views
+  document.querySelectorAll(".wizard-step-view").forEach((view, idx) => {
+    if (idx + 1 === stepNum) {
+      view.classList.add("active");
+    } else {
+      view.classList.remove("active");
+    }
+  });
+
+  // Update step indicators
+  document.querySelectorAll(".step-indicator").forEach((indicator, idx) => {
+    const currentIndNum = idx + 1;
+    indicator.classList.remove("active", "completed");
+    
+    if (currentIndNum === stepNum) {
+      indicator.classList.add("active");
+    } else if (currentIndNum < stepNum) {
+      indicator.classList.add("completed");
+      indicator.innerHTML = "✓";
+    } else {
+      indicator.innerHTML = currentIndNum;
+    }
+  });
+}
+
+// -------------------------------------------------------------
+// 4. TAG-BASED CHIP INPUTS & AUTOCOMPLETE SUGGESTIONS
+// -------------------------------------------------------------
+function setupTagInputs() {
+  // Extract all unique skills dynamically from reportRoles
+  const allSkillsSet = new Set();
+  reportRoles.forEach(role => {
+    role.mustHaveSkills.forEach(s => allSkillsSet.add(s.trim()));
+    if (role.learnableSkills) {
+      role.learnableSkills.forEach(s => allSkillsSet.add(s.trim()));
+    }
+  });
+  const allSkills = Array.from(allSkillsSet).sort();
+
+  // Curated list of common search interest terms corresponding to RIASEC/O*NET job fields
+  const commonInterests = [
+    "Coding", "Software", "Web Development", "UI/UX Design", "Graphic Design", 
+    "Video Editing", "Content Creation", "Writing", "Marketing", "Sales", 
+    "HR", "Business Strategy", "Data Analysis", "Statistics", "Finance", 
+    "Teaching", "Training", "Health & Fitness", "Cooking", "Hospital Ops", 
+    "Electronics", "Customer Support", "Cybersecurity", "Management"
+  ].sort();
+
+  // Populate HTML datalists
+  populateDatalist("skills-datalist", allSkills);
+  populateDatalist("interests-datalist", commonInterests);
+
+  // Curated subsets to show as popular clickable chips
+  const popularSkills = [
+    "SQL", "Python", "JavaScript", "Excel", "Figma", "Digital Marketing", 
+    "Tableau", "SEO/SEM", "Communication", "Data Structures"
+  ];
+  
+  const popularInterests = [
+    "Coding", "Design", "Writing", "Marketing", "Fitness", "Sales", "Teaching", "Finance"
+  ];
+
+  // Render initial chips
+  setupChips("container-skills-chips", popularSkills, "input-skills", "container-skills-tags", state.userProfile.skills);
+  setupChips("container-interests-chips", popularInterests, "input-interests", "container-interests-tags", state.userProfile.interests);
+
+  // Setup inputs
+  setupSingleTagInput("input-skills", "container-skills-tags", state.userProfile.skills, "container-skills-chips", popularSkills);
+  setupSingleTagInput("input-interests", "container-interests-tags", state.userProfile.interests, "container-interests-chips", popularInterests);
+}
+
+function populateDatalist(id, list) {
+  const datalist = document.getElementById(id);
+  if (!datalist) return;
+  datalist.innerHTML = "";
+  list.forEach(item => {
+    const opt = document.createElement("option");
+    opt.value = item;
+    datalist.appendChild(opt);
+  });
+}
+
+function setupChips(chipsContainerId, popularItems, inputId, tagContainerId, stateArray) {
+  const container = document.getElementById(chipsContainerId);
+  const input = document.getElementById(inputId);
+  const tagContainer = document.getElementById(tagContainerId);
+  if (!container) return;
+  
+  container.innerHTML = "";
+  let visibleChips = 0;
+  
+  popularItems.forEach(item => {
+    // If the skill is already added, do not render its chip
+    if (stateArray.includes(item)) return;
+
+    visibleChips++;
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "chip-btn";
+    chip.innerText = item;
+    
+    chip.addEventListener("click", () => {
+      if (!stateArray.includes(item)) {
+        stateArray.push(item);
+        renderTags(tagContainer, input, stateArray, chipsContainerId, popularItems);
+        // Refresh chips to hide the newly added one
+        setupChips(chipsContainerId, popularItems, inputId, tagContainerId, stateArray);
+      }
+    });
+    container.appendChild(chip);
+  });
+
+  // Toggle label visibility if all chips are added
+  const label = container.previousElementSibling;
+  if (label && label.classList.contains("chip-suggestions-label")) {
+    label.style.display = (visibleChips === 0) ? "none" : "block";
+  }
+}
+
+function setupSingleTagInput(inputId, containerId, stateArray, chipsContainerId, popularItems) {
+  const input = document.getElementById(inputId);
+  const container = document.getElementById(containerId);
+
+  const addTag = (val) => {
+    if (val && !stateArray.includes(val)) {
+      stateArray.push(val);
+      renderTags(container, input, stateArray, chipsContainerId, popularItems);
+      if (chipsContainerId && popularItems) {
+        setupChips(chipsContainerId, popularItems, inputId, containerId, stateArray);
+      }
+    }
+  };
+
+  // Add tag on Enter or comma
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      const val = input.value.trim().replace(/,/g, "");
+      addTag(val);
+      input.value = "";
+    }
+  });
+
+  // Watch input value changes to detect autocomplete selection
+  input.addEventListener("input", () => {
+    const val = input.value.trim();
+    // Check if the typed text matches one of the datalist options exactly (browser click on autocomplete)
+    const datalist = document.getElementById(input.getAttribute("list"));
+    if (datalist) {
+      const options = Array.from(datalist.options).map(o => o.value);
+      if (options.includes(val)) {
+        addTag(val);
+        input.value = "";
+      }
+    }
+  });
+
+  // Add click listener on container to focus input
+  container.addEventListener("click", (e) => {
+    if (e.target === container) {
+      input.focus();
+    }
+  });
+}
+
+function renderTags(container, input, stateArray, chipsContainerId, popularItems) {
+  // Clear out old tags (except the input itself)
+  const tagElements = container.querySelectorAll(".tag-badge");
+  tagElements.forEach(el => el.remove());
+
+  // Inject current tags before input
+  stateArray.forEach((tag, idx) => {
+    const tagBadge = document.createElement("div");
+    tagBadge.className = "tag-badge";
+    tagBadge.innerHTML = `${tag} <span data-index="${idx}">×</span>`;
+    
+    // Remove click event
+    tagBadge.querySelector("span").addEventListener("click", (e) => {
+      e.stopPropagation();
+      stateArray.splice(idx, 1);
+      renderTags(container, input, stateArray, chipsContainerId, popularItems);
+      if (chipsContainerId && popularItems) {
+        setupChips(chipsContainerId, popularItems, input.id, container.id, stateArray);
+      }
+    });
+
+    container.insertBefore(tagBadge, input);
+  });
+}
+
+// -------------------------------------------------------------
+// 5. MATCHING & SUBMISSION ENGINE
+// -------------------------------------------------------------
+function setupFormSubmit() {
+  const form = document.getElementById("assessment-form");
+  const btnSubmit = document.getElementById("btn-submit-form");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Read selected target role if present
+    const targetSelect = document.getElementById("input-target-role");
+    state.userProfile.targetRoleId = targetSelect ? targetSelect.value : "";
+
+    // Show Loading state
+    const originalText = btnSubmit.innerHTML;
+    btnSubmit.innerHTML = "🌀 Processing Grounded Models...";
+    btnSubmit.disabled = true;
+
+    try {
+      const config = getApiConfig();
+      
+      if (config.useMock) {
+        // Mock Mode calculation
+        state.recommendations = calculateLocalMatches(state.userProfile);
+      } else {
+        // Live Gemini API match call
+        try {
+          state.recommendations = await queryGeminiMatching(state.userProfile, state.rawReportMarkdown);
+        } catch (apiError) {
+          console.error("Live AI matching failed, displaying error overlay:", apiError);
+          const confirmFallback = confirm(
+            `Live AI matching failed: ${apiError.message}\n\nWould you like to fall back to the Offline/Mock Database matching engine?`
+          );
+          if (confirmFallback) {
+            state.recommendations = calculateLocalMatches(state.userProfile);
+            // Toggle config back to mock mode
+            setApiConfig(config.geminiKey, true);
+            const toggleMock = document.getElementById("setting-toggle-mock");
+            if (toggleMock) toggleMock.checked = true;
+            updateSourceBadge();
+          } else {
+            throw apiError; // Cancel submission
+          }
+        }
+      }
+
+      // Log conversion event
+      logFormCompletion(state.userProfile, state.recommendations);
+
+      // Render recommendations
+      renderRecommendations(state.recommendations);
+      
+      // Swap views
+      switchView("results");
+
+    } catch (err) {
+      alert("Error generating recommendations: " + err.message);
+    } finally {
+      btnSubmit.innerHTML = originalText;
+      btnSubmit.disabled = false;
+    }
+  });
+}
+
+function renderRecommendations(matches) {
+  const container = document.getElementById("recommendations-container");
+  container.innerHTML = "";
+
+  // Reset tab toggling to cards default
+  const btnTabCards = document.getElementById("btn-tab-cards");
+  const btnTabMatrix = document.getElementById("btn-tab-matrix");
+  const containerCards = document.getElementById("recommendations-container");
+  const containerMatrix = document.getElementById("matrix-container");
+
+  if (btnTabCards && btnTabMatrix) {
+    btnTabCards.classList.add("active");
+    btnTabMatrix.classList.remove("active");
+    if (containerCards) containerCards.style.display = "grid";
+    if (containerMatrix) containerMatrix.style.display = "none";
+  }
+
+  if (matches.length === 0) {
+    container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; padding: 40px 0;">No matching roles found.</p>`;
+    return;
+  }
+
+  matches.forEach(role => {
+    const card = document.createElement("div");
+    const isTarget = state.userProfile.targetRoleId === role.id;
+    card.className = "glass-card recommendation-card";
+    if (isTarget) {
+      card.style.borderColor = "var(--color-secondary)";
+      card.style.boxShadow = "0 15px 35px -5px rgba(217, 70, 239, 0.18), 0 0 0 1px var(--color-secondary)";
+    }
+    
+    // Format salaries to LPA (e.g. 4.5L - 10L)
+    const formatLPA = (num) => (num / 100000).toFixed(1).replace(/\.0$/, "") + "L";
+    const salaryText = `${formatLPA(role.entryLevelSalary)} - ${formatLPA(role.midLevelSalary)} LPA`;
+    const seniorText = `${formatLPA(role.seniorSalary)} LPA`;
+
+    // Map difficulty and growth rating colors
+    const growthClass = `badge-${role.growthRating.toLowerCase()}`;
+    const diffClass = `badge-${(role.difficultyToEnter || role.transitionDifficulty || "MEDIUM").toLowerCase()}`;
+
+    // SVG Circular Progress Ring path values
+    const radius = 24;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDashoffset = circumference - (role.matchScore / 100) * circumference;
+
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-title-area">
+          <div class="card-field">${isTarget ? '<span style="color: var(--color-secondary); font-weight:800;">🎯 TARGET CHOICE</span>' : role.field}</div>
+          <h3 class="card-title">${role.role}</h3>
+        </div>
+        <!-- Progress Circular Badge -->
+        <div class="score-badge-ring">
+          <svg width="54" height="54">
+            <circle class="score-badge-circle-bg" cx="27" cy="27" r="${radius}"></circle>
+            <circle class="score-badge-circle-value" cx="27" cy="27" r="${radius}" 
+              stroke-dasharray="${circumference}" 
+              stroke-dashoffset="${strokeDashoffset}"></circle>
+          </svg>
+          <div class="score-text">${role.matchScore}%</div>
+        </div>
+      </div>
+
+      <div class="card-reason">${role.oneLineReason}</div>
+
+      <div class="card-stats">
+        <div class="stat-item">
+          <span class="stat-label">Salary Range</span>
+          <span class="stat-value">${salaryText}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Top Senior Salary</span>
+          <span class="stat-value">${seniorText}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Market Demand</span>
+          <span class="stat-value"><span class="badge-tag ${growthClass}">${role.growthRating}</span></span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Barrier Level</span>
+          <span class="stat-value"><span class="badge-tag ${diffClass}">${role.difficultyToEnter || role.transitionDifficulty || "MEDIUM"}</span></span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-explore" data-id="${role.id}" style="width: 100%; margin-top: auto;">Explore Roadmap →</button>
+    `;
+
+    card.querySelector(".btn-explore").addEventListener("click", () => {
+      exploreRoadmap(role);
+    });
+
+    container.appendChild(card);
+  });
+}
+
+// -------------------------------------------------------------
+// 6. DETAILED ROADMAP & BENCHMARKING
+// -------------------------------------------------------------
+function exploreRoadmap(role) {
+  // Log click event
+  logRoadmapClick(role.id, role.role);
+  
+  state.selectedRole = role;
+  const container = document.getElementById("detail-card-container");
+  
+  // Format salaries
+  const formatLPA = (num) => (num / 100000).toFixed(1).replace(/\.0$/, "") + "L";
+  const salaryText = `${formatLPA(role.entryLevelSalary)} - ${formatLPA(role.midLevelSalary)} LPA`;
+  const seniorText = `${formatLPA(role.seniorSalary)} LPA`;
+
+  // Dynamic Case Studies mapping
+  let caseStudiesHTML = "";
+  if (role.caseStudies && role.caseStudies.length > 0) {
+    caseStudiesHTML = `
+      <div style="margin-top: 40px; border-top: 1px solid var(--border-glass); padding-top: 30px;">
+        <h4 style="margin-bottom: 15px; font-family: var(--font-display);">Real transition case studies</h4>
+        <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+          ${role.caseStudies.map(cs => `
+            <div class="case-study-box">
+              <div class="case-study-header">Pivoted from ${cs.from} → ${cs.to} (Age ${cs.age})</div>
+              <div class="case-study-body">"${cs.steps}"</div>
+              <div class="case-study-outcome">⏱️ Switch Time: ${cs.timeTaken} | Outcome: ${cs.outcome}</div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  // Check which skills the user already has (from user profile)
+  const userSkillsLower = state.userProfile.skills.map(s => s.toLowerCase().trim());
+  const mustHaveHTML = role.mustHaveSkills.map(skill => {
+    const hasSkill = userSkillsLower.some(us => us.includes(skill.toLowerCase()) || skill.toLowerCase().includes(us));
+    return `
+      <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.9rem; color: ${hasSkill ? '#a7f3d0' : 'var(--text-muted)'}">
+        <span>${hasSkill ? '✅' : '🔴'}</span>
+        <span><strong>${skill}</strong> ${hasSkill ? '(You possess this)' : '(Must Learn)'}</span>
+      </li>
+    `;
+  }).join("");
+
+  const learnableHTML = (role.learnableSkills || []).map(skill => {
+    return `
+      <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.9rem;">
+        <span>🔹</span>
+        <span><strong>${skill}</strong> (Learnable on the job)</span>
+      </li>
+    `;
+  }).join("");
+
+  // Map timelines
+  const phases = role.roadmap || { phase1: [], phase2: [], phase3: [] };
+
+  container.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; border-bottom: 1px solid var(--border-glass); padding-bottom: 25px; margin-bottom: 30px;">
+      <div>
+        <div class="card-field">${role.field}</div>
+        <h2 style="font-size: 2.2rem; margin-bottom: 10px;">${role.role} Roadmap</h2>
+        <p>A phased, personalized transition path matching your profile.</p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-secondary" id="btn-share-result">Share Result 🔗</button>
+      </div>
+    </div>
+
+    <!-- Benchmarking & Core Stats -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px;">
+      <div class="glass-card" style="padding: 20px; text-align: center; border-color: rgba(99, 102, 241, 0.2);">
+        <div class="stat-label">Match Percentage</div>
+        <div style="font-size: 2.5rem; font-weight: 800; color: var(--color-primary); font-family: var(--font-display); margin-top: 5px;">${role.matchScore}%</div>
+      </div>
+      
+      <div class="glass-card" style="padding: 20px; text-align: center;">
+        <div class="stat-label">Salary Benchmark</div>
+        <div style="font-size: 1.8rem; font-weight: 700; color: white; font-family: var(--font-display); margin-top: 10px;">${salaryText}</div>
+        <p style="font-size: 0.75rem; margin-top: 2px;">Senior Cap: ${seniorText}</p>
+      </div>
+
+      <div class="glass-card" style="padding: 20px; text-align: center;">
+        <div class="stat-label">Preparation Time</div>
+        <div style="font-size: 1.8rem; font-weight: 700; color: white; font-family: var(--font-display); margin-top: 10px;">${role.typicalTimeToEnter}</div>
+        <p style="font-size: 0.75rem; margin-top: 2px;">Min qualification: ${role.minQualification}</p>
+      </div>
+    </div>
+
+    <!-- Benchmarking Profile vs Target -->
+    <div style="margin-bottom: 40px;">
+      <h3 style="margin-bottom: 15px; font-family: var(--font-display);">Profile Benchmarking</h3>
+      <div class="glass-card" style="padding: 20px; background: rgba(0,0,0,0.15);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div style="border-right: 1px solid var(--border-glass); padding-right: 15px;">
+            <div class="stat-label">Your Current Background</div>
+            <p style="color: var(--text-main); margin-top: 5px; font-size: 0.9rem;">🎓 Degree: ${state.userProfile.qualification} (${state.userProfile.specialization})</p>
+            <p style="color: var(--text-main); font-size: 0.9rem;">💼 Current: ${state.userProfile.currentRole} (${state.userProfile.currentStatus})</p>
+            <p style="color: var(--text-main); font-size: 0.9rem;">⏳ Work Exp: ${state.userProfile.experienceYears} Years</p>
+          </div>
+          <div style="padding-left: 10px;">
+            <div class="stat-label">Critical Entry Barrier</div>
+            <p style="color: #fda4af; margin-top: 5px; font-weight: 600; font-size: 0.9rem;">⚠️ ${role.entryBarrier}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills Checklist -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px;">
+      <div>
+        <h3 style="margin-bottom: 15px; font-family: var(--font-display);">Required Core Skills</h3>
+        <ul style="list-style: none; padding-left: 0;">
+          ${mustHaveHTML}
+        </ul>
+      </div>
+
+      <div>
+        <h3 style="margin-bottom: 15px; font-family: var(--font-display);">Nice-to-Have / Learnable</h3>
+        <ul style="list-style: none; padding-left: 0;">
+          ${learnableHTML || '<li style="color: var(--text-dark)">No learnable skills specified</li>'}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Phased Timeline Roadmap -->
+    <h3 style="margin-bottom: 15px; font-family: var(--font-display);">3-Phase Transition Timeline</h3>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-phase">Phase 1 (0 to 3 months)</div>
+        <div class="timeline-title">Foundation & Core Skill Building</div>
+        <ul class="timeline-tasks">
+          ${phases.phase1.map(task => `<li>${task}</li>`).join("")}
+        </ul>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-phase">Phase 2 (3 to 6 months)</div>
+        <div class="timeline-title">Application & Portfolio Projects</div>
+        <ul class="timeline-tasks">
+          ${phases.phase2.map(task => `<li>${task}</li>`).join("")}
+        </ul>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-phase">Phase 3 (6 to 12 months)</div>
+        <div class="timeline-title">Specialization & Job Application Preparation</div>
+        <ul class="timeline-tasks">
+          ${phases.phase3.map(task => `<li>${task}</li>`).join("")}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Case Studies -->
+    ${caseStudiesHTML}
+  `;
+
+  // Setup Share button action
+  document.getElementById("btn-share-result").addEventListener("click", () => {
+    shareResult(role);
+  });
+
+  // Switch to detailed view
+  switchView("details");
+}
+
+function shareResult(role) {
+  const shareText = `🎯 Just matched as ${role.role} (${role.matchScore}% match) on AuraCareer! Check your recommended career roadmap now.`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(shareText + "\nhttps://auracareer.com/results/share")
+      .then(() => alert("Share template copied to clipboard! You can share it on LinkedIn or Twitter."))
+      .catch(() => alert("Could not write to clipboard. Direct text: " + shareText));
+  } else {
+    alert("Clipboard not supported. Copy this text to share: \n\n" + shareText);
+  }
+}
+
+function renderComparisonMatrix(matches) {
+  const tbody = document.getElementById("matrix-table-body");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  if (matches.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-dark); padding: 20px;">No comparison paths available.</td></tr>`;
+    return;
+  }
+
+  matches.forEach(role => {
+    const tr = document.createElement("tr");
+
+    // Format salaries
+    const formatLPA = (num) => (num / 100000).toFixed(1).replace(/\.0$/, "") + "L";
+    const salaryText = `${formatLPA(role.entryLevelSalary)} - ${formatLPA(role.midLevelSalary)} LPA`;
+    const seniorText = `${formatLPA(role.seniorSalary)} LPA`;
+
+    // Success rate color classes
+    let successClass = "badge-medium";
+    if (role.successRate > 75) successClass = "badge-high";
+    else if (role.successRate < 45) successClass = "badge-low";
+
+    const isTarget = state.userProfile.targetRoleId === role.id;
+
+    tr.innerHTML = `
+      <td style="vertical-align: middle;">
+        <div style="font-weight: 700; color: white; display: flex; align-items: center; gap: 6px;">
+          ${role.role} ${isTarget ? '<span style="color:var(--color-secondary); font-size:0.7rem; font-weight:800;">🎯 TARGET</span>' : ''}
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-dark);">${role.field}</div>
+      </td>
+      <td style="vertical-align: middle; text-align: center;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <span style="font-weight: 800; font-size: 0.9rem; width: 32px; text-align: right; color: white;">${role.capabilityScore || role.matchScore}%</span>
+          <div style="width: 80px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; display: inline-block;">
+            <div style="width: ${role.capabilityScore || role.matchScore}%; height: 100%; background: var(--color-primary);"></div>
+          </div>
+        </div>
+      </td>
+      <td style="vertical-align: middle; text-align: center;">
+        <span style="color: var(--color-secondary); font-weight: 700; font-size: 0.95rem;">${role.interestScore || role.matchScore}%</span>
+      </td>
+      <td style="vertical-align: middle; text-align: center;">
+        <span class="badge-tag ${successClass}" style="font-size: 0.78rem; padding: 4px 8px; font-weight:700;">${role.successRate || 70}% Success</span>
+      </td>
+      <td style="vertical-align: middle;">
+        <div style="font-weight: 600; color: white;">${salaryText}</div>
+        <div style="font-size: 0.75rem; color: var(--text-dark);">Senior Cap: ${seniorText}</div>
+      </td>
+      <td style="vertical-align: middle; text-align: center;">
+        <button class="btn btn-secondary btn-matrix-explore" data-id="${role.id}" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 700;">Explore Roadmap →</button>
+      </td>
+    `;
+
+    // Click handler for explore button
+    tr.querySelector(".btn-matrix-explore").addEventListener("click", () => {
+      exploreRoadmap(role);
+    });
+
+    tbody.appendChild(tr);
+  });
+}
+
+// -------------------------------------------------------------
+// 7. ANALYTICS log AND EXPORTER
+// -------------------------------------------------------------
+function showAnalyticsDashboard() {
+  const summary = getAnalyticsSummary();
+  
+  // Set numeric totals
+  document.getElementById("stat-conversions").innerText = summary.totalCompletions;
+  document.getElementById("stat-clicks").innerText = summary.totalRoadmapClicks;
+
+  // Build the popular table
+  const tbody = document.getElementById("analytics-table-body");
+  tbody.innerHTML = "";
+
+  // Combine recommendations and click stats
+  const allRoles = new Set([
+    ...Object.keys(summary.recommendationsCount),
+    ...Object.keys(summary.clickedRolesCount)
+  ]);
+
+  if (allRoles.size === 0) {
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-dark); padding: 20px;">No conversion logs recorded yet.</td></tr>`;
+    return;
+  }
+
+  // Convert to array and sort by recommendation count desc
+  const rows = Array.from(allRoles).map(roleName => ({
+    name: roleName,
+    recommendations: summary.recommendationsCount[roleName] || 0,
+    clicks: summary.clickedRolesCount[roleName] || 0
+  })).sort((a, b) => b.recommendations - a.recommendations);
+
+  rows.forEach(row => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td style="font-weight:600; color:white;">${row.name}</td>
+      <td>${row.recommendations}</td>
+      <td>${row.clicks}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// -------------------------------------------------------------
+// 8. NAVIGATION AND VIEW MANAGER
+// -------------------------------------------------------------
+function setupNavigation() {
+  const btnAnalytics = document.getElementById("nav-btn-analytics");
+  const btnCloseAnalytics = document.getElementById("btn-close-analytics");
+  const btnExport = document.getElementById("btn-export-analytics");
+  const btnRestart = document.getElementById("btn-restart-assessment");
+  const btnBackMatches = document.getElementById("btn-back-to-results");
+  const logoHome = document.getElementById("logo-home");
+
+  // Cost-Benefit matrix tabs
+  const btnTabCards = document.getElementById("btn-tab-cards");
+  const btnTabMatrix = document.getElementById("btn-tab-matrix");
+  const containerCards = document.getElementById("recommendations-container");
+  const containerMatrix = document.getElementById("matrix-container");
+
+  if (btnTabCards && btnTabMatrix) {
+    btnTabCards.addEventListener("click", () => {
+      btnTabCards.classList.add("active");
+      btnTabMatrix.classList.remove("active");
+      if (containerCards) containerCards.style.display = "grid";
+      if (containerMatrix) containerMatrix.style.display = "none";
+    });
+
+    btnTabMatrix.addEventListener("click", () => {
+      btnTabMatrix.classList.add("active");
+      btnTabCards.classList.remove("active");
+      if (containerCards) containerCards.style.display = "none";
+      if (containerMatrix) containerMatrix.style.display = "block";
+      renderComparisonMatrix(state.recommendations);
+    });
+  }
+
+  // Route swaps
+  btnAnalytics.addEventListener("click", () => {
+    showAnalyticsDashboard();
+    switchView("analytics");
+  });
+
+  btnCloseAnalytics.addEventListener("click", () => switchView("assessment"));
+  logoHome.addEventListener("click", (e) => {
+    e.preventDefault();
+    switchView("assessment");
+  });
+
+  btnRestart.addEventListener("click", () => {
+    // Reset wizard
+    document.getElementById("assessment-form").reset();
+    state.userProfile.skills = [];
+    state.userProfile.interests = [];
+    renderTags(document.getElementById("container-skills-tags"), document.getElementById("input-skills"), state.userProfile.skills);
+    renderTags(document.getElementById("container-interests-tags"), document.getElementById("input-interests"), state.userProfile.interests);
+    
+    // Hide dynamic containers
+    document.getElementById("container-student-course").style.display = "none";
+    document.getElementById("container-professional-title").style.display = "none";
+    document.getElementById("container-pg-specialization").style.display = "none";
+    document.getElementById("container-prior-work").style.display = "none";
+
+    goToStep(1);
+    switchView("assessment");
+  });
+
+  btnBackMatches.addEventListener("click", () => switchView("results"));
+
+  btnExport.addEventListener("click", exportAnalyticsJSON);
+}
+
+function switchView(viewName) {
+  Object.keys(views).forEach(key => {
+    if (key === viewName) {
+      views[key].style.display = "block";
+    } else {
+      views[key].style.display = "none";
+    }
+  });
+
+  // Scroll to top of view
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+</script>
+
+</body>
+</html>
