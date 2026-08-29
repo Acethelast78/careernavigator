@@ -1,0 +1,45 @@
+name: Automated XL ERP Timetable Sync
+
+on:
+  schedule:
+    # Runs 3 times every day: 6:00 AM IST, 1:00 PM IST, and 7:30 PM IST
+    - cron: '30 0,7 * * *'
+    - cron: '0 14 * * *'
+  workflow_dispatch: # Enables 1-click manual trigger from GitHub website
+
+permissions:
+  contents: write
+
+jobs:
+  sync-timetable:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Fetch Complete Term 5 Schedule (Sec E & Sec F)
+        env:
+          XL_ERP_SEC_E_EMAIL: ${{ secrets.XL_ERP_SEC_E_EMAIL }}
+          XL_ERP_SEC_E_PASSWORD: ${{ secrets.XL_ERP_SEC_E_PASSWORD }}
+          XL_ERP_SEC_F_EMAIL: ${{ secrets.XL_ERP_SEC_F_EMAIL }}
+          XL_ERP_SEC_F_PASSWORD: ${{ secrets.XL_ERP_SEC_F_PASSWORD }}
+        run: |
+          python sync_erp.py
+
+      - name: Commit and Push Updated Timetable
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add term5_timetable.csv term5_schedule.json index.html
+          if git diff --staged --quiet; then
+            echo "No schedule changes detected."
+          else
+            git commit -m "Auto-sync Term 5 timetable from XL ERP [skip ci]"
+            git push
+          fi
