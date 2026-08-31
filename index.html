@@ -1075,19 +1075,19 @@ RAW.forEach(r => {
 
 const studentMap = {};
 RAW.forEach(r => {
-  // Data Sanitization for second-year sections (Terms 5 & 6)
-  if (r.Term === '6') {
-    const g = globalSubjectStats[r['Subject Code Full']];
-    const isUnclear = g && (g.tot > 60 || g.G > 0 || g.oth > 0);
-    if (isUnclear) {
-      r.Section = 'Section list not yet available';
-    }
-  }
-
   if (!studentMap[r.SID]) studentMap[r.SID] = { Name: r.Name, SID: r.SID, records: [] };
   studentMap[r.SID].records.push(r);
 });
 const allStudents = Object.values(studentMap).sort((a,b) => a.Name.localeCompare(b.Name));
+
+// Immediate persistent student initialization
+const savedDefaultSid = typeof localStorage !== 'undefined' ? localStorage.getItem('xlri_default_student') : null;
+const initialDefaultSid = (savedDefaultSid && studentMap[savedDefaultSid]) 
+  ? savedDefaultSid 
+  : (studentMap['B25323'] ? 'B25323' : (allStudents[0] ? allStudents[0].SID : null));
+
+let ttSIDs = initialDefaultSid ? [initialDefaultSid] : [];
+let ttSID = initialDefaultSid || null;
 
 // ── Filters ────────────────────────────────────────────────────────────────
 const fTerm = () => document.getElementById('f-term').value;
@@ -1581,8 +1581,7 @@ let timetableData = [];
 let courseMetadata = {};
 let timetableSyncTime = 'Online';
 let timetableSyncStatus = 'online';
-let ttSIDs = [];
-let ttSID = null;
+// ttSIDs already initialized at top
 let ttSelectedWeekStart = null;
 let ttSelectedMobileDayStr = null;
 let currentModalClass = null;
@@ -2509,9 +2508,7 @@ function getAttendanceWarningsHtml() {
     termCourses.forEach(course => {
       const courseCode = course['Subject Code'];
       const courseSlots = studentSlots.filter(s => s.courseCode === courseCode && !s.isSpecial && !s.isGeneral);
-      const conductedSlots = courseSlots.filter(s => isSlotInPast(s.date, s.time));
-      
-      const missedSlots = conductedSlots.filter(s => {
+      const missedSlots = courseSlots.filter(s => {
         const key = 'xlri_absent_' + sid + '_' + s.date + '_' + s.slotIndex;
         return localStorage.getItem(key) === 'true';
       });
@@ -2546,7 +2543,7 @@ function getAttendanceWarningsHtml() {
     } else if (w.missedCount === 4) {
       return `<strong>${w.courseCode}</strong> (4 missed - 0 left)`;
     } else {
-      return `<strong>${w.courseCode}</strong> (3 missed - 1 left)`;
+      return `<strong>${w.courseCode}</strong> (${w.missedCount} missed - ${4 - w.missedCount} left)`;
     }
   }).join(', ');
   
@@ -2631,7 +2628,6 @@ function toggleTrackerAttendance(sid, dateStr, slotIndex) {
 
 function toggleAttendance(sidsStr, dateStr, slotIndex) {
   const sids = String(sidsStr).split(',');
-  let newAbsentState = false;
   sids.forEach(sid => {
     const key = 'xlri_absent_' + sid + '_' + dateStr + '_' + slotIndex;
     const isAbsent = localStorage.getItem(key) === 'true';
@@ -2639,7 +2635,6 @@ function toggleAttendance(sidsStr, dateStr, slotIndex) {
       localStorage.removeItem(key);
     } else {
       localStorage.setItem(key, 'true');
-      newAbsentState = true;
     }
   });
   
@@ -2691,14 +2686,13 @@ function openAttendanceTracker(activeSid) {
     const courseCode = course['Subject Code'];
     // Filter strictly teaching lectures (excluding exams and special events)
     const courseSlots = studentSlots.filter(s => s.courseCode === courseCode && !s.isSpecial && !s.isGeneral);
-    const conductedSlots = courseSlots.filter(s => isSlotInPast(s.date, s.time));
-    const conductedCount = conductedSlots.length;
-    
-    const missedSlots = conductedSlots.filter(s => {
+    const missedSlots = courseSlots.filter(s => {
       const key = 'xlri_absent_' + sid + '_' + s.date + '_' + s.slotIndex;
       return localStorage.getItem(key) === 'true';
     });
     const missedCount = missedSlots.length;
+    const conductedSlots = courseSlots.filter(s => isSlotInPast(s.date, s.time) || localStorage.getItem('xlri_absent_' + sid + '_' + s.date + '_' + s.slotIndex) === 'true');
+    const conductedCount = Math.max(missedCount, conductedSlots.length);
     const attendedCount = Math.max(0, conductedCount - missedCount);
     
     totalConductedBatch += conductedCount;
@@ -2810,7 +2804,6 @@ function openAttendanceTracker(activeSid) {
   body.innerHTML = contentHtml;
   overlay.classList.add('open');
 }
-
 
 
 
@@ -3239,6 +3232,16 @@ function renderTimetable() {
 
   // Render selection chips whenever rendering timetable
   renderSelectedStudentChips();
+
+  // Safeguard: auto-fallback if ttSIDs is empty
+  if (ttSIDs.length === 0 && !ttShowAllSubjects) {
+    const saved = localStorage.getItem('xlri_default_student');
+    const fallback = (saved && studentMap[saved]) ? saved : (studentMap['B25323'] ? 'B25323' : Object.keys(studentMap)[0]);
+    if (fallback && studentMap[fallback]) {
+      ttSIDs = [fallback];
+      ttSID = fallback;
+    }
+  }
 
   if (ttSIDs.length === 0 && !ttShowAllSubjects) {
     container.innerHTML = `<div class="empty-hint" style="padding: 40px 20px;">
@@ -3778,17 +3781,7 @@ makeAC('tt-inp', 'tt-list', sid => {
   renderSelectedStudentChips();
 });
 
-const savedDefaultSid = localStorage.getItem('xlri_default_student');
-if (savedDefaultSid && studentMap[savedDefaultSid]) {
-  ttSIDs = [savedDefaultSid];
-  ttSID = savedDefaultSid;
-} else {
-  const fallbackSid = studentMap['B25323'] ? 'B25323' : Object.keys(studentMap)[0];
-  if (fallbackSid) {
-    ttSIDs = [fallbackSid];
-    ttSID = fallbackSid;
-  }
-}
+
 
 function initTheme() {
   const toggleBtn = document.getElementById('theme-toggle');
