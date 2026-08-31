@@ -1653,10 +1653,10 @@ function parseCSV(text) {
   return lines;
 }
 
-// Process CSV string into structured arrays
-function processTimetable(csvText) {
+// Process CSV string into structured arrays (Pure / Isolated)
+function processTimetable(csvText, isTerm4 = false) {
   const rows = parseCSV(csvText);
-  if (rows.length < 2) return;
+  if (rows.length < 2) return { slots: [], metadata: {} };
 
   const metadata = {};
   const slots = [];
@@ -1703,12 +1703,13 @@ function processTimetable(csvText) {
     }
   }
 
-    timetableData = slots.filter(s => {
+  let finalSlots = [...slots];
+  if (isTerm4) {
+    finalSlots = finalSlots.filter(s => {
       const isSepDate = s.date === "01-09-2026" || s.date === "02-09-2026" || s.date === "03-09-2026" || s.date === "04-09-2026" || s.date === "05-09-2026" || s.date === "06-09-2026";
       return !isSepDate;
     });
 
-    // Append hardcoded Term IV End-Term Exams (Sep 1 - Sep 6, 2026)
     const hardcodedExams = [
       { day: "Tuesday", date: "01-09-2026", time: TIME_SLOTS[1], slotIndex: 1, text: "BAV EXAM (9:00 AM) sec E & F" },
       { day: "Tuesday", date: "01-09-2026", time: TIME_SLOTS[4], slotIndex: 4, text: "PJM EXAM (2:00 PM) sec E & F" },
@@ -1727,15 +1728,16 @@ function processTimetable(csvText) {
       { day: "Sunday", date: "06-09-2026", time: TIME_SLOTS[4], slotIndex: 4, text: "SGM EXAM (2:00 PM) sec E & F" },
       { day: "Sunday", date: "06-09-2026", time: TIME_SLOTS[6], slotIndex: 6, text: "CMN EXAM (6:00 PM) sec E & F" }
     ];
-    timetableData.push(...hardcodedExams);
-
-    courseMetadata = metadata;
+    finalSlots.push(...hardcodedExams);
   }
+
+  return { slots: finalSlots, metadata: metadata };
+}
 
 // Helper: Convert Google Visualization JSON to CSV layout
 function convertGvizToCSV(data) {
   if (!data || !data.table || !data.table.rows) return '';
-  const csvLines = ['TERM IV']; // Prepend header row to match original layout
+  const csvLines = ['TERM IV'];
   
   data.table.rows.forEach(r => {
     if (!r || !r.c) {
@@ -1751,46 +1753,46 @@ function convertGvizToCSV(data) {
         val = String(cell.v);
       }
       
-      if (val.includes('"') || val.includes(',') || val.includes('\n') || val.includes('\r')) {
-        return '"' + val.replace(/"/g, '""') + '"';
+      if (val.indexOf('"') !== -1 || val.indexOf(',') !== -1 || val.indexOf(String.fromCharCode(10)) !== -1 || val.indexOf(String.fromCharCode(13)) !== -1) {
+        return '"' + val.split('"').join('""') + '"';
       }
       return val;
     });
     csvLines.push(lineCells.join(','));
   });
   
-  return csvLines.join('\n');
+  return csvLines.join(String.fromCharCode(10));
 }
-
-
 
 function initTermDatasets() {
   // Parse Term 4 CSV
-  processTimetable(TERM4_FROZEN_CSV);
-  term4TimetableData = [...timetableData];
-  term4CourseMetadata = { ...courseMetadata };
+  const t4 = processTimetable(TERM4_FROZEN_CSV, true);
+  term4TimetableData = t4.slots;
+  term4CourseMetadata = t4.metadata;
 
   // Parse Term 5 CSV
-  processTimetable(TERM5_DEFAULT_CSV);
-  term5TimetableData = [...timetableData];
-  term5CourseMetadata = { ...courseMetadata };
+  const t5 = processTimetable(TERM5_DEFAULT_CSV, false);
+  term5TimetableData = t5.slots;
+  term5CourseMetadata = t5.metadata;
 
   // Load default term by current date
   currentSelectedTerm = getDefaultTermByDate();
   loadTermData(currentSelectedTerm);
   
   // Also attempt async fetch of latest CSV if running on web server (GitHub Pages)
-  if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+  if (typeof window !== 'undefined' && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) {
     fetch('term5_timetable.csv')
       .then(res => res.ok ? res.text() : null)
       .then(csvText => {
         if (csvText && csvText.includes('TERM V')) {
-          processTimetable(csvText);
-          term5TimetableData = [...timetableData];
-          term5CourseMetadata = { ...courseMetadata };
-          if (currentSelectedTerm === '5') {
-            loadTermData('5');
-            renderTimetable();
+          const t5Remote = processTimetable(csvText, false);
+          if (t5Remote.slots.length > 0) {
+            term5TimetableData = t5Remote.slots;
+            term5CourseMetadata = t5Remote.metadata;
+            if (currentSelectedTerm === '5') {
+              loadTermData('5');
+              renderTimetable();
+            }
           }
         }
       })
