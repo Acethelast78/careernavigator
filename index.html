@@ -95,49 +95,55 @@
   
   
   
+  /* Attendance Tracker Modal - Premium Balanced UI Layout */
   .tt-modal.wide-tracker {
-    max-width: min(920px, 94vw) !important;
+    max-width: min(980px, 94vw) !important;
+  }
+  .tt-modal.wide-tracker .tt-modal-body {
+    padding: 14px 18px !important;
+    gap: 8px !important;
+  }
+  .tt-modal.wide-tracker .tt-modal-header {
+    padding: 12px 18px !important;
   }
   
-  /* Tracker Grid System - Generous 2-Column Responsive Layout */
   .tt-tracker-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 10px;
     align-items: start;
-    margin-top: 10px;
+    margin-top: 6px;
   }
   
   .tt-tracker-card {
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 18px;
+    border-radius: 10px;
+    padding: 10px 14px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     position: relative;
     overflow: hidden;
     transition: all 0.2s ease;
   }
   .tt-tracker-card:hover {
-    box-shadow: 0 6px 16px rgba(0,0,0,0.09);
-    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.07);
   }
 
-  /* 4-Slot Absence Meter */
+  /* 4-Slot Absence Meter - Balanced Proportions */
   .tt-absence-meter {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin: 12px 0 8px 0;
+    gap: 6px;
+    margin: 6px 0 0 0;
   }
   .tt-absence-slot {
-    height: 30px;
-    border-radius: 7px;
+    height: 24px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 700;
     border: 1px solid rgba(0,0,0,0.12);
     transition: all 0.2s ease;
@@ -166,12 +172,12 @@
 
   /* Missed Lecture Accordion */
   .tt-missed-accordion-toggle {
-    margin-top: 12px;
-    padding: 7px 12px;
+    margin-top: 6px;
+    padding: 4px 10px;
     background: rgba(255, 255, 255, 0.65);
     border: 1px solid rgba(0,0,0,0.12);
-    border-radius: 7px;
-    font-size: 12px;
+    border-radius: 6px;
+    font-size: 11px;
     font-weight: 700;
     color: inherit;
     cursor: pointer;
@@ -195,8 +201,10 @@
   .tt-missed-accordion-body {
     display: none;
     flex-direction: column;
-    gap: 6px;
-    margin-top: 8px;
+    gap: 5px;
+    margin-top: 6px;
+    max-height: 160px;
+    overflow-y: auto;
   }
   .tt-missed-accordion-body.open {
     display: flex;
@@ -2384,7 +2392,8 @@ function openClassDetails(slotJsonOrObj) {
     </div>`;
 
   // Attendees
-  const attendees = slot.attendeeSids || (ttSID ? [ttSID] : []);
+  const rawAttendees = slot.attendeeSids || (ttSID ? [ttSID] : []);
+  const attendees = rawAttendees.filter(s => studentMap[s]);
   if (ttSIDs.length > 1) {
     const names = attendees.map(sid => studentMap[sid].Name).join(', ');
     detailsCardHtml += `
@@ -2453,7 +2462,14 @@ function closeClassModal() {
   if (modalDialog) modalDialog.classList.remove('wide-tracker');
   if (overlay) overlay.classList.remove('open');
   currentModalClass = null;
-  // Re-render schedule to update notes indicators
+  ttSIDs = ttSIDs.filter(s => studentMap[s]);
+  if (ttSIDs.length === 0) {
+    const fallback = localStorage.getItem('xlri_default_student') || (studentMap['B25323'] ? 'B25323' : Object.keys(studentMap)[0]);
+    if (fallback && studentMap[fallback]) {
+      ttSIDs = [fallback];
+      ttSID = fallback;
+    }
+  }
   renderTimetable();
 }
 
@@ -2627,7 +2643,10 @@ function toggleTrackerAttendance(sid, dateStr, slotIndex) {
 }
 
 function toggleAttendance(sidsStr, dateStr, slotIndex) {
-  const sids = String(sidsStr).split(',');
+  const sids = String(sidsStr).split(',').filter(s => studentMap[s]);
+  if (sids.length === 0 && ttSID && studentMap[ttSID]) {
+    sids.push(ttSID);
+  }
   sids.forEach(sid => {
     const key = 'xlri_absent_' + sid + '_' + dateStr + '_' + slotIndex;
     const isAbsent = localStorage.getItem(key) === 'true';
@@ -2654,8 +2673,9 @@ function openAttendanceTracker(activeSid) {
 
   if (modalDialog) modalDialog.classList.add('wide-tracker');
 
+  ttSIDs = ttSIDs.filter(s => studentMap[s]);
   const fallbackSid = studentMap['B25323'] ? 'B25323' : Object.keys(studentMap)[0];
-  const sid = activeSid || (ttSIDs.length > 0 ? ttSIDs[0] : fallbackSid);
+  const sid = (activeSid && studentMap[activeSid]) ? activeSid : (ttSIDs.length > 0 ? ttSIDs[0] : fallbackSid);
   if (ttSIDs.length === 0 && sid) { ttSIDs = [sid]; ttSID = sid; }
   const stu = studentMap[sid];
   if (!stu) return;
@@ -2663,12 +2683,13 @@ function openAttendanceTracker(activeSid) {
   titleEl.textContent = "Attendance Tracker";
 
   let selectorHtml = '';
-  if (ttSIDs.length > 1) {
+  const validSIDs = ttSIDs.filter(s => studentMap[s]);
+  if (validSIDs.length > 1) {
     selectorHtml = `
-      <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+      <div style="margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
         <span style="font-size: 12px; font-weight: 600; color: var(--text-secondary);">Select Student:</span>
         <select class="tt-select" onchange="openAttendanceTracker(this.value)" style="padding: 3px 8px; font-size: 12px; font-weight: 600; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-primary);">
-          ${ttSIDs.map(s => `<option value="${s}" ${s === sid ? 'selected' : ''}>${studentMap[s].Name}</option>`).join('')}
+          ${validSIDs.map(s => `<option value="${s}" ${s === sid ? 'selected' : ''}>${studentMap[s].Name}</option>`).join('')}
         </select>
       </div>`;
   }
@@ -2715,7 +2736,7 @@ function openAttendanceTracker(activeSid) {
       badgeBg = '#fffbeb'; badgeBorder = '#fde68a'; badgeColor = '#d97706';
     }
 
-    // 4-Slot Absence Meter (Compact)
+    // 4-Slot Absence Meter (Balanced Proportions)
     let absenceSlotsHtml = '';
     const ordinals = ['1st', '2nd', '3rd', '4th'];
     for (let slotNum = 1; slotNum <= 4; slotNum++) {
@@ -2729,7 +2750,7 @@ function openAttendanceTracker(activeSid) {
       absenceSlotsHtml += `<div class="tt-absence-slot used" style="grid-column: span 4; background:#b91c1c; color:#fff; margin-top:4px;" title="Penalty">⚠️ +${missedCount - 4} Over Limit</div>`;
     }
 
-    // Collapsible Missed Lectures Accordion
+    // Collapsible Missed Lectures Accordion (Balanced Proportions)
     let accordionHtml = '';
     if (missedSlots.length > 0) {
       const accordionId = `missed-acc-${cIdx}`;
@@ -2737,7 +2758,7 @@ function openAttendanceTracker(activeSid) {
         <div style="margin-top: 6px;">
           <div class="tt-missed-accordion-toggle" onclick="toggleMissedAccordion('${accordionId}')">
             <span>📍 ${missedSlots.length} Missed Lecture${missedSlots.length > 1 ? 's' : ''}</span>
-            <span id="icon-${accordionId}" style="font-size: 12px;">▾</span>
+            <span id="icon-${accordionId}" style="font-size: 11px;">▾</span>
           </div>
           <div class="tt-missed-accordion-body" id="${accordionId}">
             ${missedSlots.map(s => `
@@ -2761,12 +2782,12 @@ function openAttendanceTracker(activeSid) {
     cardsHtml += `
       <div class="tt-tracker-card ${colorClass}">
         <div>
-          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 2px;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 6px;">
             <div style="flex: 1; min-width: 0;">
               <div style="font-size: 13px; font-weight: 800; line-height: 1.25; color: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${course['Subject Name']}">${course['Subject Name']}</div>
-              <div style="font-size: 10.5px; font-weight: 600; margin-top: 1px; opacity: 0.85; color: inherit;">${courseCode} · ${course.Section || 'Section E'}</div>
+              <div style="font-size: 10.5px; font-weight: 600; opacity: 0.85; margin-top: 1px; color: inherit;">${courseCode} · ${course.Section || 'Section E'}</div>
             </div>
-            <span style="flex-shrink: 0; background: ${badgeBg}; color: ${badgeColor}; border: 1px solid ${badgeBorder}; padding: 2px 7px; border-radius: 5px; font-size: 11px; font-weight: 800; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+            <span style="flex-shrink: 0; background: ${badgeBg}; color: ${badgeColor}; border: 1px solid ${badgeBorder}; padding: 2px 7px; border-radius: 5px; font-size: 10.5px; font-weight: 800; white-space: nowrap;">
               ${attendedCount} / ${conductedCount} Attended
             </span>
           </div>
@@ -2784,14 +2805,14 @@ function openAttendanceTracker(activeSid) {
 
   const contentHtml = `
     <div>
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-bottom: 4px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-bottom: 2px;">
         <div style="font-size: 14px; font-weight: 800; color: var(--text-primary);">${stu.Name} <span style="font-size: 11.5px; font-weight: 500; color: var(--text-secondary);">(${stu.SID})</span></div>
-        <div style="font-size: 11.5px; font-weight: 700; color: var(--text-secondary); background: var(--surface2); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--border);">
+        <div style="font-size: 11.5px; font-weight: 700; color: var(--text-secondary); background: var(--surface2); padding: 2px 8px; border-radius: 6px; border: 1px solid var(--border);">
           Overall: ${totalAttendedBatch}/${totalConductedBatch} Attended (${overallPct}%) · ${totalMissedBatch} Total Absences
         </div>
       </div>
-      <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 6px;">
-        Term ${currentSelectedTerm} Attendance · Tracked on conducted lectures (Exams excluded · Max 4 permissible absences before grade penalty).
+      <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">
+        Term ${currentSelectedTerm} Attendance · Tracked on conducted lectures (Max 4 permissible absences before grade penalty).
       </div>
     </div>
     
@@ -3258,8 +3279,10 @@ function renderTimetable() {
 
   // 1. Get weeks in timetable
   const weeks = getWeeksInTimetable();
-  const primaryStu = ttSIDs.length > 0 ? studentMap[ttSIDs[0]] : null;
-  const namesTitle = ttSIDs.map(sid => studentMap[sid].Name).join(' & ');
+  ttSIDs = ttSIDs.filter(sid => studentMap[sid]);
+  const validStudents = ttSIDs.map(sid => studentMap[sid]).filter(Boolean);
+  const primaryStu = validStudents.length > 0 ? validStudents[0] : null;
+  const namesTitle = validStudents.map(stu => stu.Name).join(' & ');
   let titleText = '';
   if (ttSIDs.length > 0) {
     titleText = ttSIDs.length > 1 ? `Comparison: ${namesTitle}` : `Timetable Calendar - ${primaryStu.Name}`;
