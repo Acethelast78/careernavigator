@@ -2455,7 +2455,7 @@ function closeClassModal() {
   if (overlay) overlay.classList.remove('open');
   currentModalClass = null;
   // Re-render schedule to update notes indicators
-  if (ttSIDs.length) renderTimetable();
+  renderTimetable();
 }
 
 function editModalNote(sid) {
@@ -2659,7 +2659,9 @@ function openAttendanceTracker(activeSid) {
 
   if (modalDialog) modalDialog.classList.add('wide-tracker');
 
-  const sid = activeSid || ttSIDs[0] || Object.keys(studentMap)[0];
+  const fallbackSid = studentMap['B25323'] ? 'B25323' : Object.keys(studentMap)[0];
+  const sid = activeSid || (ttSIDs.length > 0 ? ttSIDs[0] : fallbackSid);
+  if (ttSIDs.length === 0 && sid) { ttSIDs = [sid]; ttSID = sid; }
   const stu = studentMap[sid];
   if (!stu) return;
 
@@ -2864,79 +2866,6 @@ function lockAllSubjects() {
   ttShowAllSubjects = false;
   ttSelectedSubject = 'all';
   renderTimetable();
-}
-
-const STUDENT_CHIP_COLORS = [
-  { bg: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe' }, // blue
-  { bg: '#f0fdf4', text: '#15803d', border: '#bbf7d0' }, // green
-  { bg: '#faf5ff', text: '#7e22ce', border: '#e9d5ff' }, // purple
-  { bg: '#fff7ed', text: '#c2410c', border: '#fed7aa' }, // orange
-  { bg: '#ecfeff', text: '#0369a1', border: '#a5f3fc' }, // cyan
-  { bg: '#fff1f2', text: '#be123c', border: '#fecdd3' }, // rose
-  { bg: '#fffbeb', text: '#b45309', border: '#fde68a' }, // amber
-  { bg: '#fdf4ff', text: '#a21caf', border: '#f5d0fe' }  // fuchsia
-];
-
-const STUDENT_CHIP_COLORS_DARK = [
-  { bg: '#1e3a8a', text: '#bfdbfe', border: '#3b82f6' }, // blue
-  { bg: '#064e3b', text: '#bbf7d0', border: '#10b981' }, // green
-  { bg: '#581c87', text: '#e9d5ff', border: '#a855f7' }, // purple
-  { bg: '#7c2d12', text: '#fed7aa', border: '#f97316' }, // orange
-  { bg: '#164e63', text: '#a5f3fc', border: '#06b6d4' }, // cyan
-  { bg: '#881337', text: '#fecdd3', border: '#f43f5e' }, // rose
-  { bg: '#78350f', text: '#fde68a', border: '#f59e0b' }, // amber
-  { bg: '#701a75', text: '#f5d0fe', border: '#d946ef' }  // fuchsia
-];
-
-function renderSelectedStudentChips() {
-  const container = document.getElementById('tt-chips-container');
-  if (!container) return;
-  
-  if (ttSIDs.length === 0) {
-    container.innerHTML = '';
-    return;
-  }
-  
-  const isDark = typeof document !== 'undefined' && document.body && document.body.classList && document.body.classList.contains('dark-theme');
-  const chipColors = isDark ? STUDENT_CHIP_COLORS_DARK : STUDENT_CHIP_COLORS;
-  
-  container.innerHTML = ttSIDs.map((sid, idx) => {
-    const stu = studentMap[sid];
-    if (!stu) return '';
-    const color = chipColors[idx % chipColors.length];
-    
-    const isDefault = localStorage.getItem('xlri_default_student') === sid;
-    const pinBtn = isDefault 
-      ? `<button onclick="setDefaultStudent('')" style="background: ${color.text}; color: #fff; border: none; cursor: pointer; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 4px;" title="This is your default student. Click to unset.">📌 Default</button>`
-      : `<button onclick="setDefaultStudent('${sid}')" style="background: rgba(0,0,0,0.05); color: ${color.text}; border: none; cursor: pointer; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 4px;" title="Set as default student on page load" onmouseover="this.style.background='rgba(0,0,0,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.05)'">📌 Set Default</button>`;
-    
-    return `
-      <div style="background: ${color.bg}; color: ${color.text}; border: 1px solid ${color.border}; display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: all 0.2s ease;">
-        <span>${stu.Name} <span style="font-size: 11px; opacity: 0.8; font-weight: 400; margin-left: 6px;">(${stu.SID})</span></span>
-        ${pinBtn}
-        <button onclick="removeSelectedStudent('${sid}')" style="background: rgba(0,0,0,0.05); border: none; color: ${color.text}; cursor: pointer; font-size: 14px; font-weight: bold; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; padding: 0; line-height: 1; transition: background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.05)'">&times;</button>
-      </div>`;
-  }).join('');
-}
-
-function removeSelectedStudent(sid) {
-  ttSIDs = ttSIDs.filter(s => s !== sid);
-  ttSID = ttSIDs[0] || null;
-  if (ttSIDs.length === 0) {
-    ttSelectedSubject = 'all';
-    ttShowAllSubjects = false;
-  }
-  renderSelectedStudentChips();
-  renderTimetable();
-}
-
-function setDefaultStudent(sid) {
-  if (sid) {
-    localStorage.setItem('xlri_default_student', sid);
-  } else {
-    localStorage.removeItem('xlri_default_student');
-  }
-  renderSelectedStudentChips();
 }
 
 function getWeeklyGridHTML(weekStart, isPrint = false) {
@@ -3225,6 +3154,29 @@ function lockAllSubjects() {
 }
 
 // Student chip management
+const STUDENT_CHIP_COLORS = [
+  { bg: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe' }, // blue
+  { bg: '#f0fdf4', text: '#15803d', border: '#bbf7d0' }, // green
+  { bg: '#faf5ff', text: '#7e22ce', border: '#e9d5ff' }, // purple
+  { bg: '#fff7ed', text: '#c2410c', border: '#fed7aa' }, // orange
+  { bg: '#ecfeff', text: '#0369a1', border: '#a5f3fc' }, // cyan
+  { bg: '#fff1f2', text: '#be123c', border: '#fecdd3' }, // rose
+  { bg: '#fffbeb', text: '#b45309', border: '#fde68a' }, // amber
+  { bg: '#fdf4ff', text: '#a21caf', border: '#f5d0fe' }  // fuchsia
+];
+
+const STUDENT_CHIP_COLORS_DARK = [
+  { bg: '#1e3a8a', text: '#bfdbfe', border: '#3b82f6' }, // blue
+  { bg: '#064e3b', text: '#bbf7d0', border: '#10b981' }, // green
+  { bg: '#581c87', text: '#e9d5ff', border: '#a855f7' }, // purple
+  { bg: '#7c2d12', text: '#fed7aa', border: '#f97316' }, // orange
+  { bg: '#164e63', text: '#a5f3fc', border: '#06b6d4' }, // cyan
+  { bg: '#881337', text: '#fecdd3', border: '#f43f5e' }, // rose
+  { bg: '#78350f', text: '#fde68a', border: '#f59e0b' }, // amber
+  { bg: '#701a75', text: '#f5d0fe', border: '#d946ef' }  // fuchsia
+];
+
+
 function renderSelectedStudentChips() {
   const container = document.getElementById('tt-chips-container');
   if (!container) return;
@@ -3830,6 +3782,12 @@ const savedDefaultSid = localStorage.getItem('xlri_default_student');
 if (savedDefaultSid && studentMap[savedDefaultSid]) {
   ttSIDs = [savedDefaultSid];
   ttSID = savedDefaultSid;
+} else {
+  const fallbackSid = studentMap['B25323'] ? 'B25323' : Object.keys(studentMap)[0];
+  if (fallbackSid) {
+    ttSIDs = [fallbackSid];
+    ttSID = fallbackSid;
+  }
 }
 
 function initTheme() {
