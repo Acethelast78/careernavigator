@@ -92,19 +92,168 @@
     border-left: 2px solid var(--accent) !important;
   }
 
-  /* Sunday Highlighting */
-  .tt-grid-header.sunday {
+  
+  
+  
+  .tt-modal.wide-tracker {
+    max-width: min(920px, 94vw) !important;
+  }
+  
+  /* Tracker Grid System - Generous 2-Column Responsive Layout */
+  .tt-tracker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 16px;
+    align-items: start;
+    margin-top: 10px;
+  }
+  
+  .tt-tracker-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+  .tt-tracker-card:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.09);
+    transform: translateY(-1px);
+  }
+
+  /* 4-Slot Absence Meter */
+  .tt-absence-meter {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 12px 0 8px 0;
+  }
+  .tt-absence-slot {
+    height: 30px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11.5px;
+    font-weight: 700;
+    border: 1px solid rgba(0,0,0,0.12);
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+  .tt-absence-slot.used {
     background: #fee2e2 !important;
-    color: #991b1b !important;
     border-color: #fca5a5 !important;
+    color: #dc2626 !important;
   }
-  .tt-grid-header.sunday span {
-    color: #7f1d1d !important;
+  .tt-absence-slot.available {
+    background: rgba(255, 255, 255, 0.75) !important;
+    color: var(--text-primary) !important;
+    border-color: rgba(0,0,0,0.12) !important;
   }
-  .tt-grid-cell.sunday {
+  .dark-theme .tt-absence-slot.used {
+    background: rgba(239, 68, 68, 0.25) !important;
+    border-color: rgba(239, 68, 68, 0.45) !important;
+    color: #fca5a5 !important;
+  }
+  .dark-theme .tt-absence-slot.available {
+    background: rgba(17, 24, 39, 0.6) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: #f3f4f6 !important;
+  }
+
+  /* Missed Lecture Accordion */
+  .tt-missed-accordion-toggle {
+    margin-top: 12px;
+    padding: 7px 12px;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    transition: background 0.15s ease;
+  }
+  .tt-missed-accordion-toggle:hover {
+    background: rgba(255, 255, 255, 0.9);
+  }
+  .dark-theme .tt-missed-accordion-toggle {
+    background: rgba(17, 24, 39, 0.6);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  .dark-theme .tt-missed-accordion-toggle:hover {
+    background: rgba(17, 24, 39, 0.85);
+  }
+
+  .tt-missed-accordion-body {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .tt-missed-accordion-body.open {
+    display: flex;
+  }
+
+  /* Target Slot Glow Animation */
+  @keyframes slotPulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8); }
+    50% { transform: scale(1.06); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0.35); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  }
+  .slot-target-glow {
+    animation: slotPulse 1.4s ease 2 !important;
+    z-index: 99 !important;
+    position: relative !important;
+  }
+
+  /* Attendance Warning Alert Banners */
+  .tt-attendance-warning-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    border: 1px solid transparent;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+  }
+  .tt-attendance-warning-banner > span:first-child {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .tt-attendance-warning-banner.warning {
+    background: #fffbeb !important;
+    border-color: #fde68a !important;
+    color: #92400e !important;
+  }
+  .tt-attendance-warning-banner.warning strong {
+    color: #78350f !important;
+    font-weight: 700;
+  }
+  .tt-attendance-warning-banner.danger {
     background: #fef2f2 !important;
-    border-color: #fecdd3 !important;
+    border-color: #fecaca !important;
+    color: #991b1b !important;
   }
+  .tt-attendance-warning-banner.danger strong {
+    color: #7f1d1d !important;
+    font-weight: 700;
+  }
+  
 
   /* 8am Row Height Restriction */
   .tt-time-cell.row-8am,
@@ -217,234 +366,118 @@
   .tt-week-selector { display: flex; align-items: center; gap: 8px; }
   .tt-week-select { font-size: 13px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text-primary); min-height: 36px; font-weight: 500; }
   
+  
+  /* Full Today Column Highlighting (Blue) */
+  .tt-grid-header.today {
+    background: #dbeafe !important;
+    color: #1e40af !important;
+    border: 2px solid #3b82f6 !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+    z-index: 15;
+  }
+  .tt-grid-header.today span {
+    color: #1d4ed8 !important;
+    font-weight: 700;
+  }
+  .tt-grid-cell.today {
+    background: rgba(219, 234, 254, 0.42) !important;
+    border: 1px solid #93c5fd !important;
+  }
+  
+  body.dark-theme .tt-grid-header.today {
+    background: rgba(59, 130, 246, 0.28) !important;
+    color: #bfdbfe !important;
+    border-color: #3b82f6 !important;
+  }
+  body.dark-theme .tt-grid-header.today span {
+    color: #93c5fd !important;
+  }
+  body.dark-theme .tt-grid-cell.today {
+    background: rgba(59, 130, 246, 0.14) !important;
+    border-color: rgba(59, 130, 246, 0.35) !important;
+  }
+
   /* Calendar Grid View (Desktop) */
-  .tt-grid-container { overflow-anchor: none !important; overflow-x: auto; overflow-y: hidden; background: var(--surface2); border-radius: 8px; border: 1px solid var(--border); padding: 8px 0; margin-top: 10px; scroll-snap-type: x proximity; scroll-padding-left: 90px; }
+  .tt-grid-container { 
+    overflow-anchor: none !important; 
+    overflow-x: auto; 
+    overflow-y: hidden; 
+    background: var(--surface2); 
+    border-radius: 8px; 
+    border: 1px solid var(--border); 
+    padding: 8px 0; 
+    margin-top: 10px; 
+    scroll-snap-type: x mandatory !important; 
+    scroll-padding-left: 96px !important; 
+    -webkit-overflow-scrolling: touch;
+  }
   .tt-grid {
     display: grid;
-    grid-template-columns: 90px repeat(84, calc((100% - 90px - 36px) / 7));
     gap: 6px;
   }
 
-  
-  .tt-grid-header { background: var(--surface); padding: 10px 6px; text-align: center; font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; border-radius: 6px; border: 1px solid var(--border); scroll-snap-align: start; }
-  .tt-grid-header.today { background: var(--accent-light); color: var(--accent); border-color: rgba(37,99,235,0.3); }
-  .tt-grid-header span { display: block; font-size: 13px; font-weight: 600; text-transform: none; margin-top: 2px; color: var(--text-primary); }
-  .tt-grid-header.today span { color: var(--accent); }
-
-  .tt-time-col-header { background: transparent; border: none; color: #000000 !important; font-weight: 800 !important; }
-
-  .tt-time-cell { display: flex; flex-direction: column; justify-content: center; background: var(--surface); padding: 8px; border-radius: 6px; border: 1px solid var(--border); font-size: 11px; font-weight: 700; color: #000000; min-height: 80px; height: auto; box-sizing: border-box; text-align: center; line-height: 1.3; }
-  
-  .tt-grid-cell { background: var(--surface); border: 1px dashed #cbd5e1; border-radius: 6px; min-height: 80px; height: auto; box-sizing: border-box; position: relative; }
-  
-  .tt-class-block { position: absolute; inset: 2px; border-radius: 6px; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid transparent; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-  .tt-class-block:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.08); z-index: 10; }
-  
-  .tt-class-block.active { outline: 2px solid var(--accent); animation: glow-pulse 2s infinite alternate; }
-  @keyframes glow-pulse {
-    0% { box-shadow: 0 0 4px rgba(37,99,235,0.2); }
-    100% { box-shadow: 0 0 12px rgba(37,99,235,0.5); }
+  .tt-grid-header { 
+    background: #ffffff !important; 
+    padding: 8px 4px !important; 
+    text-align: center !important; 
+    font-size: 11px !important; 
+    font-weight: 700 !important; 
+    color: #64748b !important; 
+    text-transform: uppercase !important; 
+    letter-spacing: 0.04em !important; 
+    border-radius: 8px !important; 
+    border: 1px solid #e2e8f0 !important; 
+    scroll-snap-align: start !important; 
+    display: flex !important; 
+    flex-direction: column !important; 
+    justify-content: center !important; 
+    align-items: center !important; 
+  }
+  .tt-grid-header span {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    text-transform: none !important;
+    margin-top: 3px !important;
+    display: block !important;
   }
 
-  .tt-block-title { font-size: 11px; font-weight: 700; line-height: 1.25; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-  .tt-block-venue { font-size: 9px; font-weight: 600; display: flex; align-items: center; gap: 2px; opacity: 0.8; margin-top: auto; }
-  .tt-block-hasnotes { position: absolute; top: 4px; right: 4px; font-size: 10px; }
-
-  /* ── Course Color System ── */
-  .cc-general { background: #f8fafc; color: #475569; border-color: #cbd5e1; }
-  .cc-BAV { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
-  .cc-CMN { background: #ccfbf1; color: #115e59; border-color: #99f6e4; }
-  .cc-CNB { background: #dcfce7; color: #166534; border-color: #86efac; }
-  .cc-CSP { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
-  .cc-DGM { background: #f3e8ff; color: #6b21a8; border-color: #d8b4fe; }
-  .cc-DMD { background: #ffedd5; color: #c2410c; border-color: #fdba74; } /* Orange */
-  .cc-DPCC { background: #c7d2fe; color: #1e1b4b; border-color: #a5b4fc; } /* Saturated Indigo - not white */
-  .cc-INM { background: #ede9fe; color: #5b21b6; border-color: #c084fc; }
-  .cc-LSC { background: #bae6fd; color: #0369a1; border-color: #7dd3fc; } /* Sky Blue */
-  .cc-MABA { background: #d9f99d; color: #3f6212; border-color: #bef264; } /* Lime */
-  .cc-PJM { background: #fde68a; color: #92400e; border-color: #fcd34d; } /* Amber Gold */
-  .cc-PMG { background: #fae8ff; color: #86198f; border-color: #f5d0fe; } /* Fuchsia/Magenta */
-  .cc-PPBS { background: #e2e8f0; color: #334155; border-color: #cbd5e1; }
-  .cc-QCAM { background: #a5f3fc; color: #083344; border-color: #67e8f9; } /* Saturated Cyan - not white */
-  .cc-RBS { background: #fce7f3; color: #9d174d; border-color: #fbcfe8; }
-  .cc-SGM { background: #fef9c3; color: #713f12; border-color: #fde047; }
-  /* Term 5 Subject Palettes (Light Mode) */
-  .cc-GCD { background: #e0e7ff; color: #3730a3; border-color: #a5b4fc; }
-  .cc-IMCE { background: #cffafe; color: #155e75; border-color: #67e8f9; }
-  .cc-SDM { background: #fef9c3; color: #854d0e; border-color: #fde047; }
-  .cc-B2B { background: #fed7aa; color: #9a3412; border-color: #fdba74; }
-  .cc-BDM { background: #fce7f3; color: #831843; border-color: #fbcfe8; }
-  .cc-DBF { background: #dcfce7; color: #166534; border-color: #86efac; }
-  .cc-FME { background: #e0f2fe; color: #075985; border-color: #7dd3fc; }
-  .cc-MST { background: #f3e8ff; color: #581c87; border-color: #d8b4fe; }
-  .cc-OMCR { background: #ccfbf1; color: #115e59; border-color: #99f6e4; }
-  .cc-PCGM { background: #fae8ff; color: #701a75; border-color: #f5d0fe; }
-  .cc-SAP, .cc-SAPM { background: #d9f99d; color: #3f6212; border-color: #bef264; }
-  .cc-VCPE { background: #fde68a; color: #78350f; border-color: #fcd34d; } /* Saturated Yellow */
-
-  /* Academic Alerts Styling */
-  .tt-quiz-event {
-    background: #fffbeb !important;
-    color: #b45309 !important;
-    border: 2px solid #f59e0b !important;
+  /* Time slots sticky column - Bold Pure Black Text */
+  .tt-time-col-header { 
+    background: #ffffff !important; 
+    padding: 10px 4px !important; 
+    text-align: center !important; 
+    font-size: 13px !important; 
+    font-weight: 900 !important; 
+    color: #000000 !important; 
+    text-transform: uppercase !important; 
+    letter-spacing: 0.05em !important; 
+    border-radius: 8px !important; 
+    border: 1px solid #e2e8f0 !important; 
   }
-  .tt-exam-event {
-    background: #fff1f2 !important;
-    color: #e11d48 !important;
-    border: 2px dashed #f43f5e !important;
-    animation: exam-pulse 1.5s infinite;
+  .tt-time-cell { 
+    background: #ffffff !important; 
+    padding: 6px 4px !important; 
+    text-align: center !important; 
+    font-size: 12px !important; 
+    font-weight: 800 !important; 
+    color: #000000 !important; 
+    border-radius: 8px !important; 
+    border: 1px solid #e2e8f0 !important; 
+    display: flex !important; 
+    align-items: center !important; 
+    justify-content: center !important; 
+    line-height: 1.25 !important; 
   }
-  @keyframes exam-pulse {
-    0% { border-color: #f43f5e; box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.4); }
-    50% { border-color: #fda4af; box-shadow: 0 0 6px 3px rgba(244, 63, 94, 0.15); }
-    100% { border-color: #f43f5e; box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+  .sticky-col { 
+    position: sticky; 
+    left: 0; 
+    z-index: 20; 
+    scroll-snap-align: none !important; 
   }
-
-  /* Attendance Tracker & Group Scheduler Styling */
-  .tt-absent-badge {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    color: #ef4444;
-    font-size: 10px;
-    font-weight: bold;
-    line-height: 1;
-    pointer-events: none;
-    background: rgba(255,255,255,0.85);
-    border-radius: 50%;
-    width: 14px;
-    height: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  }
-  body.dark-theme .tt-absent-badge {
-    background: rgba(15,23,42,0.85);
-  }
-  .tt-attendance-pill {
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 700;
-    display: inline-block;
-  }
-  .tt-attendance-pill.status-safe {
-    background: #dcfce7;
-    color: #166534;
-  }
-  .tt-attendance-pill.status-warning {
-    background: #fef3c7;
-    color: #92400e;
-  }
-  .tt-attendance-pill.status-danger {
-    background: #fee2e2;
-    color: #991b1b;
-    animation: flash-red 1.5s infinite;
-  }
-  .status-safe-text { color: #166534; }
-  .status-warning-text { color: #d97706; }
-  .status-danger-text { color: #ef4444; font-weight: 800; }
-  
-  @keyframes flash-red {
-    0% { opacity: 1; }
-    50% { opacity: 0.6; }
-    100% { opacity: 1; }
-  }
-
-  .tt-scheduler-panel {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    margin-top: 16px;
-  }
-  .tt-scheduler-hdr {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--border);
-    padding-bottom: 12px;
-    margin-bottom: 20px;
-  }
-  .tt-scheduler-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-  .tt-scheduler-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .tt-scheduler-week {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .tt-scheduler-week-hdr {
-    background: var(--surface2);
-    padding: 10px 14px;
-    font-weight: 700;
-    font-size: 13px;
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--border);
-  }
-  .tt-scheduler-week-body {
-    padding: 12px 14px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .tt-scheduler-slot-pill {
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    color: #334155;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .tt-modal-alert-banner {
-    display: flex;
-    gap: 12px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    align-items: flex-start;
-    font-size: 13px;
-    line-height: 1.4;
-  }
-  .tt-modal-alert-banner .alert-icon {
-    font-size: 20px;
-    line-height: 1;
-  }
-  .tt-modal-alert-banner .alert-title {
-    font-weight: 800;
-    font-size: 12px;
-    letter-spacing: 0.05em;
-    margin-bottom: 2px;
-  }
-  .tt-modal-alert-banner.quiz {
-    background: #fffbeb;
-    color: #b45309;
-    border: 1px solid #f59e0b;
-  }
-  .tt-modal-alert-banner.quiz .alert-title {
-    color: #d97706;
-  }
-  .tt-modal-alert-banner.exam {
-    background: #fff1f2;
-    color: #e11d48;
-    border: 1px solid #f43f5e;
-  }
-  .tt-modal-alert-banner.exam .alert-title {
-    color: #f43f5e;
+  .tt-time-col-header.sticky-col { 
+    z-index: 25; 
+    scroll-snap-align: none !important;
   }
 
   /* Sunday Highlighting */
@@ -454,225 +487,146 @@
     border-color: #fca5a5 !important;
   }
   .tt-grid-header.sunday span {
-    color: #7f1d1d !important;
+    color: #991b1b !important;
+    font-weight: 700 !important;
   }
   .tt-grid-cell.sunday {
     background: #fef2f2 !important;
     border-color: #fecdd3 !important;
   }
 
-  /* 8am Row Height Restriction */
-  .tt-time-cell.row-8am,
-  .tt-grid-cell.row-8am {
-    min-height: 30px !important;
-  }
-  .tt-time-cell.row-8am {
-    padding: 4px 8px !important;
-  }
-
-  /* Weekly Scrollable Timeline */
-  .tt-weeks-scroll-container {
-    max-height: 70vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-right: 6px;
-    scroll-behavior: smooth;
-  }
-  .tt-week-block {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .tt-week-header-label {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .tt-week-header-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* Premium Drawer Modal Overlay */
-  .tt-modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.45); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; transition: opacity 0.25s ease; opacity: 0; pointer-events: none; }
-  .tt-modal-overlay.open { opacity: 1; pointer-events: auto; }
-  
-  .tt-modal { background: var(--surface); border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); border: 1px solid var(--border); width: 100%; max-width: 460px; overflow: hidden; transform: scale(0.95); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
-  .tt-modal-overlay.open .tt-modal { transform: scale(1); }
-  
-  .tt-modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-  .tt-modal-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
-  .tt-modal-close { background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 0 4px; }
-  .tt-modal-close:hover { color: var(--text-primary); }
-
-  .tt-modal-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
-  .tt-md-row { display: flex; gap: 8px; font-size: 13px; align-items: baseline; }
-  .tt-md-label { width: 80px; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.05em; flex-shrink: 0; }
-  .tt-md-val { color: var(--text-primary); font-weight: 500; }
-  .tt-md-val.title { font-size: 16px; font-weight: 700; color: var(--accent); }
-
-  /* Notepad in Modal */
-  .tt-notes-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-top: 6px; display: flex; flex-direction: column; gap: 6px; }
-  .tt-notes-box-header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
-  .tt-notes-txt-view { font-size: 12px; color: #047857; background: #ecfdf5; border-left: 3px solid #10b981; border-radius: 4px; padding: 6px 10px; font-style: italic; display: flex; justify-content: space-between; align-items: center; }
-  .tt-notes-txt-view button { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 14px; padding: 0 4px; }
-  .tt-notes-txt-view span { flex: 1; word-break: break-word; }
-  
-  .tt-notes-edit-area { display: flex; flex-direction: column; gap: 6px; }
-  .tt-notes-area { font-family: inherit; font-size: 12px; width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; min-height: 60px; resize: vertical; }
-  .tt-notes-area:focus { outline: none; border-color: var(--accent); background: white; }
-  
-  .tt-calendar-btn-link { color: var(--accent); cursor: pointer; font-weight: 600; font-size: 12px; text-decoration: none; border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; background: var(--surface2); transition: all 0.15s ease; margin-left: 8px; display: inline-flex; align-items: center; gap: 3px; }
-  .tt-calendar-btn-link:hover { background: var(--accent-light); border-color: var(--accent); text-decoration: none; }
-
-  /* Print Styles */
-  @page {
-    size: landscape;
-    margin: 10mm;
-  }
-  @media print {
-    body {
-      background: #ffffff !important;
-      color: #000000 !important;
-    }
-    .header, .filterbar, .tabs, #tt-student-selector-card, .screen-only-timetable, .tt-mobile-view {
-      display: none !important;
-    }
-    .main {
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-    .print-only-timetable {
-      display: block !important;
-    }
-    .tt-print-page {
-      page-break-after: always !important;
-      break-after: page !important;
-      margin-bottom: 20px;
-    }
-    .tt-grid-container { overflow-anchor: none !important;
-      border: none !important;
-      background: transparent !important;
-      padding: 0 !important;
-      overflow: visible !important;
-      display: block !important;
-    }
-    .tt-grid {
-      display: grid !important;
-      grid-template-columns: 90px repeat(7, minmax(120px, 1fr)) !important;
-      gap: 6px !important;
-    }
-    * {
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-  }
-  
-  /* ── Enhanced High-Contrast Modern Dark Theme ── */
-  body.dark-theme {
-    --bg: #0b0f19;
-    --surface: #111827;
-    --surface2: #1f2937;
-    --border: #374151;
-    --header-bg: #0f172a;
-    --accent: #3b82f6;
-    --accent-light: #1e3a8a;
-    --text-primary: #f9fafb;
-    --text-secondary: #9ca3af;
-    --text-muted: #6b7280;
-    --shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.5);
-  }
-  
-  
-  body.dark-theme .filter-label,
-  body.dark-theme label,
-  body.dark-theme .tt-control-group label {
-    color: #e5e7eb !important;
-  }
-  body.dark-theme #tt-sync-text {
-    color: #9ca3af !important;
-  }
-  body.dark-theme .tt-header-controls {
-    color: #e5e7eb !important;
-  }
-  body.dark-theme .btn-secondary,
-  body.dark-theme button.btn-secondary {
-    background: #1f2937 !important;
-    color: #f3f4f6 !important;
-    border-color: #374151 !important;
-  }
-
-  body.dark-theme input,
-  body.dark-theme select,
-  body.dark-theme textarea {
-    background: #1f2937 !important;
-    color: #f9fafb !important;
-    border-color: #4b5563 !important;
-  }
-  
-  body.dark-theme .tt-grid-container { overflow-anchor: none !important;
-    background: #0b0f19 !important;
-    border-color: #374151 !important;
-  }
-  
+  /* Dark Theme Time & Header Overrides */
   body.dark-theme .tt-grid-header {
-    background: #1f2937 !important;
-    color: #f3f4f6 !important;
-    border-color: #374151 !important;
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #94a3b8 !important;
   }
   body.dark-theme .tt-grid-header span {
-    color: #9ca3af !important;
+    color: #f8fafc !important;
   }
-  body.dark-theme .tt-grid-header.today {
-    background: #1e3a8a !important;
-    color: #bfdbfe !important;
-    border-color: #3b82f6 !important;
+  body.dark-theme .tt-time-col-header,
+  body.dark-theme .tt-time-cell {
+    background: #1e293b !important;
+    color: #ffffff !important;
+    border-color: #334155 !important;
   }
-  body.dark-theme .tt-grid-header.today span {
-    color: #93c5fd !important;
+
+  .tt-grid-cell { 
+    background: var(--surface); 
+    border: 1px dashed #cbd5e1; 
+    border-radius: 8px; 
+    min-height: 80px; 
+    height: auto; 
+    box-sizing: border-box; 
+    position: relative; 
+    padding: 3px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 4px; 
+    scroll-snap-align: start !important;
   }
-  body.dark-theme .tt-grid-header.sunday {
-    background: #271317 !important;
-    color: #fca5a5 !important;
-    border-color: #4c1d24 !important;
+  .tt-grid-cell.week-boundary { border-left: 2px solid #3b82f6 !important; }
+  .tt-grid-header.week-boundary { border-left: 2px solid #3b82f6 !important; }
+
+  /* Timetable Class Card Blocks on Grid */
+  .tt-class-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: all 0.15s ease;
+    user-select: none;
+    box-sizing: border-box;
   }
-  body.dark-theme .tt-grid-header.sunday span {
-    color: #f87171 !important;
+  .tt-class-block:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    filter: brightness(0.96);
   }
-  
-  body.dark-theme .tt-time-cell,
-  body.dark-theme .tt-time-col-header {
-    background: #182234 !important;
-    color: #9ca3af !important;
-    border-color: #374151 !important;
+  .tt-class-block.active {
+    outline: 2px solid #ef4444 !important;
+    animation: activeGlow 1.5s infinite;
+  }
+  @keyframes activeGlow {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+    50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.2); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+  }
+  .tt-block-title {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: inherit;
+  }
+  .tt-block-venue {
+    font-size: 9px;
+    color: inherit;
+    opacity: 0.85;
     font-weight: 600;
   }
-  
-  body.dark-theme .tt-grid-cell {
-    background: #111827 !important;
-    border-color: #1f2937 !important;
+  .tt-block-hasnotes {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 10px;
   }
-  body.dark-theme .tt-grid-cell.sunday {
-    background: #160c0e !important;
-    border-color: #271317 !important;
+  .tt-absent-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 10px;
+    line-height: 1;
+    z-index: 5;
   }
-  body.dark-theme .tt-grid-cell.week-boundary {
-    border-left: 2px solid #4b5563 !important;
-  }
-  body.dark-theme .tt-grid-header.week-boundary {
-    border-left: 2px solid #4b5563 !important;
-  }
+
+  /* Full Subject Pastel Palette */
+  .cc-general { background: #f8fafc; color: #475569; border-color: #cbd5e1; }
+  .cc-BAV { background: #dbeafe !important; color: #1e40af !important; border-color: #93c5fd !important; }
+  .cc-CMN { background: #ccfbf1 !important; color: #115e59 !important; border-color: #99f6e4 !important; }
+  .cc-CNB { background: #dcfce7 !important; color: #166534 !important; border-color: #86efac !important; }
+  .cc-CSP { background: #d1fae5 !important; color: #065f46 !important; border-color: #6ee7b7 !important; }
+  .cc-DGM { background: #f3e8ff !important; color: #6b21a8 !important; border-color: #d8b4fe !important; }
+  .cc-DMD { background: #ffedd5 !important; color: #c2410c !important; border-color: #fdba74 !important; }
+  .cc-DPCC { background: #c7d2fe !important; color: #1e1b4b !important; border-color: #a5b4fc !important; }
+  .cc-INM { background: #ede9fe !important; color: #5b21b6 !important; border-color: #c084fc !important; }
+  .cc-LSC { background: #bae6fd !important; color: #0369a1 !important; border-color: #7dd3fc !important; }
+  .cc-MABA { background: #d9f99d !important; color: #3f6212 !important; border-color: #bef264 !important; }
+  .cc-PJM { background: #fde68a !important; color: #92400e !important; border-color: #fcd34d !important; }
+  .cc-PMG { background: #fae8ff !important; color: #86198f !important; border-color: #f5d0fe !important; }
+  .cc-PPBS { background: #e2e8f0 !important; color: #334155 !important; border-color: #cbd5e1 !important; }
+  .cc-QCAM { background: #a5f3fc !important; color: #083344 !important; border-color: #67e8f9 !important; }
+  .cc-RBS { background: #fce7f3 !important; color: #9d174d !important; border-color: #fbcfe8 !important; }
+  .cc-SGM { background: #fef9c3 !important; color: #713f12 !important; border-color: #fde047 !important; }
+  .cc-GCD { background: #e0e7ff !important; color: #3730a3 !important; border-color: #a5b4fc !important; }
+  .cc-IMCE { background: #cffafe !important; color: #155e75 !important; border-color: #67e8f9 !important; }
+  .cc-SDM { background: #fef9c3 !important; color: #854d0e !important; border-color: #fde047 !important; }
+  .cc-B2B { background: #fed7aa !important; color: #9a3412 !important; border-color: #fdba74 !important; }
+  .cc-BDM { background: #fce7f3 !important; color: #831843 !important; border-color: #fbcfe8 !important; }
+  .cc-DBF { background: #dcfce7 !important; color: #166534 !important; border-color: #86efac !important; }
+  .cc-FME { background: #e0f2fe !important; color: #075985 !important; border-color: #7dd3fc !important; }
+  .cc-MST { background: #f3e8ff !important; color: #581c87 !important; border-color: #d8b4fe !important; }
+  .cc-OMCR { background: #ccfbf1 !important; color: #115e59 !important; border-color: #99f6e4 !important; }
+  .cc-PCGM { background: #fae8ff !important; color: #701a75 !important; border-color: #f5d0fe !important; }
+  .cc-SAP, .cc-SAPM { background: #d9f99d !important; color: #3f6212 !important; border-color: #bef264 !important; }
+  .cc-VCPE { background: #fde68a !important; color: #78350f !important; border-color: #fcd34d !important; }
+
+  /* Dark Theme Card Overrides */
+  body.dark-theme .cc-BAV { background: rgba(59, 130, 246, 0.22) !important; color: #93c5fd !important; border-color: rgba(59, 130, 246, 0.45) !important; }
+  body.dark-theme .cc-DGM { background: rgba(168, 85, 247, 0.22) !important; color: #d8b4fe !important; border-color: rgba(168, 85, 247, 0.45) !important; }
+  body.dark-theme .cc-DPCC { background: rgba(99, 102, 241, 0.25) !important; color: #c7d2fe !important; border-color: rgba(99, 102, 241, 0.5) !important; }
+  body.dark-theme .cc-INM { background: rgba(139, 92, 246, 0.22) !important; color: #c4b5fd !important; border-color: rgba(139, 92, 246, 0.45) !important; }
+  body.dark-theme .cc-LSC { background: rgba(2, 132, 199, 0.22) !important; color: #7dd3fc !important; border-color: rgba(2, 132, 199, 0.45) !important; }
+  body.dark-theme .cc-PJM { background: rgba(217, 119, 6, 0.25) !important; color: #fde68a !important; border-color: rgba(217, 119, 6, 0.5) !important; }
+  body.dark-theme .cc-MABA { background: rgba(101, 163, 13, 0.22) !important; color: #bef264 !important; border-color: rgba(101, 163, 13, 0.45) !important; }
+  body.dark-theme .cc-GCD { background: rgba(79, 70, 229, 0.25) !important; color: #c7d2fe !important; border-color: rgba(79, 70, 229, 0.5) !important; }
+  body.dark-theme .cc-IMCE { background: rgba(8, 145, 178, 0.22) !important; color: #67e8f9 !important; border-color: rgba(8, 145, 178, 0.45) !important; }
+  body.dark-theme .cc-SDM { background: rgba(180, 83, 9, 0.25) !important; color: #fde047 !important; border-color: rgba(180, 83, 9, 0.5) !important; }
+  body.dark-theme .cc-FME { background: rgba(2, 132, 199, 0.22) !important; color: #7dd3fc !important; border-color: rgba(2, 132, 199, 0.45) !important; }
 
   body.dark-theme .tt-class-block {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
@@ -795,6 +749,161 @@
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.4);
   }
+
+
+  
+  /* Sleek Class Details Modal */
+  .tt-detail-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0;
+  }
+  .tt-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tt-detail-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+  }
+  .tt-detail-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  
+
+  /* Modal Overlay & Dialog Styles */
+  .tt-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .tt-modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .tt-modal {
+    background: var(--surface);
+    border-radius: 14px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2), 0 10px 10px -5px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+    transform: scale(0.96);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .tt-modal-overlay.open .tt-modal {
+    transform: scale(1);
+  }
+  .tt-modal.wide-tracker {
+    max-width: min(920px, 94vw) !important;
+  }
+  .tt-modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface);
+  }
+  .tt-modal-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .tt-modal-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: var(--text-muted);
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+  }
+  .tt-modal-close:hover {
+    color: var(--text-primary);
+  }
+  .tt-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Modal Metadata rows */
+  .tt-md-row { display: flex; flex-direction: column; gap: 2px; }
+  .tt-md-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.04em; }
+  .tt-md-val { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+  .tt-md-val.title { font-size: 16px; font-weight: 800; color: var(--accent); }
+
+  /* Modal Alert Banners */
+  .tt-modal-alert-banner { display: flex; gap: 12px; padding: 12px 16px; border-radius: 8px; margin-bottom: 8px; align-items: flex-start; font-size: 13px; line-height: 1.4; }
+  .tt-modal-alert-banner .alert-icon { font-size: 20px; line-height: 1; }
+  .tt-modal-alert-banner .alert-title { font-weight: 800; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .tt-modal-alert-banner.quiz { background: #fffbeb; color: #b45309; border: 1px solid #f59e0b; }
+  .tt-modal-alert-banner.quiz .alert-title { color: #d97706; }
+  .tt-modal-alert-banner.exam { background: #fff1f2; color: #e11d48; border: 1px solid #f43f5e; }
+  .tt-modal-alert-banner.exam .alert-title { color: #f43f5e; }
+
+  /* Exam & Quiz Event Card Classes */
+  .tt-exam-event {
+    background: #fff1f2 !important;
+    color: #991b1b !important;
+    border: 1px solid #fca5a5 !important;
+    box-shadow: 0 1px 3px rgba(239, 68, 68, 0.12);
+  }
+  .tt-quiz-event {
+    background: #fffbeb !important;
+    color: #92400e !important;
+    border: 1px solid #fde68a !important;
+    box-shadow: 0 1px 3px rgba(245, 158, 11, 0.12);
+  }
+  body.dark-theme .tt-exam-event {
+    background: rgba(239, 68, 68, 0.22) !important;
+    color: #fca5a5 !important;
+    border-color: rgba(239, 68, 68, 0.45) !important;
+  }
+  body.dark-theme .tt-quiz-event {
+    background: rgba(245, 158, 11, 0.22) !important;
+    color: #fde68a !important;
+    border-color: rgba(245, 158, 11, 0.45) !important;
+  }
+
+  /* Modal Class Notes Box */
+  .tt-notes-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-top: 6px; }
+  .tt-notes-txt-view { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #ecfdf5; color: #065f46; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #10b981; font-size: 12.5px; margin-top: 6px; }
+  .tt-notes-txt-view button { background: none; border: none; cursor: pointer; color: inherit; font-size: 14px; padding: 0 3px; opacity: 0.75; }
+  .tt-notes-txt-view button:hover { opacity: 1; }
+  .tt-notes-edit-area { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+  .tt-notes-area { width: 100%; min-height: 60px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-primary); padding: 8px; font-family: inherit; font-size: 12.5px; resize: vertical; box-sizing: border-box; }
 
 </style>
 </head>
@@ -1465,7 +1574,7 @@ const TIME_SLOTS = [
 ];
 
 const TERM4_FROZEN_CSV = "\"      TERM IV\",\"\",\"\",\"\",\"\",\"\",\"Venue: Sec E MCR-07 , Sec F MCR-08 , Common MCR-07.\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"DAY\",\"Date/Time\",\"8:00 AM\",\"08:30 To 10:00 AM\",\"10:20 To 11:50AM\",\"12:10 To 1:40 PM\",\"02:45 to 4:15 PM\",\"04:30 To 6:00 PM\",\"06:15 To 7:45 PM\",\"08:00 To 9:30PM\",\"\",\"\",\"\",\"\",\"\"\n\"Monday\",\"15-06-2026\",\"\",\"Registration Term IV 9:30 am - 12:30 pm\",\"\",\"\",\"PPBS (Dr.Smriti)\",\"CMN sec E\",\"CMN sec F\",\"\",\"\",\"Course Code \",\"Courses Name\",\"Faculty\",\"TA\"\n\"Tuesday\",\"16-06-2026\",\"\",\"\",\"MABA\",\"CNB Sec E\",\"CNB Sec F\",\"PJM (LCR01)\",\"PJM (LCR01)\",\"\",\"\",\"BAVBD25-4\",\"Business Analysis & Valuation  (20)\",\"Dr N Sivasankaran\",\"Ms.Surekha\"\n\"\",\"\",\"\",\"\",\"\",\"DGM Sec F\",\"DGM Sec E\",\"\",\"\",\"\",\"\",\"CMNBD25-4\",\"Conflicts Management and Negotiations (20)\",\"Dr Ankit  \",\"Ms.Chandrima\"\n\"Wednesday\",\"17-06-2026\",\"\",\"\",\"\",\"\",\"PPBS (Dr.Smriti)\",\"CMN sec E\",\"CMN sec F\",\"\",\"\",\"CNBBD25-4\",\"Consumer Behaviour \",\"Dr Megha Bharti\",\"Ms.Indu\"\n\"\",\"\",\"\",\"\",\"INM Sec F\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"CSPBD25-4\",\"Corporate Sustainability in Practice  (21)\",\"Dr Sanchayan Nath \",\"Mr.Shubham\"\n\"Thursday\",\"18-06-2026\",\"\",\"\",\"INM Sec F\",\"INM Sec E\",\"\",\"\",\"DPCC sec E (AG)\",\"DPCC sec F (AG)\",\"\",\"DGMBD25-4\",\"Digital Marketing (20)\",\"Dr Mohit Malhan\",\"Mr. Souparna\"\n\"\",\"\",\"\",\"\",\"DGM Sec E\",\"DGM Sec F\",\"\",\"\",\"\",\"\",\"\",\"DMDBD25-4\",\"Debt Markets and their Derivatives  (21)\",\"Dr Nand Kishore Rathi\",\"Mr. Souparna\"\n\"Friday\",\"19-06-2026\",\"\",\"CSP\",\"DPCC sec E (AG)\",\"CNB Sec E\",\"CNB Sec F\",\"MABA\",\"\",\"\",\"\",\"DPCCBD25-4\",\"Digital Product Management: Concept to Commercialization (20)\",\"Mr Atanu Ghosh, Dr Dipankar Bose, Dr Harshit Kumar Singh  \",\"Ms.Nupur\"\n\"\",\"\",\"\",\"\",\"\",\"DPCC (AG) sec F\",\"1 SGM Sec E\",\"\",\"1 SGM Sec F\",\"2 SGM Sec F\",\"\",\"INMBD25-4\",\"International Management (21)\",\"Dr Faisal Mohammad Ahsan  \",\"Ms.Chandrima\"\n\"Saturday\",\"20-06-2026\",\"\",\"PJM \",\"\",\"\",\"2 SGM Sec E\",\"3 SGM Sec E\",\"3 SGM Sec F\",\"\",\"\",\"LSCBD25-4\",\"Logistics and Supply Chain Management (20)\",\"Dr T A S Vijayaraghavan \",\"Mr. Souparna\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"MABABD25-4\",\"Management of Banking (20)\",\"Dr Pankaj Kumar Agarwal \",\"Ms.Indu\"\n\"Sunday\",\"21-06-2026\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"PJMBD25-4\",\"Project Management (20)\",\"Prof Rajiv Misra  \",\"Ms.Akanksha\"\n\"Monday\",\"22-06-2026\",\"\",\"DMD\",\"INM Sec F (10:30 am) MCR08\",\"INM Sec E\",\"PPBS (Dr.Smriti)\",\"CSP\",\"\",\"\",\"\",\"PMGBD25-4\",\"Product Management (20)\",\"Prof.Sanjay Patro\",\"Ms.Shikha\"\n\"\",\"\",\"\",\"\",\"DGM Sec E\",\"DGM Sec F\",\"\",\"\",\"\",\"\",\"\",\"PPBSBD25-4\",\"Public Policy and Business Strategy (20)\",\"Dr Smriti Das, Dr Kalyan Bhaskar\",\"Ms.Chandrima\"\n\"Tuesday\",\"23-06-2026\",\"\",\"PJM \",\"DMD\",\"MABA\",\"CNB Sec E\",\"CNB Sec F\",\"RBS\",\"\",\"\",\"QCAMBD25-4\",\"Quality Control, Analysis and Management (19)\",\"Dr Dipankar Bose \",\"Ms.Nupur\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"RBSBD25-4\",\"Resource Based Strategy (20)\",\"Dr Manoj T Thomas \",\"Ms.Shikha\"\n\"Wednesday\",\"24-06-2026\",\"\",\"DMD\",\"DGM Sec E\",\"DGM Sec F\",\"PPBS (Dr.Smriti)\",\"RBS\",\"\",\"\",\"\",\"SGMBD25-4\",\"Strategic Marketing\",\"Mr.Ulhas Joshi \",\"Ms.Nupur Ghosh\"\n\"\",\"\",\"\",\"\",\"INM Sec F (MCR8)\",\"INM Sec E (MCR07)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Thursday\",\"25-06-2026\",\"\",\"BAV Sec E\",\"BAV Sec E\",\"PJM \",\"BAV Sec F\",\"QCAM (DB)\",\"DPCC sec E (AG)\",\"DPCC sec F (AG)\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"INM Sec F\",\"\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Friday\",\"26-06-2026\",\"\",\"BAV Sec F\",\"BAV Sec F\",\"DMD\",\"BAV Sec E\",\"DPCC sec F (DB)\",\"DPCC sec E (DB)\",\"RBS\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"4 SGM Sec E\",\"CMN sec E\",\"\",\"CNB Sec F\",\"CNB Sec E\",\"CMN sec F\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Saturday\",\"27-06-2026\",\"\",\"BAV Sec E\",\"BAV Sec F\",\"PJM \",\"RBS\",\"QCAM (DB)\",\"4 SGM Sec F\",\"5 SGM Sec F & E combined LCR01\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"DPCC sec F (DB)\",\"DPCC sec E (DB)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Sunday\",\"28-06-2026\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"  \",\"\",\"\"\n\"Monday\",\"29-06-2026\",\"\",\"\",\"DMD\",\"CSP\",\"PPBS (Dr.Smriti)\",\"RBS\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Tuesday\",\"30-06-2026\",\"\",\"PJM \",\"DMD\",\"CNB Sec E\",\"CNB Sec F\",\"RBS\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"DGM Sec F\",\"DGM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Wednesday\",\"01-07-2026\",\"\",\"PJM \",\"DMD\",\"CMN sec E\",\"CMN sec F\",\"PPBS (Dr.Smriti)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"INM Sec F\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Thursday\",\"02-07-2026\",\"\",\"DMD\",\"DMD\",\"DPCC sec F (AG)\",\"DPCC sec E (AG)\",\"RBS\",\" 6 SGM Sec E (MCR08)\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"DGM Sec E\",\"DGM Sec F\",\"\",\"PMG (MCR 07)\",\"6 SGM Sec F\",\"\",\"\",\"\",\"\",\"\"\n\"Friday\",\"03-07-2026\",\"\",\"DMD\",\"MABA\",\"PMG\",\"PMG\",\"DPCC sec F (AG)\",\"DPCC sec E (AG)\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"7 SGM Sec E\",\"7 SGM Sec F\",\"8 SGM Sec F\",\"\",\"\",\"\",\"\",\"\"\n\"Saturday\",\"04-07-2026\",\"\",\"PMG\",\"DPCC sec F (AG)\",\"DPCC sec E (AG)\",\"8 SGM Sec E\",\"QCAM (VF)\",\"QCAM (VF)\",\"\",\"\",\"\",\" \",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CNB Sec E\",\"CNB Sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Sunday\",\"05-07-2026\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Monday\",\"06-07-2026\",\"\",\"PJM \",\"QCAM (VF)\",\"QCAM (VF)\",\"INM Sec E\",\"INM Sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Tuesday\",\"07-07-2026\",\"DMD Quiz 1 (7:30 AM)\",\"PJM \",\"MABA\",\"CMN sec E\",\"CMN sec F\",\"DPCC sec F (HK)   MCR 08\",\"DPCC sec E (HK) LCR 01\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"INM Sec F\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Wednesday\",\"08-07-2026\",\"\",\"CSP\",\"DGM Sec E\",\"DGM Sec F\",\"PPBS (Dr.Smriti)\",\"MABA\",\"LSCM MCR08\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CNB Sec F\",\"CNB Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Thursday\",\"09-07-2026\",\"CMN Quiz 1 (7:30 am)\",\"BAV Sec E\",\"BAV Sec E\",\"PJM \",\"BAV Sec F\",\"DPCC sec F (HK)\",\"DPCC sec E (HK)\",\"LSCM\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"9 SGM Sec F\",\"\",\"\",\"\",\"9 SGM Sec E\",\"10 SGM Sec F\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Friday\",\"10-07-2026\",\"INM Quiz 1(7:30)\",\"BAV Sec F\",\"BAV Sec F\",\"MABA\",\"BAV Sec E\",\"CMN sec F\",\"LSCM\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"10 SGM Sec E\",\"CMN sec E\",\"\",\"DGM Sec F\",\"DGM Sec E\",\"\",\"11 SGM Sec F & E\",\"\",\"\",\"\",\"\",\"\"\n\"Saturday\",\"11-07-2026\",\"\",\"BAV Sec E\",\"BAV Sec F MCR07\",\"PJM \",\"CNB Sec E\",\"CNB Sec F MCR07\",\"LSCM\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Sunday\",\"12-07-2026\",\"\",\"\",\"LSCM\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Monday\",\"13-07-2026\",\"\",\"AOL EXAM\",\"\",\"CSP\",\"DPCC sec F (HK)\",\"DPCC sec E (HK)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Tuesday\",\"14-07-2026\",\"\",\"PJM \",\"MABA\",\"CNB Sec E\",\"CNB Sec F\",\"RBS\",\"SGM Mid- Term\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"INM Sec F\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Wednesday\",\"15-07-2026\",\"\",\"CSP\",\"DGM Sec F\",\"DGM Sec E\",\"DPCC sec F (HK)\",\"DPCC sec E (HK)\",\"MABA\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CMN sec E\",\"CMN sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Thursday\",\"16-07-2026\",\"\",\"PJM \",\"INM Sec F\",\"INM Sec E\",\"\",\"RBS\",\"DMD Mid-Term\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CMN sec E\",\"CMN sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Friday\",\"17-07-2026\",\"\",\"QCAM (VF)\",\"QCAM (VF)\",\"CNB Sec E\",\"CNB Sec F\",\"PPBS (Dr.Smriti)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"DGM Sec F\",\"DGM Sec E\",\"\",\"12 SGM Sec F & E LCR01\",\"13 SGM Sec F\",\"\",\"\",\"\",\"\",\"\"\n\"Saturday\",\"18-07-2026\",\"\",\"PMG\",\"PMG\",\"\",\"RBS\",\"13 SGM Sec E\",\"14 SGM Sec E\",\"14 SGM Sec F (MCR07)\",\"\",\"\",\"\",\"\",\"\"\n\"Sunday\",\"19-07-2026\",\"\",\"\",\"PMG\",\"PMG\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Monday\",\"20-07-2026\",\"\",\"\",\"PMG\",\"CSP\",\"PPBS (Dr.Smriti)\",\"RBS\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Tuesday\",\"21-07-2026\",\"\",\"\",\"MABA\",\"CNB Sec E\",\"CNB Sec F\",\"RBS\",\"\",\"LSCM\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"INM Sec F\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Wednesday\",\"22-07-2026\",\"RBS Mid-Term (7:00)\",\"\",\"DGM Sec F\",\"DGM Sec E\",\"MABA Mid-Term\",\"RBS\",\"FINAX Quiz\",\"LSCM\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CMN sec E\",\"CMN sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Thursday\",\"23-07-2026\",\"\",\"BAV Sec E\",\"BAV Sec E\",\"PJM \",\"BAV Sec F\",\"MABA\",\"LSCM\",\"LSCM\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"INM Sec F\",\"\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Friday\",\"24-07-2026\",\"\",\"BAV Sec F\",\"BAV Sec F\",\"LSCM\",\"BAV Sec E\",\"DPCC sec F (AG)\",\"DPCC sec E (AG)\",\"CSP\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CNB Sec E\",\"\",\"DGM Sec F\",\"DGM Sec E\",\"CNB Sec F\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Saturday\",\"25-07-2026\",\"\",\"BAV Sec E\",\"BAV Sec F\",\"CNB Sec E&F MCR08\",\"CNB Sec E&F MCR08\",\"DPCC sec F (AG)\",\"DPCC sec E (AG)\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Sunday\",\"26-07-2026\",\"\",\"DMD\",\"DPCC sec F (AG)\",\"DPCC sec E (AG)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Monday\",\"27-07-2026\",\"DGM Quiz \",\"DMD\",\"DGM Sec F\",\"DGM Sec E\",\"QCAM (DB)\",\"PPBS (Dr.Smriti)\",\"PJM \",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CMN sec E\",\"CMN sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Tuesday\",\"28-07-2026\",\"\",\"PJM \",\"MABA\",\"DMD\",\"CNB Sec E\",\"CNB Sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"INM Sec F\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Wednesday\",\"29-07-2026\",\"\",\"DMD\",\"DGM Sec F\",\"DGM Sec E\",\"QCAM (DB)\",\"CSP\",\"DPCC sec E (AG)\",\"DPCC sec F (AG)\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CMN sec E\",\"CMN sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Thursday\",\"30-07-2026\",\"\",\"BAV Sec E\",\"BAV Sec E\",\"DMD\",\"BAV Sec F (MCR 07)\",\"MABA\",\"PJM \",\"DPCC Mid-Term\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"INM Sec F\",\"\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Friday\",\"31-07-2026\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Saturday\",\"01-08-2026\",\"CMN Mid-Term (7:00 am)\",\"BAV Sec F\",\"BAV Sec F\",\"DMD\",\"RBS\",\"BAV Sec E\",\"PJM (615-7.00pm)\",\"QCAM (DB) 7:30 PM - 9:00 PM\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CNB Sec E\",\"\",\"\",\"CNB Sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Sunday\",\"02-08-2026\",\"\",\"BAV Sec F\",\"BAV Sec E\",\"DMD\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"DPCC sec E&F (AG) LCR01\",\"DPCC sec E&F (AG) LCR01\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Monday\",\"03-08-2026\",\"PPBS Quiz (7:30 am)\",\"DMD\",\"QCAM (DB)\",\"RBS\",\"DPCC sec F (DB)\",\"DPCC sec E (DB)\",\"LSCM\",\"LSCM\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"CMN sec E\",\"CMN sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Tuesday\",\"04-08-2026\",\"BAV Mid- Term (7:15 - 8:00 am)\",\"DMD\",\"MABA\",\"CNB Sec E\",\"CNB Sec F\",\"RBS\",\"QCAM (DB)\",\"RBS Quiz 1\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"INM Sec F\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Wednesday\",\"05-08-2026\",\"\",\"DMD\",\"CSP\",\"CNB Sec E\",\"CNB Sec F\",\"RBS\",\"QCAM (DB)\",\"QCAM (DB)\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"DGM Sec F\",\"DGM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Thursday\",\"06-08-2026\",\"\",\"CMN Quiz 2 (8:45 am)\",\"CSP\",\"CNB Sec E\",\"CNB Sec F\",\"RBS\",\"PJM Mid Term\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"INM Sec F\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Friday\",\"07-08-2026\",\"\",\"CSP\",\"MABA\",\"CNB Sec E\",\"CNB Sec F\",\"RBS\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"15 SGM Sec F\",\"15 SGM Sec E\",\"\",\"16 SGM Sec E & F\",\"17 SGM Sec F\",\"\",\"\",\"\",\"\",\"\"\n\"Saturday\",\"08-08-2026\",\"\",\"PPBS (Dr.Bhaskar)\",\"PPBS (Dr.Bhaskar)\",\"CMN sec E & F\",\"RBS\",\"17 SGM Sec E\",\"18 SGM Sec F\",\"LSCM Mid term\",\"\",\"\",\"\",\"\",\"\"\n\"Sunday\",\"09-08-2026\",\"\",\"PPBS (Dr.Bhaskar)\",\"PPBS (Dr.Bhaskar)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Monday\",\"10-08-2026\",\"\",\"CNB Quiz \",\"CSP\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"CMN sec F\",\"CMN sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Tuesday\",\"11-08-2026\",\"QCAM Mid Term (7:00 am)\",\"BAV Sec E\",\"BAV Sec E\",\"MABA\",\"BAV Sec F\",\"PPBS Mid-Term (4:30 PM)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"INM Sec F\",\"\",\"INM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Wednesday\",\"12-08-2026\",\"DMD Quiz 2 7:45 AM\",\"BAV Sec F\",\"BAV Sec F\",\"PMG\",\"BAV Sec E\",\"PMG\",\"CSP\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CMN sec E (MCR09)\",\"\",\"CMN sec F (MCR09)\",\"\",\"PMG\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Thursday\",\"13-08-2026\",\"INM QUIZ 2 (7:40 am)\",\"BAV Sec E\",\"BAV Sec F\",\"INM Sec F\",\"PMG\",\"PMG\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"INM Sec E\",\"DGM Sec E\",\"DGM Sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Friday\",\"14-08-2026\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"LSCM\",\"\",\"\",\"\",\"\",\"\"\n\"Saturday\",\"15-08-2026\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Sunday\",\"16-08-2026\",\"\",\"\",\"LSCM\",\"LSCM\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Monday\",\"17-08-2026\",\"DGM Quiz II (7:45 AM)\",\"CSP\",\"DGM Sec E\",\"DGM Sec F\",\"PJM (AG)\",\"PJM (AG)\",\"QCAM (DB)\",\"LSCM\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CMN sec F\",\"CMN sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Tuesday\",\"18-08-2026\",\"\",\"QCAM Quiz \",\"\",\"\",\"\",\"\",\"LSCM\",\"LSCM\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"DPCC sec E (DB)\",\"DPCC sec F (DB)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Wednesday\",\"19-08-2026\",\"\",\"\",\"PJM (AG)\",\"PJM (AG)\",\"QCAM (DB)\",\"\",\"LSCM\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Thursday\",\"20-08-2026\",\"\",\"LSCM\",\"INM Sec F\",\"INM Sec E\",\"QCAM (DB)\",\"QCAM (DB)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"DPCC sec E (DB)\",\"DPCC sec F (DB)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Friday\",\"21-08-2026\",\"\",\"INM Sec F\",\"INM Sec E\",\"\",\"\",\"\",\"QCAM (DB)\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"CMN sec F\",\"CMN sec E\",\"DGM Sec F\",\"DGM Sec E\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Saturday\",\"22-08-2026\",\"\",\"\",\"\",\"\",\"\",\"CSP\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Sunday\",\"23-08-2026\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Monday\",\"24-08-2026\",\"\",\"\",\"CSP\",\"DGM Sec F\",\"DGM Sec E\",\"MABA\",\"PMG\",\"PMG\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"CMN sec E\",\"CMN sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Tuesday\",\"25-08-2026\",\"CMN Quiz 3 (7:45 am)\",\"PMG\",\"CSP\",\"MABA\",\"18 SGM Sec E\",\"19 SGM Sec E\",\"19 SGM Sec F\",\"PMG\",\"\",\"\",\"\",\"\",\"\"\n\"Wednesday\",\"26-08-2026\",\"\",\"CSP\",\"CSP\",\"\",\"\",\"\",\"CMN sec E& F Guest session\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"20 SGM Sec E\",\"20 SGM Sec F\",\"\",\"PMG\",\"\",\"\",\"\",\"\",\"\"\n\"Thursday\",\"27-08-2026\",\"\",\"\",\"INM Sec F\",\"INM Sec E\",\"MABA\",\"PPBS (Dr.Bhaskar)\",\"PPBS (Dr.Bhaskar)\",\"PMG\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"DGM Sec E\",\"DGM Sec F\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Friday\",\"28-08-2026\",\"\",\"\",\"\",\"\",\"\",\"PPBS (Dr.Bhaskar)\",\"PPBS (Dr.Bhaskar)\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Saturday\",\"29-08-2026\",\"\",\"PPBS (Dr.Bhaskar)\",\"PPBS (Dr.Bhaskar)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Sunday\",\"30-08-2026\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"Monday\",\"31-08-2026\",\"\",\"\",\"CMN sec F (presentation)\",\"CMN sec E (presentation)\",\"MABA\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"\n\"\",\"\",\"\",\"\",\"\",\"\",\"\",\" \",\"\",\"\",\"\",\"\",\"\",\"\",\"\"";
-const TERM5_DEFAULT_CSV = "      TERM V,,,,,,\"Venue: Sec E MCR-07 , Sec F MCR-08 , Common MCR-07.\",,,,,,,,\nDAY,Date/Time,8:00 AM,08:30 To 10:00 AM,10:20 To 11:50AM,12:10 To 1:40 PM,02:45 to 4:15 PM,04:30 To 6:00 PM,06:15 To 7:45 PM,08:00 To 9:30PM,,Course Code ,Courses Name,Faculty,TA\nFriday,11-09-2026,,FME Sec EF (LCR-01),OMCR Sec EF (MCR-07),,DBF Sec EF (MCR-07),DBF Sec EF (MCR-07),,,,FMEBD25-5,Financial Modeling using Excel,Prof. Pitabas Mohanty,\nSaturday,12-09-2026,,FME Sec EF (LCR-01),OMCR Sec EF (MCR-07),,BDM Sec EF (MCR-07),DBF Sec EF (MCR-07),DBF Sec EF (MCR-07),,,OMCRBD25-5,Omnichannel Retailing,Dr. Smitu Malhotra,\nSunday,13-09-2026,,,,,,,,,,DBFBD25-5,Demand and Business Forecasting,Dr. Amitava Mukherjee,\nMonday,14-09-2026,,FME Sec EF (LCR-01),SDM Sec E (MCR-07),GCD Sec E (MCR-07),BDM Sec EF (MCR-07),DBF Sec EF (MCR-07),DBF Sec EF (MCR-07),PCGM Sec EF (MCR-07),,BDMBD25-5,Brand Management,Dr Madhu Mandal,\n,,,,GCD Sec F (MCR-08),SDM Sec F (MCR-08),,,,,,SDMBD25-5,Sales and Distribution Management,Dr. Sanjeev Varshney,\nTuesday,15-09-2026,,FME Sec EF (LCR-01),SDM Sec E (MCR-07),GCD Sec E (MCR-07),OMCR Sec EF (MCR-07),VCPE Sec EF (MCR-07),VCPE Sec EF (MCR-07),,,GCDBD25-5,Gales of Creative Destruction - Managing Innovation,Dr Faisal Mohammad Ahsan,\n,,,,GCD Sec F (MCR-08),SDM Sec F (MCR-08),,,,,,PCGMBD25-5,Pricing Management,Dr. Narasimhan Rajkumar,\nWednesday,16-09-2026,,FME Sec EF (LCR-01),VCPE Sec EF (MCR-07),VCPE Sec EF (MCR-07),SDM Sec E (MCR-07),SDM Sec F (MCR-08),DBF Sec EF (MCR-07),DBF Sec EF (MCR-07),,VCPEBD25-5,Venture Capital & Private Equity,Mr Venkatesh Bangaruswamy,\nThursday,17-09-2026,,VCPE Sec EF (MCR-07),SAPM Sec EF (MCR-07),SAPM Sec EF (MCR-07),SDM Sec E (MCR-07),SDM Sec F (MCR-08),OMCR Sec EF (MCR-07),PCGM Sec EF (MCR-07),,SAPMBD25-5,Security Analysis and Portfolio Management,Dr. Prantik Ray,\nFriday,18-09-2026,,OMCR Sec EF (MCR-07),SAPM Sec EF (MCR-07),SAPM Sec EF (MCR-07),SDM Sec E (MCR-07),SDM Sec F (MCR-08),,,,IMCEBD25-5,International Business Models for the Circular Economy,Dr. Sanchayan Nath,\nSaturday,19-09-2026,,OMCR Sec EF (MCR-07),SAPM Sec EF (MCR-07),SAPM Sec EF (MCR-07),,,,,,,,,\nSunday,20-09-2026,,,,,,,,,,,,,\nMonday,21-09-2026,,,,,,,,,,,,,\nTuesday,22-09-2026,,,,,,,,,,,,,\nWednesday,23-09-2026,,,,,,,,,,,,,\nThursday,24-09-2026,,,,,,,,,,,,,\nFriday,25-09-2026,,,,,,,,,,,,,\nSaturday,26-09-2026,,,,,,,,,,,,,\nSunday,27-09-2026,,,,,,,,,,,,,\nMonday,28-09-2026,,,,,,,,,,,,,\nTuesday,29-09-2026,,,,,,,,,,,,,\nWednesday,30-09-2026,,,,,,,,,,,,,\nThursday,01-10-2026,,,,,,,,,,,,,\nFriday,02-10-2026,,,,,,,,,,,,,\nSaturday,03-10-2026,,,,,,,,,,,,,\nSunday,04-10-2026,,,,,,,,,,,,,\nMonday,05-10-2026,,,,,,,BDM Sec EF (MCR-07),,,,,,\nTuesday,06-10-2026,,,IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,DBF Sec EF (MCR-07),DBF Sec EF (MCR-07),,,,,,\nWednesday,07-10-2026,,,IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,,BDM Sec EF (MCR-07),,,,,,\nThursday,08-10-2026,,FME Sec EF (LCR-01),IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,,,,,,,,\nFriday,09-10-2026,,FME Sec EF (LCR-01),,,BDM Sec EF (MCR-07),DBF Sec EF (MCR-07),DBF Sec EF (MCR-07),,,,,,\nSaturday,10-10-2026,,,FME Sec EF (LCR-01),,,,,,,,,,\nSunday,11-10-2026,,,,,,,,,,,,,\nMonday,12-10-2026,,FME Sec EF (LCR-01),SDM Sec E (MCR-07),SDM Sec F (MCR-08),BDM Sec EF (MCR-07),DBF Sec EF (MCR-07),DBF Sec EF (MCR-07),,,,,,\nTuesday,13-10-2026,,FME Sec EF (LCR-01),SDM Sec E (MCR-07),IMCE Sec E (MCR-07),,,,,,,,,\n,,,,IMCE Sec F (MCR-08),SDM Sec F (MCR-08),,,,,,,,,\nWednesday,14-10-2026,,,SDM Sec E (MCR-07),IMCE Sec E (MCR-07),BDM Sec EF (MCR-07),DBF Sec EF (MCR-07),DBF Sec EF (MCR-07),,,,,,\n,,,,IMCE Sec F (MCR-08),SDM Sec F (MCR-08),,,,,,,,,\nThursday,15-10-2026,,,SDM Sec E (MCR-07),SDM Sec F (MCR-08),,,,,,,,,\nFriday,16-10-2026,,,SDM Sec E (MCR-07),IMCE Sec E (MCR-07),,,,,,,,,\n,,,,IMCE Sec F (MCR-08),SDM Sec F (MCR-08),,,,,,,,,\nSaturday,17-10-2026,,,,BDM Sec EF (MCR-07),,,,,,,,,\nSunday,18-10-2026,,,,,,,,,,,,,\nMonday,19-10-2026,,,,,,,,,,,,,\nTuesday,20-10-2026,,,,,,,,,,,,,\nWednesday,21-10-2026,,,IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,,,,,,,,\nThursday,22-10-2026,,,,,SAPM Sec EF (MCR-07),SAPM Sec EF (MCR-07),,,,,,,\nFriday,23-10-2026,,,SAPM Sec EF (MCR-07),SAPM Sec EF (MCR-07),,,,,,,,,\nSaturday,24-10-2026,,,SAPM Sec EF (MCR-07),SAPM Sec EF (MCR-07),,,,,,,,,\nSunday,25-10-2026,,,,,,,,,,,,,\nMonday,26-10-2026,,,,,,,,,,,,,\nTuesday,27-10-2026,,,IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,BDM Sec EF (MCR-07),BDM Sec EF (MCR-07),,,,,,\nWednesday,28-10-2026,,,IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,,,,,,,,\nThursday,29-10-2026,,,,,,BDM Sec EF (MCR-07),BDM Sec EF (MCR-07),,,,,,\nFriday,30-10-2026,,,IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,,,,,,,,\nSaturday,31-10-2026,,,,,,,,,,,,,\nSunday,01-11-2026,,,,,,,,,,,,,\nMonday,02-11-2026,,,IMCE Sec E (MCR-07),SDM Sec E (MCR-07),,,BDM Sec EF (MCR-07),,,,,,\n,,,,SDM Sec F (MCR-08),IMCE Sec F (MCR-08),,,,,,,,,\nTuesday,03-11-2026,,,IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),SDM Sec F (MCR-08),SDM Sec E (MCR-07),,,,,,,\nWednesday,04-11-2026,,,IMCE Sec E (MCR-07),SDM Sec E (MCR-07),,,BDM Sec EF (MCR-07),BDM Sec EF (MCR-07),,,,,\n,,,,SDM Sec F (MCR-08),IMCE Sec F (MCR-08),,,,,,,,,\nThursday,05-11-2026,,,SAPM Sec EF (MCR-07),SAPM Sec EF (MCR-07),SDM Sec E (MCR-07),SDM Sec F (MCR-08),,,,,,,\nFriday,06-11-2026,,,SDM Sec E (MCR-07),SDM Sec F (MCR-08),SAPM Sec EF (MCR-07),SAPM Sec EF (MCR-07),,,,,,,\nSaturday,07-11-2026,,,,,,,,,,,,,\nSunday,08-11-2026,,,,,,,,,,,,,\nMonday,09-11-2026,,,IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,,,,,,,,\nTuesday,10-11-2026,,,IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,,,,,,,,\nWednesday,11-11-2026,,,IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,,,,,,,,\nThursday,12-11-2026,,FME Sec EF (LCR-01),,,,BDM Sec EF (MCR-07),BDM Sec EF (MCR-07),,,,,,\nFriday,13-11-2026,,,FME Sec EF (LCR-01),,,,,,,,,,\nSaturday,14-11-2026,,FME Sec EF (LCR-01),,,,,,,,,,,\nSunday,15-11-2026,,,,,,,,,,,,,\nMonday,16-11-2026,,FME Sec EF (LCR-01),,,,,,,,,,,\nTuesday,17-11-2026,,FME Sec EF (LCR-01),SDM Sec E (MCR-07),SDM Sec F (MCR-08),,,,,,,,,\nWednesday,18-11-2026,,,SDM Sec E (MCR-07),SDM Sec F (MCR-08),,,,,,,,,\nThursday,19-11-2026,,,SDM Sec E (MCR-07),SDM Sec F (MCR-08),,,,,,,,,\nFriday,20-11-2026,,,SDM Sec E (MCR-07),SDM Sec F (MCR-08),,,,,,,,,\nSaturday,21-11-2026,,,SDM Sec E (MCR-07),SDM Sec F (MCR-08),,,,,,,,,\nSunday,22-11-2026,,,,,,,,,,,,,\nMonday,23-11-2026,,FME Sec EF (LCR-01),IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,,,,,,,,\nTuesday,24-11-2026,,FME Sec EF (LCR-01),IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),,,BDM Sec EF (MCR-07),,,,,,\nWednesday,25-11-2026,,FME Sec EF (LCR-01),BDM Sec EF (MCR-01),BDM Sec EF (MCR-07),DBF Sec EF (MCR-07),DBF Sec EF (MCR-07),,,,,,,\nThursday,26-11-2026,,FME Sec EF (LCR-01),,,,,,,,,,,\nFriday,27-11-2026,,FME Sec EF (LCR-01),IMCE Sec E (MCR-07),IMCE Sec F (MCR-08),DBF Sec EF (MCR-07),DBF Sec EF (MCR-07),,,,,,,\nSaturday,28-11-2026,,,,,,,,,,,,,\nSunday,29-11-2026,,,,,,,,,,,,,\nMonday,30-11-2026,,,,,,,,,,,,,\nTuesday,01-12-2026,,,,,,,,,,,,,\nWednesday,02-12-2026,,,,,,,,,,,,,\nThursday,03-12-2026,,,,,,,,,,,,,\nFriday,04-12-2026,,,,,,,,,,,,,\nSaturday,05-12-2026,,,,,,,,,,,,,\nSunday,06-12-2026,,,,,,,,,,,,,\nMonday,07-12-2026,,,,,,,,,,,,,\nTuesday,08-12-2026,,,,,,,,,,,,,\nWednesday,09-12-2026,,,,,,,,,,,,,\nThursday,10-12-2026,,,,,,,,,,,,,\nFriday,11-12-2026,,,,,,,,,,,,,\nSaturday,12-12-2026,,,,,,,,,,,,,\nSunday,13-12-2026,,,,,,,,,,,,,\nMonday,14-12-2026,,,,,,,,,,,,,\nTuesday,15-12-2026,,,,,,,,,,,,,\nWednesday,16-12-2026,,,,,,,,,,,,,\nThursday,17-12-2026,,,,,,,,,,,,,\nFriday,18-12-2026,,,,,,,,,,,,,\nSaturday,19-12-2026,,,,,,,,,,,,,\nSunday,20-12-2026,,,,,,,,,,,,,\nMonday,21-12-2026,,,,,,,,,,,,,\nTuesday,22-12-2026,,,,,,,,,,,,,\nWednesday,23-12-2026,,,,,,,,,,,,,\nThursday,24-12-2026,,,,,,,,,,,,,\nFriday,25-12-2026,,,,,,,,,,,,,\nSaturday,26-12-2026,,,,,,,,,,,,,\nSunday,27-12-2026,,,,,,,,,,,,,\nMonday,28-12-2026,,,,,,,,,,,,,\nTuesday,29-12-2026,,,,,,,,,,,,,\nWednesday,30-12-2026,,,,,,,,,,,,,\nThursday,31-12-2026,,,,,,,,,,,,,\n";
+const TERM5_DEFAULT_CSV = "      TERM V,,,,,,\"Venue: Sec E MCR-07 , Sec F MCR-08 , Common MCR-07.\",,,,,,,,\nDAY,Date/Time,8:00 AM,08:30 To 10:00 AM,10:20 To 11:50AM,12:10 To 1:40 PM,02:45 to 4:15 PM,04:30 To 6:00 PM,06:15 To 7:45 PM,08:00 To 9:30PM,,Course Code ,Courses Name,Faculty,TA\n";
 
 let currentSelectedTerm = '4';
 let timetableData = [];
@@ -1701,15 +1810,10 @@ function changeTermFilter(term) {
   const selectEl = document.getElementById('tt-term-select');
   if (selectEl) selectEl.value = term;
   
-  // Directly enforce scroll target
-  const sc = document.querySelector('.tt-grid-container');
-  if (sc) {
-    const todayStr = getTodayString();
-    const todayEl = document.getElementById(`hdr-col-${todayStr}`);
-    const target = todayEl ? Math.max(0, todayEl.offsetLeft - 90) : 0;
-    sc.scrollLeft = target;
-    if (sc.scrollTo) sc.scrollTo({ left: target, top: 0, behavior: 'instant' });
-  }
+  centerOnToday(false);
+  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => centerOnToday(false));
+  setTimeout(() => centerOnToday(false), 60);
+  setTimeout(() => centerOnToday(false), 200);
 }
 
 
@@ -1800,7 +1904,7 @@ function getWeeksInTimetable() {
     weeks.push({
       start: monday,
       end: sunday,
-      label: `${optStartStr} – ${optEndStr}${isCurrentWeek ? ' (This Week)' : ''}`
+      label: optStartStr + ' - ' + optEndStr + (isCurrentWeek ? ' (This Week)' : '')
     });
 
     current.setDate(current.getDate() + 7);
@@ -1813,6 +1917,8 @@ function getAllDatesInTerm() {
   const range = getTermDateRange(currentSelectedTerm);
   const dates = [];
   let current = new Date(range.start);
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
   while (current <= range.end) {
     const next = new Date(current);
@@ -1821,10 +1927,10 @@ function getAllDatesInTerm() {
     const yStr = next.getFullYear();
 
     dates.push({
-      dateStr: `${dStr}-${mStr}-${yStr}`,
+      dateStr: dStr + '-' + mStr + '-' + yStr,
       dateObj: next,
-      dayName: next.toLocaleDateString([], { weekday: 'short' }),
-      dayLabel: next.toLocaleDateString([], { day: 'numeric', month: 'short' })
+      dayName: days[next.getDay()],
+      dayLabel: months[next.getMonth()] + ' ' + next.getDate()
     });
 
     current.setDate(current.getDate() + 1);
@@ -1836,7 +1942,7 @@ function formatDateToDDMMYYYY(date) {
   const dStr = String(date.getDate()).padStart(2, '0');
   const mStr = String(date.getMonth() + 1).padStart(2, '0');
   const yStr = date.getFullYear();
-  return `${dStr}-${mStr}-${yStr}`;
+  return dStr + '-' + mStr + '-' + yStr;
 }
 
 // Heuristic time parser
@@ -1865,19 +1971,59 @@ function timeToHours(timeStr) {
   return { startH, startM, endH, endM };
 }
 
-// Generate today date DD-MM-YYYY (simulate if out of bounds)
+// Calculate centered scroll offset (Target column positioned as the 4th visible column with 3 days before it)
+function getCenteredScrollOffset(colEl, sc) {
+  if (!colEl || !sc) return 0;
+  const stickyWidth = 90;
+  const gap = 6;
+  const colWidth = colEl.offsetWidth || 140;
+  // Offset to column 1 (3 days before the target column):
+  const threeColsOffset = 3 * (colWidth + gap);
+  return Math.max(0, colEl.offsetLeft - (stickyWidth + gap) - threeColsOffset);
+}
+
+// Center timetable on today's column (4th column in the middle, 3 days before & 3 days after)
+function centerOnToday(smooth = false) {
+  const sc = document.querySelector('.tt-grid-container');
+  if (!sc) return;
+  
+  adjustGridColumns();
+  
+  const todayStr = getTodayString();
+  const todayEl = document.getElementById('hdr-col-' + todayStr);
+  
+  if (todayEl) {
+    const targetScroll = getCenteredScrollOffset(todayEl, sc);
+    if (smooth && sc.scrollTo) {
+      sc.scrollTo({ left: targetScroll, top: 0, behavior: 'smooth' });
+    } else {
+      sc.scrollLeft = targetScroll;
+      if (sc.scrollTo) sc.scrollTo({ left: targetScroll, top: 0, behavior: 'instant' });
+    }
+  } else {
+    sc.scrollLeft = 0;
+    if (sc.scrollTo) sc.scrollTo({ left: 0, top: 0, behavior: 'instant' });
+  }
+}
+
+// Generate today date DD-MM-YYYY (or accurate term bounds)
 function getTodayString() {
   const d = new Date();
+  // Valid active date range covering Term 4 and Term 5:
   const start = new Date(2026, 5, 15);
-  const end = new Date(2026, 8, 6);
+  const end = new Date(2026, 11, 31, 23, 59, 59);
+  
   if (d >= start && d <= end) {
     const day = String(d.getDate()).padStart(2, '0');
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const year = d.getFullYear();
-    return `${day}-${month}-${year}`;
+    return day + '-' + month + '-' + year;
   }
-  return '16-06-2026'; // Default simulated day (Tue, 16 Jun)
+  
+  // Simulation / Fallback: If viewing Term 5, return start of Term 5; else return 30-08-2026
+  return currentSelectedTerm === '5' ? '11-09-2026' : '30-08-2026';
 }
+
 
 function isSlotActive(dateStr, timeStr) {
   const todayStr = getTodayString();
@@ -2031,7 +2177,7 @@ function getDatesInWeek(mondayDate) {
     const yStr = next.getFullYear();
     
     dates.push({
-      dateStr: `${dStr}-${mStr}-${yStr}`,
+      dateStr: dStr + '-' + mStr + '-' + yStr,
       dateObj: next,
       dayName: next.toLocaleDateString([], {weekday: 'short'}),
       dayLabel: next.toLocaleDateString([], {day: 'numeric', month: 'short'})
@@ -2047,17 +2193,18 @@ function adjustGridColumns() {
   const slotsVisible = 7;
   const stickyWidth = 90;
   const gap = 6;
-  const totalGaps = (slotsVisible - 1) * gap;
+  const totalGaps = slotsVisible * gap; // Exactly 7 gaps for 7 visible day columns = 42px
   
   const containerWidth = container.clientWidth;
   if (!containerWidth) return;
   
-  const colWidth = (containerWidth - stickyWidth - totalGaps) / slotsVisible;
+  // Exact column width so exactly 7 columns fit without peeking the 8th column
+  const colWidth = Math.floor((containerWidth - stickyWidth - totalGaps) / slotsVisible);
   const ttGrid = container.querySelector('.tt-grid');
   if (ttGrid) {
     const numDays = getAllDatesInTerm().length;
-    ttGrid.style.gridTemplateColumns = `${stickyWidth}px repeat(${numDays}, ${colWidth}px)`;
-    ttGrid.style.minWidth = `${stickyWidth + numDays * colWidth + numDays * gap}px`;
+    ttGrid.style.gridTemplateColumns = stickyWidth + 'px repeat(' + numDays + ', ' + colWidth + 'px)';
+    ttGrid.style.minWidth = (stickyWidth + numDays * colWidth + (numDays + 1) * gap) + 'px';
   }
 }
 
@@ -2075,7 +2222,7 @@ function selectWeekDropdown(val) {
   if (selectEl) selectEl.value = val;
   
   const mondayStr = formatDateToDDMMYYYY(ttSelectedWeekStart);
-  const colEl = document.getElementById(`hdr-col-${mondayStr}`);
+  const colEl = document.getElementById('hdr-col-' + mondayStr);
   const scrollContainer = document.querySelector('.tt-grid-container');
   if (colEl && scrollContainer) {
     const leftOffset = colEl.getBoundingClientRect().left - scrollContainer.getBoundingClientRect().left + scrollContainer.scrollLeft;
@@ -2098,7 +2245,7 @@ function initScrollListener() {
     const mondayHeaders = [];
     weeks.forEach(w => {
       const mondayStr = formatDateToDDMMYYYY(w.start);
-      const colEl = document.getElementById(`hdr-col-${mondayStr}`);
+      const colEl = document.getElementById('hdr-col-' + mondayStr);
       if (colEl) {
         mondayHeaders.push({
           weekStart: w.start,
@@ -2173,7 +2320,14 @@ function openClassDetails(slotJsonOrObj) {
   
   const overlay = document.getElementById('tt-modal-overlay');
   const body = document.getElementById('tt-modal-body');
+  const modalDialog = document.querySelector('#tt-modal-overlay .tt-modal');
+  if (modalDialog) modalDialog.classList.remove('wide-tracker');
   if (!overlay || !body) return;
+
+  const titleEl = document.querySelector('#tt-modal-overlay .tt-modal-title');
+  if (titleEl) {
+    titleEl.textContent = slot.isSpecial ? 'Event Details' : 'Class Details';
+  }
 
   let alertBannerHtml = '';
   if (slot.isSpecial) {
@@ -2184,99 +2338,95 @@ function openClassDetails(slotJsonOrObj) {
         <span class="alert-icon">⚠️</span>
         <div class="alert-content">
           <div class="alert-title">${alertType}</div>
-          <div class="alert-desc">This slot is scheduled for <strong>${slot.text}</strong>. Please ensure you prepare accordingly.</div>
+          <div class="alert-desc">Scheduled slot: <strong>${slot.text}</strong>.</div>
         </div>
       </div>`;
   }
 
-  let subtitle = slot.isGeneral ? 'General Event' : `${slot.courseCodeFull} · ${slot.section}`;
-  if (slot.lectureNumber) {
-    subtitle += ` · Lecture ${slot.lectureNumber}`;
-    if (slot.totalLectures) {
-      subtitle += ` of ${slot.totalLectures}`;
-    }
-  }
-  if (slot.isSpecial && !slot.isGeneral) {
-    subtitle += ` · ${slot.courseName}`;
-  }
-
   const mainTitle = slot.isSpecial ? slot.text : slot.courseName;
+  const courseCode = slot.courseCodeFull || slot.courseCode || '';
+  const sectionStr = slot.section || 'Section E';
+  const lectureStr = slot.lectureNumber ? `Lecture ${slot.lectureNumber}${slot.totalLectures ? ' of ' + slot.totalLectures : ''}` : '';
 
-  let detailsHtml = `
+  let headerHtml = `
     ${alertBannerHtml}
-    <div class="tt-md-row">
-      <div class="tt-md-val title">${mainTitle}</div>
-    </div>
-    <div class="tt-md-row" style="margin-top:-6px;margin-bottom:8px">
-      <span style="font-size:12px;color:var(--text-secondary)">${subtitle}</span>
-    </div>
-    <div class="tt-md-row">
-      <div class="tt-md-label">Date</div>
-      <div class="tt-md-val">📅 ${slot.day}, ${slot.date}</div>
-    </div>
-    <div class="tt-md-row">
-      <div class="tt-md-label">Time</div>
-      <div class="tt-md-val">⏰ ${slot.time}</div>
-    </div>
-    <div class="tt-md-row">
-      <div class="tt-md-label">Venue</div>
-      <div class="tt-md-val">📍 <strong>${slot.isSpecial ? 'To Be Announced (Not in MCR)' : (slot.venue || 'Batch-wide Event (No single venue)')}</strong></div>
+    <div style="margin-bottom: 12px;">
+      <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px;">
+        ${courseCode ? `<span style="font-size: 11px; font-weight: 800; background: var(--accent-light); color: var(--accent); padding: 2px 8px; border-radius: 6px;">${courseCode}</span>` : ''}
+        ${sectionStr ? `<span style="font-size: 11px; font-weight: 700; background: var(--surface2); border: 1px solid var(--border); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px;">${sectionStr}</span>` : ''}
+        ${lectureStr ? `<span style="font-size: 11px; font-weight: 700; background: rgba(0,0,0,0.06); color: var(--text-primary); padding: 2px 8px; border-radius: 6px;">#${lectureStr}</span>` : ''}
+      </div>
+      <div style="font-size: 17px; font-weight: 800; line-height: 1.3; color: var(--text-primary);">${mainTitle}</div>
     </div>`;
 
-  if (!slot.isGeneral) {
-    detailsHtml += `
-      <div class="tt-md-row">
-        <div class="tt-md-label">Faculty</div>
-        <div class="tt-md-val">👨‍🏫 ${slot.faculty || '—'}</div>
+  let detailsCardHtml = `
+    <div class="tt-detail-card">
+      <div class="tt-detail-item">
+        <div class="tt-detail-label">📅 Date</div>
+        <div class="tt-detail-val">${slot.day}, ${slot.date}</div>
       </div>
-      <div class="tt-md-row">
-        <div class="tt-md-label">TA</div>
-        <div class="tt-md-val">🤝 ${slot.ta || '—'}</div>
-      </div>`;
-  }
+      <div class="tt-detail-item">
+        <div class="tt-detail-label">⏰ Time</div>
+        <div class="tt-detail-val">${slot.time}</div>
+      </div>
+      <div class="tt-detail-item">
+        <div class="tt-detail-label">📍 Venue</div>
+        <div class="tt-detail-val">${slot.isSpecial ? 'To Be Announced' : (slot.venue || 'MCR-07')}</div>
+      </div>
+      ${!slot.isGeneral ? `
+      <div class="tt-detail-item">
+        <div class="tt-detail-label">👨‍🏫 Faculty</div>
+        <div class="tt-detail-val">${slot.faculty || '—'}</div>
+      </div>
+      <div class="tt-detail-item" style="grid-column: span 2;">
+        <div class="tt-detail-label">🤝 Teaching Assistant</div>
+        <div class="tt-detail-val">${slot.ta || '—'}</div>
+      </div>` : ''}
+    </div>`;
 
-  // Attendees list
+  // Attendees
   const attendees = slot.attendeeSids || (ttSID ? [ttSID] : []);
   if (ttSIDs.length > 1) {
     const names = attendees.map(sid => studentMap[sid].Name).join(', ');
-    detailsHtml += `
-      <div class="tt-md-row">
-        <div class="tt-md-label">Attendees</div>
-        <div class="tt-md-val">👤 ${names}</div>
+    detailsCardHtml += `
+      <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
+        👤 Attendees: <strong style="color: var(--text-primary);">${names}</strong>
       </div>`;
   }
 
-  // Attendance tracker controls
+  // Attendance controls
   let attendanceHtml = '';
   if (!slot.isGeneral) {
     const activeSid = slot.attendeeSids ? slot.attendeeSids[0] : ttSID;
     const key = `xlri_absent_${activeSid}_${slot.date}_${slot.slotIndex}`;
     const isAbsent = localStorage.getItem(key) === 'true';
-    
+    const sidsStr = (slot.attendeeSids || [ttSID]).join(',');
+
     attendanceHtml = `
-      <div class="tt-md-row" style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); display: flex; align-items: center; justify-content: space-between;">
-        <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">Class Attendance:</span>
-        <button class="tt-btn ${isAbsent ? 'primary' : 'danger'}" 
-                onclick="toggleAttendance('${slot.attendeeSids ? slot.attendeeSids.join(',') : ttSID}', '${slot.date}', ${slot.slotIndex})"
-                style="padding: 4px 12px; min-height: 28px; font-size: 12px;">
-          ${isAbsent ? '✓ Mark as Attended' : '❌ Mark as Missed'}
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; margin: 8px 0; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 12px; font-weight: 700; color: var(--text-primary);">Attendance:</span>
+          <span style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; ${isAbsent ? 'background: rgba(239,68,68,0.15); color: #dc2626;' : 'background: rgba(34,197,94,0.15); color: #16a34a;'}">
+            ${isAbsent ? '❌ Missed' : '✓ Attended'}
+          </span>
+        </div>
+        <button class="tt-btn" onclick="toggleAttendance('${sidsStr}', '${slot.date}', ${slot.slotIndex})" style="padding: 4px 10px; min-height: 28px; font-size: 11.5px; font-weight: 700; border-radius: 6px; cursor: pointer; ${isAbsent ? 'background: #16a34a; color: #fff; border: none; box-shadow: 0 1px 2px rgba(0,0,0,0.1);' : 'background: var(--surface); color: #dc2626; border: 1px solid rgba(220,38,38,0.3);'}">
+          ${isAbsent ? '✓ Mark as Present' : '❌ Mark as Missed'}
         </button>
       </div>`;
   }
 
-  // Notepads section: one for each attendee of this session!
-  let notepadHtml = `<div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">`;
-  
+  // Notepads
+  let notepadHtml = `<div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">`;
   attendees.forEach(sid => {
     const stu = studentMap[sid];
     if (!stu) return;
-    
     const noteKey = `tt_note_${sid}_${slot.date}_${slot.time}`;
     const savedNote = localStorage.getItem(noteKey) || '';
     
     notepadHtml += `
       <div class="tt-notes-box">
-        <div class="tt-notes-box-header" style="font-weight:700; color:var(--accent); display:flex; justify-content:space-between; align-items:center;">
+        <div class="tt-notes-box-header" style="font-weight:700; font-size: 12px; color:var(--accent); display:flex; justify-content:space-between; align-items:center;">
           <span>📝 Notes for ${stu.Name.split(' ')[0]}</span>
         </div>
         <div class="tt-notes-txt-view" id="modal-notes-view-${sid}" style="${savedNote ? 'display:flex' : 'display:none'}">
@@ -2292,15 +2442,16 @@ function openClassDetails(slotJsonOrObj) {
         </div>
       </div>`;
   });
-  
   notepadHtml += `</div>`;
 
-  body.innerHTML = detailsHtml + attendanceHtml + notepadHtml;
+  body.innerHTML = headerHtml + detailsCardHtml + attendanceHtml + notepadHtml;
   overlay.classList.add('open');
 }
 
 function closeClassModal() {
   const overlay = document.getElementById('tt-modal-overlay');
+  const modalDialog = document.querySelector('#tt-modal-overlay .tt-modal');
+  if (modalDialog) modalDialog.classList.remove('wide-tracker');
   if (overlay) overlay.classList.remove('open');
   currentModalClass = null;
   // Re-render schedule to update notes indicators
@@ -2308,26 +2459,26 @@ function closeClassModal() {
 }
 
 function editModalNote(sid) {
-  document.getElementById(`modal-notes-view-${sid}`).style.display = 'none';
-  document.getElementById(`modal-notes-edit-${sid}`).style.display = 'flex';
-  document.getElementById(`modal-notes-textarea-${sid}`).focus();
+  document.getElementById('modal-notes-view-' + sid).style.display = 'none';
+  document.getElementById('modal-notes-edit-' + sid).style.display = 'flex';
+  document.getElementById('modal-notes-textarea-' + sid).focus();
 }
 
 function saveModalNote(sid) {
   if (!currentModalClass) return;
   const key = `tt_note_${sid}_${currentModalClass.date}_${currentModalClass.time}`;
-  const val = document.getElementById(`modal-notes-textarea-${sid}`).value.trim();
+  const val = document.getElementById('modal-notes-textarea-' + sid).value.trim();
   
   if (val) {
     localStorage.setItem(key, val);
-    document.getElementById(`modal-notes-span-${sid}`).textContent = val;
-    document.getElementById(`modal-notes-view-${sid}`).style.display = 'flex';
-    document.getElementById(`modal-notes-edit-${sid}`).style.display = 'none';
+    document.getElementById('modal-notes-span-' + sid).textContent = val;
+    document.getElementById('modal-notes-view-' + sid).style.display = 'flex';
+    document.getElementById('modal-notes-edit-' + sid).style.display = 'none';
   } else {
     localStorage.removeItem(key);
-    document.getElementById(`modal-notes-view-${sid}`).style.display = 'none';
-    document.getElementById(`modal-notes-edit-${sid}`).style.display = 'flex';
-    document.getElementById(`modal-notes-textarea-${sid}`).value = '';
+    document.getElementById('modal-notes-view-' + sid).style.display = 'none';
+    document.getElementById('modal-notes-edit-' + sid).style.display = 'flex';
+    document.getElementById('modal-notes-textarea-' + sid).value = '';
   }
 }
 
@@ -2336,116 +2487,153 @@ function deleteModalNote(sid) {
   if (confirm(`Delete class note for ${studentMap[sid].Name.split(' ')[0]}?`)) {
     const key = `tt_note_${sid}_${currentModalClass.date}_${currentModalClass.time}`;
     localStorage.removeItem(key);
-    document.getElementById(`modal-notes-view-${sid}`).style.display = 'none';
-    document.getElementById(`modal-notes-edit-${sid}`).style.display = 'flex';
-    document.getElementById(`modal-notes-textarea-${sid}`).value = '';
+    document.getElementById('modal-notes-view-' + sid).style.display = 'none';
+    document.getElementById('modal-notes-edit-' + sid).style.display = 'flex';
+    document.getElementById('modal-notes-textarea-' + sid).value = '';
   }
 }
 
-function openAttendanceTracker(activeSid) {
-  const overlay = document.getElementById('tt-modal-overlay');
-  const body = document.getElementById('tt-modal-body');
-  const titleEl = document.querySelector('#tt-modal-overlay .tt-modal-title');
-  if (!overlay || !body || !titleEl) return;
+function dismissAttendanceBanner() {
+  const banner = document.getElementById('tt-warning-banner');
+  if (banner) banner.style.display = 'none';
+}
 
-  const sid = activeSid || ttSIDs[0];
-  const stu = studentMap[sid];
-  if (!stu) return;
-
-  titleEl.textContent = "Attendance Tracker";
-
-  let selectorHtml = '';
-  if (ttSIDs.length > 1) {
-    selectorHtml = `
-      <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-        <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">Select Student:</span>
-        <select class="tt-select" onchange="openAttendanceTracker(this.value)" style="padding: 4px 8px; font-size: 13px; font-weight: 600; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-primary);">
-          ${ttSIDs.map(s => `<option value="${s}" ${s === sid ? 'selected' : ''}>${studentMap[s].Name}</option>`).join('')}
-        </select>
-      </div>`;
-  }
-
-  const term4Courses = stu.records.filter(r => r.Term === '4');
-  const studentSlots = getStudentTimetable(sid);
-  
-  let rowsHtml = '';
-  term4Courses.forEach(course => {
-    const courseCode = course['Subject Code'];
-    const courseSlots = studentSlots.filter(s => s.courseCode === courseCode);
-    const conductedSlots = courseSlots.filter(s => isSlotInPast(s.date, s.time));
-    const conductedCount = conductedSlots.length;
+function getAttendanceWarningsHtml() {
+  let warnings = [];
+  ttSIDs.forEach(sid => {
+    const stu = studentMap[sid];
+    if (!stu) return;
+    const termCourses = stu.records.filter(r => String(r.Term) === String(currentSelectedTerm));
+    const studentSlots = getStudentTimetable(sid);
     
-    const missedSlots = conductedSlots.filter(s => {
-      const key = `xlri_absent_${sid}_${s.date}_${s.slotIndex}`;
-      return localStorage.getItem(key) === 'true';
+    termCourses.forEach(course => {
+      const courseCode = course['Subject Code'];
+      const courseSlots = studentSlots.filter(s => s.courseCode === courseCode && !s.isSpecial && !s.isGeneral);
+      const conductedSlots = courseSlots.filter(s => isSlotInPast(s.date, s.time));
+      
+      const missedSlots = conductedSlots.filter(s => {
+        const key = 'xlri_absent_' + sid + '_' + s.date + '_' + s.slotIndex;
+        return localStorage.getItem(key) === 'true';
+      });
+      const missedCount = missedSlots.length;
+      
+      if (missedCount >= 3) {
+        let type = 'warning';
+        if (missedCount >= 5) type = 'danger';
+        else if (missedCount === 4) type = 'critical';
+        
+        warnings.push({
+          studentName: stu.Name,
+          sid: sid,
+          courseCode: courseCode,
+          courseName: course['Subject Name'],
+          missedCount: missedCount,
+          type: type
+        });
+      }
     });
-    const missedCount = missedSlots.length;
-    const attendedCount = Math.max(0, conductedCount - missedCount);
-    
-    let statusClass = 'status-safe';
-    let statusText = 'Safe';
-    if (missedCount >= 5) {
-      statusClass = 'status-danger';
-      statusText = 'Grade Drop!';
-    } else if (missedCount >= 3) {
-      statusClass = 'status-warning';
-      statusText = 'Warning';
-    }
-    
-    let missedDatesHtml = '';
-    if (missedCount > 0) {
-      missedDatesHtml = `
-        <div style="font-size: 10px; color: #ef4444; margin-top: 4px; padding-left: 8px; font-weight: 500;">
-          Missed: ${missedSlots.map(s => `${s.date} (${s.time.split(' To ')[0]})`).join(', ')}
-        </div>`;
-    }
-
-    rowsHtml += `
-      <tr style="border-bottom: 1px solid var(--border);">
-        <td style="padding: 12px 8px; font-weight: 600; font-size: 13px; color: var(--text-primary);">
-          <div>${course['Subject Name']}</div>
-          <span style="font-size: 10px; color: var(--text-secondary);">${course['Subject Code Full']}</span>
-          ${missedDatesHtml}
-        </td>
-        <td style="padding: 12px 8px; text-align: center; font-size: 13px; color: var(--text-primary); font-weight: 600;">${attendedCount} / ${conductedCount}</td>
-        <td style="padding: 12px 8px; text-align: center;">
-          <span class="tt-attendance-pill ${statusClass}">${missedCount} / 4 Missed</span>
-        </td>
-        <td style="padding: 12px 8px; text-align: center; font-weight: 700; font-size: 12px;" class="${statusClass}-text">${statusText}</td>
-      </tr>`;
   });
+  
+  if (warnings.length === 0) return '';
+  
+  const hasDanger = warnings.some(w => w.type === 'danger');
+  const bannerTheme = hasDanger ? 'danger' : 'warning';
+  const icon = hasDanger ? '❌' : '⚠️';
+  
+  const summaryParts = warnings.map(w => {
+    if (w.missedCount >= 5) {
+      return `<strong>${w.courseCode}</strong> (${w.missedCount} missed - Grade Drop!)`;
+    } else if (w.missedCount === 4) {
+      return `<strong>${w.courseCode}</strong> (4 missed - 0 left)`;
+    } else {
+      return `<strong>${w.courseCode}</strong> (3 missed - 1 left)`;
+    }
+  }).join(', ');
+  
+  const titleText = hasDanger 
+    ? `Grade Drop Alert (Limit Exceeded): ${summaryParts}`
+    : `${warnings.length} Attendance Warning${warnings.length > 1 ? 's' : ''}: ${summaryParts}`;
+  
+  const btnBg = hasDanger ? '#ef4444' : '#f59e0b';
 
-  const contentHtml = `
-    <div style="font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--text-primary);">${stu.Name} (${stu.SID})</div>
-    <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">Attendance tracked based on classes scheduled in the timetable up to current time.</div>
-    
-    ${selectorHtml}
-    
-    <div style="overflow-x: auto; max-height: 400px; border: 1px solid var(--border); border-radius: 8px;">
-      <table style="width: 100%; border-collapse: collapse; text-align: left; background: var(--card-bg);">
-        <thead>
-          <tr style="border-bottom: 2px solid var(--border); background: var(--surface2); font-size: 11px; text-transform: uppercase; color: var(--text-secondary);">
-            <th style="padding: 10px 8px;">Subject</th>
-            <th style="padding: 10px 8px; text-align: center;">Attended / Conducted</th>
-            <th style="padding: 10px 8px; text-align: center;">Absences</th>
-            <th style="padding: 10px 8px; text-align: center;">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rowsHtml}
-        </tbody>
-      </table>
+  return `
+    <div class="tt-attendance-warning-banner ${bannerTheme}" id="tt-warning-banner">
+      <span>${icon}</span>
+      <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+        <span style="font-size: 13px;">${titleText}</span>
+        <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+          <button class="tt-btn" onclick="openAttendanceTracker()" style="padding: 4px 10px; font-size: 12px; font-weight: 700; min-height: 28px; background: ${btnBg}; color: #fff; border: none; border-radius: 6px; cursor: pointer;">
+            📋 Track Attendance &rarr;
+          </button>
+          <button onclick="dismissAttendanceBanner()" style="background: transparent; border: none; color: inherit; font-size: 18px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1; opacity: 0.75;" title="Dismiss banner">&times;</button>
+        </div>
+      </div>
     </div>`;
+}
 
-  body.innerHTML = contentHtml;
-  overlay.classList.add('open');
+function toggleMissedAccordion(id) {
+  const body = document.getElementById(id);
+  const icon = document.getElementById('icon-' + id);
+  if (!body) return;
+  const isOpen = body.classList.toggle('open');
+  if (icon) {
+    icon.textContent = isOpen ? '▴' : '▾';
+  }
+}
+
+function goToTimetableDate(dateStr, courseCode) {
+  const overlay = document.getElementById('tt-modal-overlay');
+  const modalDialog = document.querySelector('#tt-modal-overlay .tt-modal');
+  if (modalDialog) modalDialog.classList.remove('wide-tracker');
+  if (overlay) overlay.classList.remove('open');
+  currentModalClass = null;
+  
+  const sc = document.querySelector('.tt-grid-container');
+  const termDates = getAllDatesInTerm();
+  const targetIdx = termDates.findIndex(d => d.dateStr === dateStr);
+  
+  if (sc && targetIdx !== -1) {
+    const scrollColIdx = Math.max(0, targetIdx - 3);
+    const scrollColDate = termDates[scrollColIdx].dateStr;
+    const scrollColEl = document.getElementById('hdr-col-' + scrollColDate);
+    
+    if (scrollColEl) {
+      const targetScroll = Math.max(0, scrollColEl.offsetLeft - 96);
+      sc.scrollTo({ left: targetScroll, behavior: 'smooth' });
+    }
+    
+    setTimeout(() => {
+      const dayCol = document.getElementById('col-' + dateStr);
+      if (dayCol) {
+        const cards = dayCol.querySelectorAll('.tt-class-block, .tt-card');
+        cards.forEach(card => {
+          if (card.textContent.toUpperCase().includes(courseCode.toUpperCase())) {
+            card.classList.add('slot-target-glow');
+            setTimeout(() => card.classList.remove('slot-target-glow'), 2800);
+          }
+        });
+      }
+    }, 400);
+  }
+}
+
+function toggleTrackerAttendance(sid, dateStr, slotIndex) {
+  const key = 'xlri_absent_' + sid + '_' + dateStr + '_' + slotIndex;
+  const isAbsent = localStorage.getItem(key) === 'true';
+  if (isAbsent) {
+    localStorage.removeItem(key);
+  } else {
+    localStorage.setItem(key, 'true');
+  }
+  openAttendanceTracker(sid);
+  renderTimetable();
 }
 
 function toggleAttendance(sidsStr, dateStr, slotIndex) {
-  const sids = sidsStr.split(',');
+  const sids = String(sidsStr).split(',');
   let newAbsentState = false;
   sids.forEach(sid => {
-    const key = `xlri_absent_${sid}_${dateStr}_${slotIndex}`;
+    const key = 'xlri_absent_' + sid + '_' + dateStr + '_' + slotIndex;
     const isAbsent = localStorage.getItem(key) === 'true';
     if (isAbsent) {
       localStorage.removeItem(key);
@@ -2462,65 +2650,178 @@ function toggleAttendance(sidsStr, dateStr, slotIndex) {
   renderTimetable();
 }
 
-function getAttendanceWarningsHtml() {
-  let warnings = [];
-  ttSIDs.forEach(sid => {
-    const stu = studentMap[sid];
-    if (!stu) return;
-    const term4Courses = stu.records.filter(r => r.Term === '4');
-    const studentSlots = getStudentTimetable(sid);
+function openAttendanceTracker(activeSid) {
+  const overlay = document.getElementById('tt-modal-overlay');
+  const body = document.getElementById('tt-modal-body');
+  const titleEl = document.querySelector('#tt-modal-overlay .tt-modal-title');
+  const modalDialog = document.querySelector('#tt-modal-overlay .tt-modal');
+  if (!overlay || !body || !titleEl) return;
+
+  if (modalDialog) modalDialog.classList.add('wide-tracker');
+
+  const sid = activeSid || ttSIDs[0] || Object.keys(studentMap)[0];
+  const stu = studentMap[sid];
+  if (!stu) return;
+
+  titleEl.textContent = "Attendance Tracker";
+
+  let selectorHtml = '';
+  if (ttSIDs.length > 1) {
+    selectorHtml = `
+      <div style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">Select Student:</span>
+        <select class="tt-select" onchange="openAttendanceTracker(this.value)" style="padding: 4px 8px; font-size: 13px; font-weight: 600; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-primary);">
+          ${ttSIDs.map(s => `<option value="${s}" ${s === sid ? 'selected' : ''}>${studentMap[s].Name}</option>`).join('')}
+        </select>
+      </div>`;
+  }
+
+  const termCourses = stu.records.filter(r => String(r.Term) === String(currentSelectedTerm));
+  const studentSlots = getStudentTimetable(sid);
+
+  let totalConductedBatch = 0;
+  let totalAttendedBatch = 0;
+  let totalMissedBatch = 0;
+
+  let cardsHtml = '';
+  
+  termCourses.forEach((course, cIdx) => {
+    const courseCode = course['Subject Code'];
+    // Filter strictly teaching lectures (excluding exams and special events)
+    const courseSlots = studentSlots.filter(s => s.courseCode === courseCode && !s.isSpecial && !s.isGeneral);
+    const conductedSlots = courseSlots.filter(s => isSlotInPast(s.date, s.time));
+    const conductedCount = conductedSlots.length;
     
-    term4Courses.forEach(course => {
-      const courseCode = course['Subject Code'];
-      const courseSlots = studentSlots.filter(s => s.courseCode === courseCode);
-      const conductedSlots = courseSlots.filter(s => isSlotInPast(s.date, s.time));
-      
-      const missedSlots = conductedSlots.filter(s => {
-        const key = `xlri_absent_${sid}_${s.date}_${s.slotIndex}`;
-        return localStorage.getItem(key) === 'true';
-      });
-      const missedCount = missedSlots.length;
-      
-      if (missedCount >= 3) {
-        if (missedCount >= 5) {
-          warnings.push({
-            studentName: stu.Name,
-            courseCode: courseCode,
-            courseName: course['Subject Name'],
-            missedCount: missedCount,
-            type: 'danger'
-          });
-        } else {
-          warnings.push({
-            studentName: stu.Name,
-            courseCode: courseCode,
-            courseName: course['Subject Name'],
-            missedCount: missedCount,
-            type: 'warning'
-          });
-        }
-      }
+    const missedSlots = conductedSlots.filter(s => {
+      const key = 'xlri_absent_' + sid + '_' + s.date + '_' + s.slotIndex;
+      return localStorage.getItem(key) === 'true';
     });
-  });
-  
-  if (warnings.length === 0) return '';
-  
-  return warnings.map(w => {
-    if (w.type === 'danger') {
-      return `
-        <div class="tt-attendance-warning-banner danger">
-          <span>❌</span>
-          <span><strong>Attendance Alert:</strong> ${w.studentName} has missed <strong>${w.missedCount}</strong> classes in <strong>${w.courseCode}</strong> (${w.courseName}). Grade drop limit exceeded!</span>
-        </div>`;
+    const missedCount = missedSlots.length;
+    const attendedCount = Math.max(0, conductedCount - missedCount);
+    
+    totalConductedBatch += conductedCount;
+    totalAttendedBatch += attendedCount;
+    totalMissedBatch += missedCount;
+
+    // Course Subject pastel theme matching calendar tile
+    const pfx = courseCode.replace(/BD$/, '').toUpperCase();
+    const colorClass = 'cc-' + pfx;
+
+    let badgeBg = '#f0fdf4';
+    let badgeBorder = '#bbf7d0';
+    let badgeColor = '#16a34a';
+    let statusNotice = '';
+
+    if (missedCount >= 5) {
+      badgeBg = '#fef2f2'; badgeBorder = '#fecaca'; badgeColor = '#dc2626';
+      statusNotice = `<div style="color: #dc2626; font-size: 11.5px; font-weight: 700; margin-top: 4px;">🔴 Grade drop limit exceeded (${missedCount} absences recorded)</div>`;
+    } else if (missedCount === 4) {
+      badgeBg = '#fff7ed'; badgeBorder = '#fed7aa'; badgeColor = '#ea580c';
+      statusNotice = `<div style="color: #ea580c; font-size: 11.5px; font-weight: 700; margin-top: 4px;">🟠 4 absences recorded · Threshold reached (0 buffer left)</div>`;
+    } else if (missedCount === 3) {
+      badgeBg = '#fffbeb'; badgeBorder = '#fde68a'; badgeColor = '#d97706';
+      statusNotice = `<div style="color: #d97706; font-size: 11.5px; font-weight: 700; margin-top: 4px;">⚠️ 3 absences recorded · 1 absence buffer remaining</div>`;
     } else {
-      return `
-        <div class="tt-attendance-warning-banner warning">
-          <span>⚠️</span>
-          <span><strong>Attendance Warning:</strong> ${w.studentName} has missed <strong>${w.missedCount}</strong> classes in <strong>${w.courseCode}</strong> (${w.courseName}). ${5 - w.missedCount} more absence(s) will cause a grade drop!</span>
+      const bufLeft = 4 - missedCount;
+      statusNotice = `<div style="color: inherit; opacity: 0.85; font-size: 11.5px; margin-top: 4px;">✅ ${missedCount === 0 ? '0 absences recorded (100% attendance)' : `${missedCount} absence recorded (${bufLeft} buffer remaining)`}</div>`;
+    }
+
+    // 4-Slot Absence Meter
+    let absenceSlotsHtml = '';
+    const ordinals = ['1st', '2nd', '3rd', '4th'];
+    for (let slotNum = 1; slotNum <= 4; slotNum++) {
+      if (slotNum <= missedCount) {
+        absenceSlotsHtml += `<div class="tt-absence-slot used" title="Absence #${slotNum} recorded">❌ #${slotNum}</div>`;
+      } else {
+        absenceSlotsHtml += `<div class="tt-absence-slot available" title="Buffer #${slotNum}">⚪ ${ordinals[slotNum-1]}</div>`;
+      }
+    }
+    if (missedCount > 4) {
+      absenceSlotsHtml += `<div class="tt-absence-slot used" style="grid-column: span 4; background:#b91c1c; color:#fff; margin-top:4px;" title="Penalty">⚠️ +${missedCount - 4} Over Limit</div>`;
+    }
+
+    // Collapsible Missed Lectures Accordion
+    let accordionHtml = '';
+    if (missedSlots.length > 0) {
+      const accordionId = `missed-acc-${cIdx}`;
+      accordionHtml = `
+        <div style="margin-top: 10px;">
+          <div class="tt-missed-accordion-toggle" onclick="toggleMissedAccordion('${accordionId}')">
+            <span>📍 ${missedSlots.length} Missed Lecture${missedSlots.length > 1 ? 's' : ''}</span>
+            <span id="icon-${accordionId}" style="font-size: 13px;">▾</span>
+          </div>
+          <div class="tt-missed-accordion-body" id="${accordionId}">
+            ${missedSlots.map(s => `
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; background: rgba(255,255,255,0.75); border: 1px solid rgba(0,0,0,0.1); border-radius: 7px; font-size: 11.5px; color: var(--text-primary); gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span style="font-family: monospace; font-weight: 800; background: rgba(239, 68, 68, 0.18); color: #dc2626; padding: 2px 6px; border-radius: 4px; font-size: 10.5px;">#${s.lectureNumber || '?'}</span>
+                  <span style="font-weight: 700;">${s.day.slice(0,3)}, ${s.date}</span>
+                  <span style="opacity: 0.8; font-size: 10.5px;">(${s.time.split(' To ')[0]})</span>
+                  ${s.venue ? `<span style="font-size: 10px; opacity: 0.85; background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 3px; font-weight: 600;">📍 ${s.venue}</span>` : ''}
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px; margin-left: auto; flex-shrink: 0;">
+                  <button onclick="toggleTrackerAttendance('${sid}', '${s.date}', ${s.slotIndex})" style="background: #16a34a; color: #fff; border: none; width: 28px; height: 28px; border-radius: 6px; font-size: 14px; font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.15); transition: all 0.15s ease;" title="Mark this lecture as attended / present">✓</button>
+                  <button onclick="goToTimetableDate('${s.date}', '${courseCode}')" style="background: rgba(255,255,255,0.9); color: #1e40af; border: 1px solid rgba(0,0,0,0.15); width: 28px; height: 28px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgba(0,0,0,0.06); transition: all 0.15s ease;" title="Go to date in timetable">📅</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
         </div>`;
     }
-  }).join('');
+
+    cardsHtml += `
+      <div class="tt-tracker-card ${colorClass}">
+        <div>
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 4px;">
+            <div style="flex: 1;">
+              <div style="font-size: 14.5px; font-weight: 800; line-height: 1.3; color: inherit;">${course['Subject Name']}</div>
+              <div style="font-size: 11px; font-weight: 600; margin-top: 2px; opacity: 0.85; color: inherit;">${courseCode} · ${course.Section || 'Section E'}</div>
+            </div>
+            <span style="flex-shrink: 0; background: ${badgeBg}; color: ${badgeColor}; border: 1px solid ${badgeBorder}; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 800; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,0.06);">
+              ${attendedCount} / ${conductedCount} Attended
+            </span>
+          </div>
+          
+          <div class="tt-absence-meter">
+            ${absenceSlotsHtml}
+          </div>
+          
+          ${statusNotice}
+        </div>
+        
+        ${accordionHtml}
+      </div>`;
+  });
+
+  const overallPct = totalConductedBatch > 0 ? Math.round((totalAttendedBatch / totalConductedBatch) * 100) : 100;
+
+  const contentHtml = `
+    <div>
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 6px;">
+        <div style="font-size: 15px; font-weight: 800; color: var(--text-primary);">${stu.Name} <span style="font-size: 12px; font-weight: 500; color: var(--text-secondary);">(${stu.SID})</span></div>
+        <div style="font-size: 12px; font-weight: 700; color: var(--text-secondary); background: var(--surface2); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border);">
+          Overall: ${totalAttendedBatch}/${totalConductedBatch} Attended (${overallPct}%) · ${totalMissedBatch} Total Absences
+        </div>
+      </div>
+      <div style="font-size: 11.5px; color: var(--text-secondary); margin-bottom: 10px;">
+        Term ${currentSelectedTerm} Attendance · Tracked strictly on lectures conducted till date (Exams excluded · Max 4 permissible absences before grade penalty).
+      </div>
+    </div>
+    
+    ${selectorHtml}
+    
+    <div style="max-height: 520px; overflow-y: auto; padding-right: 2px;">
+      <div class="tt-tracker-grid">
+        ${cardsHtml}
+      </div>
+    </div>`;
+
+  body.innerHTML = contentHtml;
+  overlay.classList.add('open');
 }
+
+
+
 
 
 
@@ -2543,86 +2844,37 @@ function getAttendanceWarningsHtml() {
   }
 })();
 
-// Format ICS dates
-function formatICSDate(dateStr, timeStr, type) {
-  const parts = dateStr.split('-');
-  if (parts.length !== 3) return '';
-  const day = parts[0].padStart(2, '0');
-  const month = parts[1].padStart(2, '0');
-  const year = parts[2];
-  
-  const { startH, startM, endH, endM } = timeToHours(timeStr);
-  const h = type === 'start' ? startH : endH;
-  const m = type === 'start' ? startM : endM;
-  
-  const hStr = String(h).padStart(2, '0');
-  const mStr = String(m).padStart(2, '0');
-  
-  return `${year}${month}${day}T${hStr}${mStr}00`;
+
+
+// Subject filter helper functions
+function getSubjectName(code) {
+  const rec = RAW.find(r => r['Subject Code'] === code);
+  return rec ? rec['Subject Name'] : code;
 }
 
-// Export timetable to .ics file
-function exportToICal(sid) {
-  const stu = studentMap[sid];
-  if (!stu) return;
-  const schedule = getStudentTimetable(sid);
-  if (!schedule.length) {
-    alert("No classes to export.");
-    return;
+function changeSubjectFilter(val) {
+  if (val === 'unlock-all-term') {
+    ttShowAllSubjects = true;
+    ttSelectedSubject = 'all';
+  } else if (val === 'lock-my-subjects') {
+    ttShowAllSubjects = false;
+    ttSelectedSubject = 'all';
+  } else {
+    ttSelectedSubject = val;
   }
-  
-  let ics = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Antigravity//XLRI Timetable//EN',
-    'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH'
-  ];
-  
-  schedule.forEach((slot, i) => {
-    const startStr = formatICSDate(slot.date, slot.time, 'start');
-    const endStr = formatICSDate(slot.date, slot.time, 'end');
-    if (!startStr || !endStr) return;
-    
-    const noteKey = `tt_note_${sid}_${slot.date}_${slot.time}`;
-    const savedNote = localStorage.getItem(noteKey) || '';
-    
-    let summary = slot.courseName;
-    if (!slot.isGeneral) {
-      summary = `${slot.courseName} (${slot.text})`;
-    }
-    
-    let description = '';
-    if (!slot.isGeneral) {
-      description += `Course Code: ${slot.courseCodeFull || ''}\\n`;
-      if (slot.section) description += `Section: ${slot.section}\\n`;
-      if (slot.faculty) description += `Faculty: ${slot.faculty}\\n`;
-      if (slot.ta) description += `TA: ${slot.ta}\\n`;
-    }
-    if (savedNote) description += `Notes: ${savedNote.replace(/\n/g, '\\n')}\\n`;
-    
-    let location = slot.venue || 'XLRI Delhi-NCR';
-    
-    ics.push('BEGIN:VEVENT');
-    ics.push(`UID:xlri-timetable-${sid}-${i}-${slot.date}-${slot.time.replace(/\s+/g, '')}`);
-    ics.push(`DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`);
-    ics.push(`DTSTART;TZID=Asia/Kolkata:${startStr}`);
-    ics.push(`DTEND;TZID=Asia/Kolkata:${endStr}`);
-    ics.push(`SUMMARY:${summary}`);
-    ics.push(`LOCATION:${location}`);
-    ics.push(`DESCRIPTION:${description}`);
-    ics.push('END:VEVENT');
-  });
-  
-  ics.push('END:VCALENDAR');
-  
-  const blob = new Blob([ics.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `XLRI_Timetable_${stu.Name.replace(/\s+/g, '_')}.ics`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  renderTimetable();
+}
+
+function unlockAllSubjects() {
+  ttShowAllSubjects = true;
+  ttSelectedSubject = 'all';
+  renderTimetable();
+}
+
+function lockAllSubjects() {
+  ttShowAllSubjects = false;
+  ttSelectedSubject = 'all';
+  renderTimetable();
 }
 
 const STUDENT_CHIP_COLORS = [
@@ -2666,14 +2918,14 @@ function renderSelectedStudentChips() {
     
     const isDefault = localStorage.getItem('xlri_default_student') === sid;
     const pinBtn = isDefault 
-      ? `<button onclick="setDefaultStudent('')" style="background: ${isDark ? '#f8fafc' : color.text}; color: ${isDark ? '#0f172a' : '#ffffff'}; border: none; cursor: pointer; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.25);" title="This is your default student. Click to unset.">📌 Default</button>`
-      : `<button onclick="setDefaultStudent('${sid}')" style="background: ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)'}; color: ${isDark ? '#f1f5f9' : color.text}; border: 1px solid ${isDark ? 'rgba(255,255,255,0.25)' : 'transparent'}; cursor: pointer; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;" title="Set as default student on page load">📌 Set Default</button>`;
+      ? `<button onclick="setDefaultStudent('')" style="background: ${color.text}; color: #fff; border: none; cursor: pointer; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 4px;" title="This is your default student. Click to unset.">📌 Default</button>`
+      : `<button onclick="setDefaultStudent('${sid}')" style="background: rgba(0,0,0,0.05); color: ${color.text}; border: none; cursor: pointer; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 4px;" title="Set as default student on page load" onmouseover="this.style.background='rgba(0,0,0,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.05)'">📌 Set Default</button>`;
     
     return `
-      <div style="background: ${color.bg}; color: ${color.text}; border: 1px solid ${color.border}; display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.15); transition: all 0.2s ease;">
-        <span>${stu.Name} <span style="font-size: 11px; color: ${isDark ? '#93c5fd' : '#475569'}; font-weight: 500; margin-left: 6px;">(${stu.SID})</span></span>
+      <div style="background: ${color.bg}; color: ${color.text}; border: 1px solid ${color.border}; display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: all 0.2s ease;">
+        <span>${stu.Name} <span style="font-size: 11px; opacity: 0.8; font-weight: 400; margin-left: 6px;">(${stu.SID})</span></span>
         ${pinBtn}
-        <button onclick="removeSelectedStudent('${sid}')" style="background: ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)'}; border: none; color: ${isDark ? '#f8fafc' : color.text}; cursor: pointer; font-size: 15px; font-weight: bold; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; padding: 0; line-height: 1; transition: background 0.2s;" title="Remove student">&times;</button>
+        <button onclick="removeSelectedStudent('${sid}')" style="background: rgba(0,0,0,0.05); border: none; color: ${color.text}; cursor: pointer; font-size: 14px; font-weight: bold; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; padding: 0; line-height: 1; transition: background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.05)'">&times;</button>
       </div>`;
   }).join('');
 }
@@ -2698,113 +2950,6 @@ function setDefaultStudent(sid) {
   renderSelectedStudentChips();
 }
 
-function toggleExportDropdown() {
-  const menu = document.getElementById('tt-export-menu');
-  if (menu) {
-    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-  }
-}
-
-// Close export dropdown when clicking outside
-document.addEventListener('click', e => {
-  const wrap = document.querySelector('.export-dropdown-wrap');
-  if (wrap && !wrap.contains(e.target)) {
-    const menu = document.getElementById('tt-export-menu');
-    if (menu) menu.style.display = 'none';
-  }
-});
-
-function exportCombinedICal() {
-  if (ttSIDs.length === 0) return;
-  
-  let ics = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Antigravity//XLRI Combined Timetable//EN',
-    'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH'
-  ];
-  
-  const combinedSlots = [];
-  const processedKeys = new Set();
-  
-  ttSIDs.forEach(sid => {
-    const schedule = getStudentTimetable(sid);
-    const stu = studentMap[sid];
-    
-    schedule.forEach(slot => {
-      const key = `${slot.date}_${slot.slotIndex}_${slot.text}`;
-      if (processedKeys.has(key)) {
-        const existing = combinedSlots.find(s => `${s.date}_${s.slotIndex}_${s.text}` === key);
-        if (existing && !existing.attendees.includes(stu.Name)) {
-          existing.attendees.push(stu.Name);
-        }
-      } else {
-        processedKeys.add(key);
-        combinedSlots.push({
-          ...slot,
-          attendees: [stu.Name],
-          studentSid: sid
-        });
-      }
-    });
-  });
-  
-  combinedSlots.forEach((slot, i) => {
-    const startStr = formatICSDate(slot.date, slot.time, 'start');
-    const endStr = formatICSDate(slot.date, slot.time, 'end');
-    if (!startStr || !endStr) return;
-    
-    let summary = slot.courseName;
-    if (!slot.isGeneral) {
-      summary = `${slot.courseName} (${slot.text})`;
-    }
-    
-    let description = `Attendees: ${slot.attendees.join(', ')}\\n`;
-    if (!slot.isGeneral) {
-      description += `Course Code: ${slot.courseCodeFull || ''}\\n`;
-      if (slot.section) description += `Section: ${slot.section}\\n`;
-      if (slot.faculty) description += `Faculty: ${slot.faculty}\\n`;
-      if (slot.ta) description += `TA: ${slot.ta}\\n`;
-    }
-    
-    slot.attendees.forEach(name => {
-      const attendeeSid = ttSIDs.find(s => studentMap[s].Name === name);
-      if (attendeeSid) {
-        const noteKey = `tt_note_${attendeeSid}_${slot.date}_${slot.time}`;
-        const savedNote = localStorage.getItem(noteKey);
-        if (savedNote) {
-          description += `Notes (${name.split(' ')[0]}): ${savedNote.replace(/\n/g, '\\n')}\\n`;
-        }
-      }
-    });
-    
-    let location = slot.venue || 'XLRI Delhi-NCR';
-    
-    ics.push('BEGIN:VEVENT');
-    ics.push(`UID:xlri-timetable-combined-${i}-${slot.date}-${slot.time.replace(/\s+/g, '')}`);
-    ics.push(`DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`);
-    ics.push(`DTSTART;TZID=Asia/Kolkata:${startStr}`);
-    ics.push(`DTEND;TZID=Asia/Kolkata:${endStr}`);
-    ics.push(`SUMMARY:${summary}`);
-    ics.push(`LOCATION:${location}`);
-    ics.push(`DESCRIPTION:${description}`);
-    ics.push('END:VEVENT');
-  });
-  
-  ics.push('END:VCALENDAR');
-  
-  const blob = new Blob([ics.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `XLRI_Combined_Timetable.ics`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-// Render personalized timetable grid
-// Helper to generate the weekly grid HTML for print pages
 function getWeeklyGridHTML(weekStart, isPrint = false) {
   const weekDates = getDatesInWeek(weekStart);
   const weekStartMS = weekStart.getTime();
@@ -2922,7 +3067,7 @@ function getWeeklyGridHTML(weekStart, isPrint = false) {
         } else if (isExam) {
           colorClass = 'tt-exam-event';
         } else {
-          const cPrefix = code ? code.replace(/BD$/, '') : '';
+          const cPrefix = code ? code.replace('BD','') : '';
           if (cPrefix) colorClass = 'cc-' + cPrefix;
         }
         
@@ -3088,6 +3233,58 @@ function lockAllSubjects() {
   ttShowAllSubjects = false;
   ttSelectedSubject = 'all';
   renderTimetable();
+}
+
+// Student chip management
+function renderSelectedStudentChips() {
+  const container = document.getElementById('tt-chips-container');
+  if (!container) return;
+  
+  if (ttSIDs.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  
+  const isDark = typeof document !== 'undefined' && document.body && document.body.classList && document.body.classList.contains('dark-theme');
+  const chipColors = isDark ? STUDENT_CHIP_COLORS_DARK : STUDENT_CHIP_COLORS;
+  
+  container.innerHTML = ttSIDs.map((sid, idx) => {
+    const stu = studentMap[sid];
+    if (!stu) return '';
+    const color = chipColors[idx % chipColors.length];
+    
+    const isDefault = localStorage.getItem('xlri_default_student') === sid;
+    const pinBtn = isDefault 
+      ? `<button onclick="setDefaultStudent('')" style="background: ${color.text}; color: #fff; border: none; cursor: pointer; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 4px;" title="This is your default student. Click to unset.">📌 Default</button>`
+      : `<button onclick="setDefaultStudent('${sid}')" style="background: rgba(0,0,0,0.05); color: ${color.text}; border: none; cursor: pointer; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 4px;" title="Set as default student on page load">📌 Set Default</button>`;
+    
+    return `
+      <div style="background: ${color.bg}; color: ${color.text}; border: 1px solid ${color.border}; display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: all 0.2s ease;">
+        <span>${stu.Name} <span style="font-size: 11px; opacity: 0.8; font-weight: 400; margin-left: 6px;">(${stu.SID})</span></span>
+        ${pinBtn}
+        <button onclick="removeSelectedStudent('${sid}')" style="background: rgba(0,0,0,0.05); border: none; color: ${color.text}; cursor: pointer; font-size: 14px; font-weight: bold; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; padding: 0; line-height: 1; transition: background 0.2s;">&times;</button>
+      </div>`;
+  }).join('');
+}
+
+function removeSelectedStudent(sid) {
+  ttSIDs = ttSIDs.filter(s => s !== sid);
+  ttSID = ttSIDs[0] || null;
+  if (ttSIDs.length === 0) {
+    ttSelectedSubject = 'all';
+    ttShowAllSubjects = false;
+  }
+  renderSelectedStudentChips();
+  renderTimetable();
+}
+
+function setDefaultStudent(sid) {
+  if (sid) {
+    localStorage.setItem('xlri_default_student', sid);
+  } else {
+    localStorage.removeItem('xlri_default_student');
+  }
+  renderSelectedStudentChips();
 }
 
 // Render personalized timetable grid
@@ -3360,9 +3557,11 @@ function renderTimetable() {
         const cellSlots = termSchedules.filter(s => s.date === wd.dateStr && s.slotIndex === rowIdx);
         const isSunday = wd.dateObj.getDay() === 0;
         const isMonday = wd.dateObj.getDay() === 1;
+        const isToday = wd.dateStr === todayStr;
         const sundayClass = isSunday ? 'sunday' : '';
         const mondayClass = isMonday ? 'week-boundary' : '';
-        const cellClass = `tt-grid-cell ${sundayClass} ${mondayClass}`;
+        const todayClass = isToday ? 'today' : '';
+        const cellClass = `tt-grid-cell ${todayClass} ${sundayClass} ${mondayClass}`;
         
         if (cellSlots.length > 0) {
           const groups = [];
@@ -3578,7 +3777,7 @@ function renderTimetable() {
 
   renderSyncStatusUI();
 
-    // Adjust column widths dynamically based on screen size FIRST
+      // Adjust column widths dynamically based on screen size FIRST
   adjustGridColumns();
 
   // Scroll to active target date or restore scroll
@@ -3587,28 +3786,35 @@ function renderTimetable() {
     if (savedScrollLeft !== null) {
       scrollContainer.scrollLeft = savedScrollLeft;
     } else {
-      const todayStr = getTodayString();
-      const todayEl = document.getElementById(`hdr-col-${todayStr}`);
-      const targetScroll = todayEl ? Math.max(0, todayEl.offsetLeft - 90) : 0;
-      scrollContainer.scrollLeft = targetScroll;
-      if (scrollContainer.scrollTo) {
-        scrollContainer.scrollTo({ left: targetScroll, top: 0, behavior: 'instant' });
-      }
+      centerOnToday(false);
     }
   }
 
-  // Backup tick for smooth rendering across all browser engines
+  // Multi-phase alignment to guarantee sticky positioning once layout/fonts settle
+  if (typeof requestAnimationFrame === 'function') {
+    requestAnimationFrame(() => {
+      adjustGridColumns();
+      if (savedScrollLeft === null) centerOnToday(false);
+    });
+  }
+  
   setTimeout(() => {
     adjustGridColumns();
-    const sc = document.querySelector('.tt-grid-container');
-    if (sc && savedScrollLeft === null) {
-      const todayStr = getTodayString();
-      const todayEl = document.getElementById(`hdr-col-${todayStr}`);
-      const targetScroll = todayEl ? Math.max(0, todayEl.offsetLeft - 90) : 0;
-      sc.scrollLeft = targetScroll;
+    if (savedScrollLeft !== null) {
+      const sc = document.querySelector('.tt-grid-container');
+      if (sc) sc.scrollLeft = savedScrollLeft;
+    } else {
+      centerOnToday(false);
     }
     initScrollListener();
-  }, 30);
+  }, 60);
+
+  setTimeout(() => {
+    if (savedScrollLeft === null) {
+      adjustGridColumns();
+      centerOnToday(false);
+    }
+  }, 250);
 }
 // Set autocomplete search for Timetable Tab
 makeAC('tt-inp', 'tt-list', sid => {
@@ -3669,7 +3875,13 @@ function initTheme() {
 initTheme();
 initTermDatasets();
 renderTimetable();
-if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') { window.addEventListener('resize', adjustGridColumns); }
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  window.addEventListener('resize', () => { adjustGridColumns(); });
+  window.addEventListener('load', () => {
+    adjustGridColumns();
+    centerOnToday(false);
+  });
+}
 </script>
 </body>
 </html>
